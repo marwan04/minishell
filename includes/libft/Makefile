@@ -6,7 +6,10 @@ CFLAGS = -Wall -Wextra -Werror -Iincludes
 SRCDIR = srcs
 INCDIR = includes
 OBJDIR = obj
-
+GREEN = \033[0;32m
+RED = \033[0;31m
+RESET = \033[0m
+ARROW = ✔
 SRC_FILES =     ft_atoi.c \
 		ft_atoi_base.c \
 		ft_bzero.c \
@@ -64,19 +67,25 @@ OBJ = $(addprefix $(OBJDIR)/, $(SRC_FILES:.c=.o))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	ar rcs $@ $(OBJ)
+	@echo "$(GREEN)Making $(NAME)...$(RESET)"
+	@ar rcs $@ $(OBJ)
+	@echo "$(GREEN)Done $(ARROW)$(RESET)"
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)
 
 clean:
-	rm -rf $(OBJDIR)
+	@echo "$(RED)Deleting $(OBJDIR)...$(RESET)"
+	@rm -rf $(OBJDIR)
+	@echo "$(RED)Done $(ARROW)$(RESET)"
 
 fclean: clean
-	rm -f $(NAME)
+	@echo "$(RED)Deleting $(NAME)...$(RESET)"
+	@rm -f $(NAME)
+	@echo "$(RED)Done $(ARROW)$(RESET)"
 
 re: fclean all
 
