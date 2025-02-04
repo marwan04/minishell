@@ -6,55 +6,61 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/03 11:15:42 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/02/04 18:50:30 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-CC = cc
-Flags = -Wall -Wextra -Werror
-SRCS = main
-srcDir = srcs/
-incDir = includes/
-objDir = obj/
-libftDir = $(incDir)/libft
-INCs = minishell.h
-Srcs = $(addprefix $(srcDir), $(addsuffix .c, $(SRCS)))
-OBJ = $(Srcs:$(srcDir)%.c=$(objDir)%.o)
-INC = $(addprefix $(incDir), $(INCs))
-GREEN = \033[0;32m
-RED = \033[0;31m
-RESET = \033[0m
-ARROW = ✔
+NAME    	= minishell
+CC      	= cc
+CFLAGS  	= -Wall -Wextra -Werror
+incDir 		= includes
+libftDir 	= $(incDir)/libft
+objDir 		= obj
+GREEN   	= \033[0;32m
+RED    		= \033[0;31m
+RESET   	= \033[0m
+ARROW   	= ✔
+BUILTINS	=	
+
+EXEC		=
+
+EXPANDER	= 
+
+PARSING		=	
+
+TOKENIZING	=
+
+SRCS		= main.c \
+			  $(TOKENIZING)
+
+OBJS		= $(SRCS:%.c=$(objDir)/%.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(libftDir)/libft.a
+$(NAME): $(OBJS) $(libftDir)/libft.a
 	@echo "$(GREEN)Making $(NAME)...$(RESET)"
-	@$(CC) $(Flags) -o $(NAME) $(OBJ) -L$(libftDir) -lft
+	@$(CC) -o $(NAME) $(OBJS) -L$(libftDir) -lft
 	@echo "$(GREEN)Done $(ARROW)$(RESET)"
+	
+$(objDir)/%.o: %.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -I$(incDir) -c $< -o $@
 
-$(objDir)%.o: $(srcDir)%.c $(INC) | $(objDir)
-	@$(CC) $(Flags) -c $< -o $@
-
-$(objDir):
-	@mkdir -p $(objDir)
+$(libftDir)/libft.a:
+	@$(MAKE) -C $(libftDir)
 
 clean:
 	@echo "$(RED)Deleting $(objDir)...$(RESET)"
-	@rm -rf $(objDir)
 	@$(MAKE) -C $(libftDir) clean
+	@rm -rf $(objDir)
 	@echo "$(RED)Done $(ARROW)$(RESET)"
 
 fclean: clean
 	@echo "$(RED)Deleting $(NAME)...$(RESET)"
-	@rm -f $(NAME)
 	@$(MAKE) -C $(libftDir) fclean
+	@rm -f $(NAME)
 	@echo "$(RED)Done $(ARROW)$(RESET)"
 
 re: fclean all
-
-$(libftDir)/libft.a:
-	@$(MAKE) -C $(libftDir)
 
 .PHONY: all clean fclean re
