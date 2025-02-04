@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/get_next_line.h"
+#include "../includes/libft.h"
 
 static char	*_set_line(char *line_buffer)
 {

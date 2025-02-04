@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malrifai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/09 00:02:11 by malrifai          #+#    #+#             */
-/*   Updated: 2024/10/13 17:30:23 by malrifai         ###   ########.fr       */
+/*   Created: 2025/02/04 22:19:03 by malrifai          #+#    #+#             */
+/*   Updated: 2025/02/04 22:41:43 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1028
-# endif
+#include "../includes/minishell.h"
 
-# include "libft.h"
-# include <fcntl.h>
-# include <stdlib.h>
-# include <unistd.h>
+char **tokenizer(char *input) {
+    char **tokens;
 
-char	*get_next_line(int fd);
+    tokens = ft_split(input, ' ');
 
-#endif
+    return tokens;
+}

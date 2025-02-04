@@ -6,7 +6,7 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/04 18:50:30 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/02/04 22:43:03 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,9 +26,9 @@ EXEC		=
 
 EXPANDER	= 
 
-PARSING		=	
+PARSING		=
 
-TOKENIZING	=
+TOKENIZING	= tokenizing/tokenizer.c
 
 SRCS		= main.c \
 			  $(TOKENIZING)
@@ -39,7 +39,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(libftDir)/libft.a
 	@echo "$(GREEN)Making $(NAME)...$(RESET)"
-	@$(CC) -o $(NAME) $(OBJS) -L$(libftDir) -lft
+	@$(CC) -o $(NAME) $(OBJS) -L$(libftDir) -lft -lreadline -lncurses
 	@echo "$(GREEN)Done $(ARROW)$(RESET)"
 	
 $(objDir)/%.o: %.c
