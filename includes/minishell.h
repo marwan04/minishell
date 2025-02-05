@@ -6,7 +6,7 @@
 /*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/06 01:53:12 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/06 02:09:17 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@
 
 typedef enum e_token_type
 {
-	WORD,      // Regular word or command
-	PIPE,      // "|"
-	REDIR_IN,  // "<"
-	REDIR_OUT, // ">"
-	APPEND,    // ">>"
-	HEREDOC    // "<<"
+	WORD,
+	PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HEREDOC
 }					t_token_type;
 
 typedef struct s_token

@@ -6,7 +6,7 @@
 /*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 00:47:37 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/02/06 01:52:32 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/06 02:07:47 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,17 @@ int	check_quote(int *i, char *input, t_token **head)
 	if (input[*i] == '"' || input[*i] == '\'')
 	{
 		quote = input[*i];
-		start = ++(*i);
+		start = (*i);
+		(*i)++;
 		while (input[*i] && input[*i] != quote)
 			(*i)++;
 		if (input[*i] == quote)
 		{
-			quoted_str = ft_substr(input, start, *i - start);
-			add_token(head, quoted_str, WORD);
-			free(quoted_str);
 			(*i)++;
 		}
+		quoted_str = ft_substr(input, start, *i - start);
+		add_token(head, quoted_str, WORD);
+		free(quoted_str);
 		return (1);
 	}
 	return (0);

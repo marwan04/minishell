@@ -12,33 +12,34 @@
 
 #include "./includes/minishell.h"
 
-void print_tokens(t_token *head)
+void	print_tokens(t_token *head)
 {
-    while (head)
-    {
-        printf("Token: [%s] (Type: %d)\n", head->value, head->type);
-        head = head->next;
-    }
+	while (head)
+	{
+		printf("Token: [%s] (Type: %d)\n", head->value, head->type);
+		head = head->next;
+	}
 }
 
-
 //This file will only contain the main function
-int main() {
-    char *input;
-    t_token *tokens;
+int	main(void)
+{
+	char	*input;
+	t_token	*tokens;
 
-    while (1) {
-        input = readline("minishell> ");
-        if (!input)
-          break;
-        if (*input)
-        {
-          add_history(input);
-          tokens = tokenizer(input);      
-        }
-        printf("You entered: %s\n", input);
-        print_tokens(tokens);
-        free(input);
-    }
-    return 0;
+	while (1)
+	{
+		input = readline("minishell> ");
+		if (!input)
+			break ;
+		if (*input)
+		{
+			add_history(input);
+			tokens = tokenizer(input);
+		}
+		printf("You entered: %s\n", input);
+		print_tokens(tokens);
+		free(input);
+	}
+	return (0);
 }
