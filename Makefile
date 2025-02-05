@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
+#    By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/04 22:43:03 by malrifai         ###   ########.fr        #
+#    Updated: 2025/02/06 01:02:36 by alrfa3i          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ EXPANDER	=
 
 PARSING		=
 
-TOKENIZING	= tokenizing/tokenizer.c
+TOKENIZING	= tokenizing/tokenizer.c tokenizing/check.c tokenizing/utils.c
 
 SRCS		= main.c \
 			  $(TOKENIZING)
