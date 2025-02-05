@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/04 22:41:03 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/05 23:36:20 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,23 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-char **tokenizer(char *input);
+typedef enum e_token_type
+{
+    WORD,        // Regular word or command
+    PIPE,        // "|"
+    REDIR_IN,    // "<"
+    REDIR_OUT,   // ">"
+    APPEND,      // ">>"
+    HEREDOC      // "<<"
+} t_token_type;
+
+typedef struct s_token
+{
+    char            *value;
+    t_token_type    type;
+    struct s_token  *next;
+} t_token;
+
+t_token *tokenizer(char *input);
 
 #endif

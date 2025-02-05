@@ -3,28 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/04 22:38:59 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/05 23:59:27 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void print_tokens(char **tokens)
+void print_tokens(t_token *head)
 {
-    int i = 0;
-    while (tokens[i]) {
-        printf("Token[%d]: %s\n", i, tokens[i]);
-        i++;
+    while (head)
+    {
+        printf("Token: [%s] (Type: %d)\n", head->value, head->type);
+        head = head->next;
     }
 }
+
 
 //This file will only contain the main function
 int main() {
     char *input;
-    char **tokens;
+    t_token *tokens;
 
     while (1) {
         input = readline("minishell> ");
