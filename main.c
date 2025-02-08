@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/08 16:17:02 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:50:29 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ int	main(void)
 		printf("You entered: %s\n", input);
 		cmds = parse_tokens(tokens);
 		print_tokens(tokens);
+		printf("\n");
+		print_commands(cmds);
 		free(input);
 	}
 	return (0);
