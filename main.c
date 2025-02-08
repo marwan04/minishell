@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/08 19:58:40 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 21:52:40 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_tokens(t_token *head)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = head;
 	while (tmp)
@@ -55,37 +55,42 @@ void	print_commands(t_cmd *cmds)
 	}
 }
 
-void ft_read(t_minishell *data)
+void	ft_read(t_minishell *data)
 {
 	char	*input;
-	
+
 	input = readline("minishell> ");
 	if (!input)
-		ft_free(data, 1, "Couldnt Read Input");
+		ft_free(data, 1, "Couldn't Read Input");
 	if (*input)
 	{
 		add_history(input);
+		free_tokens(data);
+		free_cmds(data);
 		data->tokens = tokenizer(input);
+		if (data->tokens)
+			data->cmds = parse_tokens(data->tokens);
 	}
 	if (ft_strcmp(input, "exit") == 0)
+	{
+		free(input);
 		ft_free(data, 0, "");
+	}
 	printf("You entered: %s\n", input);
-	data->cmds = parse_tokens(data->tokens);
 	print_tokens(data->tokens);
 	printf("\n");
 	print_commands(data->cmds);
 	free(input);
 }
 
-// This file will only contain the main function
 int	main(int ac, char **av)
 {
 	t_minishell	data;
 
 	ft_bzero(&data, sizeof(t_minishell));
-	(void) av;
+	(void)av;
 	if (ac != 1)
-		return 1;
+		return (1);
 	while (1)
 	{
 		ft_read(&data);
