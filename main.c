@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/05 23:59:27 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:17:02 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,41 @@ void	print_tokens(t_token *head)
 	}
 }
 
-//This file will only contain the main function
+void	print_commands(t_cmd *cmds)
+{
+	int		i;
+	char	*append;
+
+	while (cmds)
+	{
+		printf("Command: ");
+		i = 0;
+		while (cmds->args && cmds->args[i])
+			printf("[%s] ", cmds->args[i++]);
+		printf("\n");
+		if (cmds->input)
+			printf("  Input Redirection: %s\n", cmds->input);
+		if (cmds->output)
+		{
+			if (cmds->append)
+				append = "append";
+			else
+				append = "overwrite";
+			printf("  Output Redirection: %s (%s)\n", cmds->output, append);
+		}
+		if (cmds->pipe)
+			printf("  Pipe: Yes\n");
+		printf("\n");
+		cmds = cmds->next;
+	}
+}
+
+// This file will only contain the main function
 int	main(void)
 {
 	char	*input;
 	t_token	*tokens;
+	t_cmd	*cmds;
 
 	while (1)
 	{
@@ -38,6 +68,7 @@ int	main(void)
 			tokens = tokenizer(input);
 		}
 		printf("You entered: %s\n", input);
+		cmds = parse_tokens(tokens);
 		print_tokens(tokens);
 		free(input);
 	}

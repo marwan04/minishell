@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/06 01:01:38 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/02/06 01:47:50 by alrfa3i          ###   ########.fr       */
+/*   Created: 2025/02/06 01:01:38 by malrifai          #+#    #+#             */
+/*   Updated: 2025/02/08 14:08:24 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token	*new_token(char *value, t_token_type type)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = malloc(sizeof(*token));
 	if (!token)
 		return (NULL);
 	token->value = ft_strdup(value);
