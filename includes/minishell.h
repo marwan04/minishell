@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/08 14:16:08 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 18:46:36 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ typedef struct s_token
 	struct s_token	*next;
 }					t_token;
 
+typedef struct s_minishell
+{
+	t_cmd	*cmds;
+	t_token	*tokens;
+}					t_minishell;
+
 t_token				*tokenizer(char *input);
 int					check_redirections(int *i, char *input, t_token **head,
 						char symbol[2]);
@@ -57,5 +63,6 @@ t_cmd				*parse_tokens(t_token *tokens);
 t_cmd				*new_cmd(void);
 void				add_argument(t_cmd *cmd, char *arg);
 void				handle_redirection(t_cmd *cmd, t_token *token);
+void    ft_free(t_minishell *data, int flag, char *msg);
 
 #endif

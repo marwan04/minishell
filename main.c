@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/08 16:50:29 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 19:58:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 void	print_tokens(t_token *head)
 {
-	while (head)
+	t_token *tmp;
+
+	tmp = head;
+	while (tmp)
 	{
-		printf("Token: [%s] (Type: %d)\n", head->value, head->type);
-		head = head->next;
+		printf("Token: [%s] (Type: %d)\n", tmp->value, tmp->type);
+		tmp = tmp->next;
 	}
 }
 
@@ -25,54 +28,67 @@ void	print_commands(t_cmd *cmds)
 {
 	int		i;
 	char	*append;
+	t_cmd	*tmp;
 
-	while (cmds)
+	tmp = cmds;
+	while (tmp)
 	{
 		printf("Command: ");
 		i = 0;
-		while (cmds->args && cmds->args[i])
-			printf("[%s] ", cmds->args[i++]);
+		while (tmp->args && tmp->args[i])
+			printf("[%s] ", tmp->args[i++]);
 		printf("\n");
-		if (cmds->input)
-			printf("  Input Redirection: %s\n", cmds->input);
-		if (cmds->output)
+		if (tmp->input)
+			printf("  Input Redirection: %s\n", tmp->input);
+		if (tmp->output)
 		{
-			if (cmds->append)
+			if (tmp->append)
 				append = "append";
 			else
 				append = "overwrite";
-			printf("  Output Redirection: %s (%s)\n", cmds->output, append);
+			printf("  Output Redirection: %s (%s)\n", tmp->output, append);
 		}
-		if (cmds->pipe)
+		if (tmp->pipe)
 			printf("  Pipe: Yes\n");
 		printf("\n");
-		cmds = cmds->next;
+		tmp = tmp->next;
 	}
 }
 
-// This file will only contain the main function
-int	main(void)
+void ft_read(t_minishell *data)
 {
 	char	*input;
-	t_token	*tokens;
-	t_cmd	*cmds;
+	
+	input = readline("minishell> ");
+	if (!input)
+		ft_free(data, 1, "Couldnt Read Input");
+	if (*input)
+	{
+		add_history(input);
+		data->tokens = tokenizer(input);
+	}
+	if (ft_strcmp(input, "exit") == 0)
+		ft_free(data, 0, "");
+	printf("You entered: %s\n", input);
+	data->cmds = parse_tokens(data->tokens);
+	print_tokens(data->tokens);
+	printf("\n");
+	print_commands(data->cmds);
+	free(input);
+}
 
+// This file will only contain the main function
+int	main(int ac, char **av)
+{
+	t_minishell	data;
+
+	ft_bzero(&data, sizeof(t_minishell));
+	(void) av;
+	if (ac != 1)
+		return 1;
 	while (1)
 	{
-		input = readline("minishell> ");
-		if (!input)
-			break ;
-		if (*input)
-		{
-			add_history(input);
-			tokens = tokenizer(input);
-		}
-		printf("You entered: %s\n", input);
-		cmds = parse_tokens(tokens);
-		print_tokens(tokens);
-		printf("\n");
-		print_commands(cmds);
-		free(input);
+		ft_read(&data);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/08 14:16:40 by malrifai         ###   ########.fr        #
+#    Updated: 2025/02/08 18:46:17 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ EXPANDER	=
 
 PARSING		=
 
-TOKENIZING	= tokenizing/tokenizer.c tokenizing/check.c tokenizing/utils.c tokenizing/cmd_utils.c
+TOKENIZING	= tokenizing/tokenizer.c tokenizing/check.c tokenizing/utils.c tokenizing/cmd_utils.c tokenizing/free.c
 
 SRCS		= main.c \
 			  $(TOKENIZING)
