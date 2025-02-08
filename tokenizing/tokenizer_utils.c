@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 01:01:38 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/08 14:08:24 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 22:27:49 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,15 @@ t_token	*new_token(char *value, t_token_type type)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(*token));
+	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = ft_strdup(value);
+	if (!token->value)
+	{
+		free(token);
+		return (NULL);
+	}
 	token->type = type;
 	token->next = NULL;
 	return (token);
@@ -34,17 +39,19 @@ t_token	*last_token(t_token *token)
 
 void	add_token(t_token **head, char *value, t_token_type type)
 {
-	t_token	*tmp;
 	t_token	*new;
+	t_token	*tmp;
 
 	new = new_token(value, type);
 	if (!new)
 		return ;
 	if (!*head)
-		*head = new;
-	else
 	{
-		tmp = last_token(*head);
-		tmp->next = new;
+		*head = new;
+		return ;
 	}
+	tmp = *head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
 }

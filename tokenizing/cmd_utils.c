@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/08 20:26:15 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/08 21:27:35 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,25 @@ void	add_argument(t_cmd *cmd, char *arg)
 
 void	handle_redirection(t_cmd *cmd, t_token *token)
 {
+	char	*new_value;
+
 	if (token->type == REDIR_IN)
 	{
-		if (cmd->input)
+		new_value = ft_strdup(token->next->value);
+		if (new_value)
+		{
 			free(cmd->input);
-		cmd->input = ft_strdup(token->next->value);
+			cmd->input = new_value;
+		}
 	}
 	else if (token->type == REDIR_OUT || token->type == APPEND)
 	{
-		if (cmd->output)
+		new_value = ft_strdup(token->next->value);
+		if (new_value)
+		{
 			free(cmd->output);
-		cmd->output = ft_strdup(token->next->value);
+			cmd->output = new_value;
+		}
 		cmd->append = (token->type == APPEND);
 	}
 }
