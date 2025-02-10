@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/10 16:39:47 by malrifai         ###   ########.fr        #
+#    Updated: 2025/02/10 18:01:03 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ BUILTINS	=
 
 EXEC		=
 
-EXPANDER	= expander/expand.c
+EXPANDER	= expander/expand.c expander/utils.c
 
 PARSING		=
 

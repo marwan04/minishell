@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/10 16:41:56 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:08:31 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void				free_cmds_list(t_cmd *head);
 void				free_tokens(t_minishell *data);
 void				ft_free(t_minishell *data, int flag, char *msg);
 char *expand_tilde(char *token);
-void expand_tokens(t_token *tokens);
+void expand_tokens(t_token *tokens, int last_exit_status);
+char *ft_strjoin_free(char *s1, char *s2);
 
 #endif
