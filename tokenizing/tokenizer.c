@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:19:03 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/08 22:21:53 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:37:56 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,20 @@ t_token	*tokenizer(char *input)
 	}
 	return (head);
 }
+
+void expand_tokens(t_token *tokens)
+{
+    while (tokens)
+    {
+        char *expanded_value = expand_tilde(tokens->value);
+
+        if (expanded_value != tokens->value)
+        {
+            free(tokens->value);
+            tokens->value = expanded_value;
+        }
+
+        tokens = tokens->next;
+    }
+}
+
