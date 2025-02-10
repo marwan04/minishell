@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
+#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/08 22:33:12 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/02/10 18:01:03 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ BUILTINS	=
 
 EXEC		=
 
-EXPANDER	= 
+EXPANDER	= expander/expand.c expander/utils.c
 
 PARSING		=
 
@@ -36,7 +36,8 @@ TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/parsing_utils.c
 
 SRCS		= main.c \
-			  $(TOKENIZING)
+			  $(TOKENIZING) \
+			  $(EXPANDER)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)
 

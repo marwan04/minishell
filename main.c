@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/08 21:52:40 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:13:44 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,10 @@ void	ft_read(t_minishell *data)
 		free_cmds(data);
 		data->tokens = tokenizer(input);
 		if (data->tokens)
+		{
+			expand_tokens(data->tokens, 0);
 			data->cmds = parse_tokens(data->tokens);
+		}
 	}
 	if (ft_strcmp(input, "exit") == 0)
 	{
