@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/10 19:28:09 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 16:13:33 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,65 +28,67 @@ char	*expand_tilde(char *token)
 	return (expanded_token);
 }
 
-char	*expand_variables(char *token, int last_exit_status)
+char *expand_variables(char *token, int last_exit_status)
 {
-	char	*expanded;
-	char	*exit_status;
-	char	*var_name;
-	char	*var_value;
-	char	c[2];
-	int		i;
-	int		start;
-
-	if (!token || !ft_strchr(token, '$'))
-		return (ft_strdup(token));
-	expanded = ft_strdup("");
-	i = 0;
-	while (token[i])
-	{
-		if (token[i] == '\'')
-		{
-			start = i++;
-			while (token[i] && token[i] != '\'')
-				i++;
-			if (token[i] == '\'')
-				i++;
-			expanded = ft_strjoin_free(expanded, ft_substr(token, start, i
-						- start));
-		}
-		else if (token[i] == '$')
-		{
-			start = ++i;
-			if (token[start] == '?')
-			{
-				exit_status = ft_itoa(last_exit_status);
-				expanded = ft_strjoin_free(expanded, exit_status);
-				free(exit_status);
-				i++;
-			}
-			else
-			{
-				while (token[i] && (ft_isalnum(token[i]) || token[i] == '_'))
-					i++;
-				var_name = ft_substr(token, start, i - start);
-				var_value = getenv(var_name);
-				if (var_value)
-					expanded = ft_strjoin_free(expanded, var_value);
-				else
-					expanded = ft_strjoin_free(expanded, "");
-				free(var_name);
-			}
-		}
-		else
-		{
-			c[0] = token[i];
+	char *expanded;
+	int i;
+	int start;
+	char *exit_status;
+	char *var_name;
+	char *var_value;
+	char c[2];
+	
+    if (!token || !ft_strchr(token, '$'))
+        return ft_strdup(token);
+    expanded = ft_strdup("");
+    i = 0;
+    while (token[i])
+    {
+        if (token[i] == '\'')
+        {
+            start = i++;
+            while (token[i] && token[i] != '\'')
+                i++;
+            if (token[i] == '\'')
+                i++;
+            expanded = ft_strjoin_free(expanded, ft_substr(token, start, i - start));
+        }
+        else if (token[i] == '$')
+        {
+            start = ++i;
+            if (!ft_isalpha(token[start]) && token[start] != '_' && token[start] != '?')
+            {
+                expanded = ft_strjoin_free(expanded, "$");
+                continue;
+            }
+            if (token[start] == '?')
+            {
+                exit_status = ft_itoa(last_exit_status);
+                expanded = ft_strjoin_free(expanded, exit_status);
+                free(exit_status);
+                i++;
+            }
+            else
+            {
+                while (token[i] && (ft_isalnum(token[i]) || token[i] == '_'))
+                    i++;
+                var_name = ft_substr(token, start, i - start);
+                var_value = getenv(var_name);
+                expanded = ft_strjoin_free(expanded, var_value ? var_value : "");
+                free(var_name);
+            }
+        }
+        else
+        {
+            c[0] = token[i];
 			c[1] = '\0';
-			expanded = ft_strjoin_free(expanded, c);
-			i++;
-		}
-	}
-	return (expanded);
+            expanded = ft_strjoin_free(expanded, c);
+            i++;
+        }
+    }
+    return (expanded);
 }
+
 
 char	*remove_quotes(char *input)
 {
