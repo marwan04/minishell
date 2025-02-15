@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 16:32:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 17:21:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <signal.h>
 
 typedef enum e_token_type
 {
@@ -80,5 +81,6 @@ void				ft_free(t_minishell *data, int flag, char *msg);
 char				*expand_tilde(char *token);
 void				expand_tokens(t_token *tokens, int last_exit_status);
 char				*ft_strjoin_free(char *s1, char *s2);
+void				signals_handler(void);
 
 #endif

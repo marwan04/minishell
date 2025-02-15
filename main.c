@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 16:53:37 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 17:22:17 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 
+	signals_handler();
 	input = readline("minishell> ");
 	if (!input)
 		ft_free(data, 1, "exit");

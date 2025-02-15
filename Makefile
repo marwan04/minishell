@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/10 18:01:03 by malrifai         ###   ########.fr        #
+#    Updated: 2025/02/15 17:22:37 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,8 @@ EXPANDER	= expander/expand.c expander/utils.c
 
 PARSING		=
 
+SIGNAL		= signal/signal_handler.c
+
 TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/check.c \
 			  tokenizing/tokenizer_utils.c \
@@ -37,7 +39,8 @@ TOKENIZING	= tokenizing/tokenizer.c \
 
 SRCS		= main.c \
 			  $(TOKENIZING) \
-			  $(EXPANDER)
+			  $(EXPANDER) \
+			  $(SIGNAL)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)
 
