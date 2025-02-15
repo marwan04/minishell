@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 16:32:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:59:32 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <signal.h>
 
 typedef enum e_token_type
 {
@@ -41,8 +42,10 @@ typedef struct s_cmd
 
 typedef struct s_expand
 {
-	char	*expanded;
+	char	quote;
 	int		start;
+	int		i;
+	char	*expanded;
 	char	*exit_status;
 	char	*var_name;
 	char	*var_value;
@@ -80,5 +83,7 @@ void				ft_free(t_minishell *data, int flag, char *msg);
 char				*expand_tilde(char *token);
 void				expand_tokens(t_token *tokens, int last_exit_status);
 char				*ft_strjoin_free(char *s1, char *s2);
+void				signals_handler(void);
+char				*expand_variables(char *token, int last_exit_status);
 
 #endif
