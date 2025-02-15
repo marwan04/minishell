@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/10 18:08:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 16:32:14 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ typedef struct s_cmd
 	int				pipe;
 	struct s_cmd	*next;
 }					t_cmd;
+
+typedef struct s_expand
+{
+	char	*expanded;
+	int		start;
+	char	*exit_status;
+	char	*var_name;
+	char	*var_value;
+	char	c[2];
+}					t_expand;
 
 typedef struct s_token
 {

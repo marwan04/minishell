@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/10 18:13:44 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 16:53:37 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	ft_read(t_minishell *data)
 
 	input = readline("minishell> ");
 	if (!input)
-		ft_free(data, 1, "Couldn't Read Input");
+		ft_free(data, 1, "exit");
 	if (*input)
 	{
 		add_history(input);
@@ -74,15 +74,17 @@ void	ft_read(t_minishell *data)
 			data->cmds = parse_tokens(data->tokens);
 		}
 	}
-	if (ft_strcmp(input, "exit") == 0)
+	if (!ft_strcmp(input, "exit"))
 	{
 		free(input);
-		ft_free(data, 0, "");
+		ft_free(data, 0, "exit");
 	}
 	printf("You entered: %s\n", input);
 	print_tokens(data->tokens);
 	printf("\n");
 	print_commands(data->cmds);
+	if (!ft_strcmp(input, "clear"))
+		printf("\033[H\033[2J");
 	free(input);
 }
 
