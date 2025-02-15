@@ -6,13 +6,13 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/15 17:33:53 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:51:43 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
 	(void) sig;
 	printf("\n");

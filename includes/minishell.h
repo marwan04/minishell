@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 17:21:40 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:59:32 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ typedef struct s_cmd
 
 typedef struct s_expand
 {
-	char	*expanded;
+	char	quote;
 	int		start;
+	int		i;
+	char	*expanded;
 	char	*exit_status;
 	char	*var_name;
 	char	*var_value;
@@ -82,5 +84,6 @@ char				*expand_tilde(char *token);
 void				expand_tokens(t_token *tokens, int last_exit_status);
 char				*ft_strjoin_free(char *s1, char *s2);
 void				signals_handler(void);
+char				*expand_variables(char *token, int last_exit_status);
 
 #endif
