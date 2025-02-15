@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 19:59:32 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 20:23:55 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_expand
 	char	quote;
 	int		start;
 	int		i;
+	int		preserve_spaces;
 	char	*expanded;
 	char	*exit_status;
 	char	*var_name;
