@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 15:48:27 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/15 16:53:37 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	ft_read(t_minishell *data)
 	print_tokens(data->tokens);
 	printf("\n");
 	print_commands(data->cmds);
-	if(!ft_strcmp(input, "clear"))
-        printf("\033[H\033[2J");
+	if (!ft_strcmp(input, "clear"))
+		printf("\033[H\033[2J");
 	free(input);
 }
 
