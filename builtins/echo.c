@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 19:32:08 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/17 21:03:17 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/18 01:23:17 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int is_n_flag(char *arg)
+{
+	int i;
+
+	i = 1;
+	if (arg[0] != '-')
+		return (0);
+	if (arg[1] != 'n')
+		return (0);
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	handle_echo(char **args)
 {
@@ -19,7 +37,7 @@ void	handle_echo(char **args)
 
 	i = 1;
 	newline = 1;
-	if (args[i] && ft_strcmp(args[i], "-n") == 0)
+	while (args[i] && is_n_flag(args[i]))
 	{
 		newline = 0;
 		i++;
