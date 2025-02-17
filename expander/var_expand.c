@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_expand.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:51:48 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/15 20:57:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/18 00:37:59 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	expand_track_quotes(t_expand *expand, char c)
 		expand->preserve_spaces = 0;
 	}
 }
+
 /* This function for the following
 1- Identifies and extracts the variable name after $.
 2- Handles special case $?, which represents the exit status of the last command.

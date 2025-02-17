@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/15 18:54:38 by malrifai         ###   ########.fr        #
+#    Updated: 2025/02/17 21:02:34 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,13 @@ RESET   	= \033[0m
 ARROW   	= ✔
 BUILTINS	=	
 
-EXEC		=
+EXEC		= exec/exec.c
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
 PARSING		=
+
+BUILTINS	= builtins/echo.c builtins/export.c
 
 SIGNAL		= signal/signal_handler.c
 
@@ -40,7 +42,9 @@ TOKENIZING	= tokenizing/tokenizer.c \
 SRCS		= main.c \
 			  $(TOKENIZING) \
 			  $(EXPANDER) \
-			  $(SIGNAL)
+			  $(SIGNAL) \
+			  $(BUILTINS) \
+			  $(EXEC)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)
 
