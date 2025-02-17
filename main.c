@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/17 21:22:36 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/18 01:16:20 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	ft_read(t_minishell *data)
 		free_tokens(data);
 		free_cmds(data);
 		data->tokens = tokenizer(input);
-	print_tokens(data->tokens);
 		if (data->tokens)
 		{
 			expand_tokens(data->tokens, 0);
@@ -85,9 +84,9 @@ void	ft_read(t_minishell *data)
 	print_tokens(data->tokens);
 	printf("\n");
 	print_commands(data->cmds);
+	printf("You entered: %s\n", input);
 	if (!ft_strcmp(input, "clear"))
 		printf("\033[H\033[2J");
-	printf("You entered: %s\n", input);
 	free(input);
 }
 

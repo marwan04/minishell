@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/17 21:19:38 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/18 00:21:14 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ char	*remove_quotes(char *input)
 		}
 		i++;
 	}
-	printf("cleaned: %s\n", cleaned);
 	return (cleaned);
 }
 

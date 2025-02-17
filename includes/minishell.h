@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/17 21:00:55 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/18 00:42:52 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void				export_variable(char *arg, char ***env);
 void				handle_export(char **args, char ***env);
 
 // exec/exec.c
-void execute_cmds(t_cmd *cmds, int *last_exit_status, char ***env);
+void				execute_cmds(t_cmd *cmds,
+						int *last_exit_status, char ***env);
 
 #endif
