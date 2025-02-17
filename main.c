@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/17 19:13:28 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/17 21:22:36 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ void	ft_read(t_minishell *data)
 		free_tokens(data);
 		free_cmds(data);
 		data->tokens = tokenizer(input);
+	print_tokens(data->tokens);
 		if (data->tokens)
 		{
 			expand_tokens(data->tokens, 0);
 			data->cmds = parse_tokens(data->tokens);
-			execute_cmds(data->cmds, 0, &data->env);
 		}
 	}
 	if (!ft_strcmp(input, "exit"))
@@ -81,16 +81,17 @@ void	ft_read(t_minishell *data)
 		free(input);
 		ft_free(data, 0, "exit");
 	}
-	printf("You entered: %s\n", input);
+	execute_cmds(data->cmds, &data->last_exit_status, &data->env);
 	print_tokens(data->tokens);
 	printf("\n");
 	print_commands(data->cmds);
 	if (!ft_strcmp(input, "clear"))
 		printf("\033[H\033[2J");
+	printf("You entered: %s\n", input);
 	free(input);
 }
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	t_minishell	data;
 
@@ -98,7 +99,8 @@ int	main(int ac, char **av)
 	(void)av;
 	if (ac != 1)
 		return (1);
-	data.env = ft_dup_env(av);
+	data.env = ft_dup_env(env);
+    data.last_exit_status = 0; 
 	while (1)
 	{
 		ft_read(&data);

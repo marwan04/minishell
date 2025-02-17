@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/17 19:15:22 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/17 21:00:55 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct s_minishell
 	t_cmd			*cmds;
 	t_token			*tokens;
 	char			**env;
+	int				last_exit_status;
 }					t_minishell;
 
 // tokenizing/check.c
@@ -106,7 +107,7 @@ void				expand_tokens(t_token *tokens, int last_exit_status);
 // expander/utils.c
 char				*ft_strjoin_free(char *s1, char *s2);
 char				**ft_realloc_env(char **env, char *key, char *value);
-char				**ft_dup_env(char **av);
+char				**ft_dup_env(char **env);
 
 // expander/var_expand.c
 void				expand_track_quotes(t_expand *expand, char c);
@@ -120,12 +121,15 @@ char				*expand_variables(char *token, int last_exit_status);
 void				handle_sigint(int sig);
 void				signals_handler(void);
 
+// builtins/echo.c
+void				handle_echo(char **args);
+
 // builtins/export.c
 void				print_env_vars(char **env);
 void				export_variable(char *arg, char ***env);
 void				handle_export(char **args, char ***env);
 
 // exec/exec.c
-void				execute_cmds(t_cmd *cmds, int *last_exit_status, char ***env);
+void execute_cmds(t_cmd *cmds, int *last_exit_status, char ***env);
 
 #endif

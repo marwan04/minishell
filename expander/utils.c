@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:59:26 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/17 19:11:32 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:39:36 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,21 @@ char	**ft_realloc_env(char **env, char *key, char *value)
 	return (new_env);
 }
 
-char	**ft_dup_env(char **av)
+char	**ft_dup_env(char **env)
 {
 	int		i;
 	char	**new_env;
 
 	i = 0;
-	while (av[i])
+	while (env[i])
 		i++;
 	new_env = malloc((i + 1) * sizeof(char *));
 	if (!new_env)
 		return (NULL);
 	i = 0;
-	while (av[i])
+	while (env[i])
 	{
-		new_env[i] = ft_strdup(av[i]);
+		new_env[i] = ft_strdup(env[i]);
 		i++;
 	}
 	new_env[i] = NULL;
