@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/15 17:22:17 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:13:28 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_read(t_minishell *data)
 		{
 			expand_tokens(data->tokens, 0);
 			data->cmds = parse_tokens(data->tokens);
+			execute_cmds(data->cmds, 0, &data->env);
 		}
 	}
 	if (!ft_strcmp(input, "exit"))
@@ -97,6 +98,7 @@ int	main(int ac, char **av)
 	(void)av;
 	if (ac != 1)
 		return (1);
+	data.env = ft_dup_env(av);
 	while (1)
 	{
 		ft_read(&data);
