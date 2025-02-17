@@ -6,11 +6,22 @@
 /*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 00:47:37 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/02/06 02:07:47 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/18 00:52:03 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	check_separator(int *i, char *input)
+{
+	if (input[*i] != '\0' && input[*i] != ' ' && input[*i] != '|'
+		&& input[*i] != '<' && input[*i] != '>')
+	{
+		while (input[*i] && input[*i] != ' ' && input[*i] != '|'
+			&& input[*i] != '<' && input[*i] != '>')
+			(*i)++;
+	}
+}
 
 int	check_redirections(int *i, char *input, t_token **head, char symbol[2])
 {
@@ -57,6 +68,7 @@ int	check_quote(int *i, char *input, t_token **head)
 		if (input[*i] == quote)
 		{
 			(*i)++;
+			check_separator(i, input);
 		}
 		quoted_str = ft_substr(input, start, *i - start);
 		add_token(head, quoted_str, WORD);
