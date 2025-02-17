@@ -6,15 +6,15 @@
 /*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 19:32:08 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 01:23:17 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/18 01:27:35 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int is_n_flag(char *arg)
+int	is_n_flag(char *arg)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (arg[0] != '-')
