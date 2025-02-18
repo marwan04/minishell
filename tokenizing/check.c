@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 00:47:37 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/02/18 21:50:56 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:15:31 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int	check_quote(int *i, char *input, t_token **head)
 			check_separator(i, input);
 		}
 		quoted_str = ft_substr(input, start, *i - start);
-		printf("q_str = %s\n", quoted_str);
 		add_token(head, quoted_str, WORD);
 		free(quoted_str);
 		return (1);
@@ -119,7 +118,6 @@ int	handle_words(int *i, char *input, t_token **head)
 		word = ft_substr(input, start, *i - start);
 		if (!word)
 			return (0);
-		printf("word = %s\n", word);
 		add_token(head, word, WORD);
 		free(word);
 		return (1);
