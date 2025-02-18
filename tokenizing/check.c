@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 00:47:37 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/02/18 00:52:03 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/18 21:50:56 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,33 @@ int	check_quote(int *i, char *input, t_token **head)
 			check_separator(i, input);
 		}
 		quoted_str = ft_substr(input, start, *i - start);
+		printf("q_str = %s\n", quoted_str);
 		add_token(head, quoted_str, WORD);
 		free(quoted_str);
 		return (1);
 	}
 	return (0);
+}
+
+int	handle_quoted_part(int *i, char *input, t_token **head, int start)
+{
+	int		quote;
+	char	*word;
+
+	quote = *i;
+	if (quote > start)
+		word = ft_substr(input, start, quote - start);
+	else
+		word = ft_strdup("");
+	check_quote(i, input, head);
+	if (*head)
+	{
+		word = ft_strjoin_free(word, last_token(*head)->value);
+		remove_last_token(head);
+	}
+	add_token(head, word, WORD);
+	free(word);
+	return (1);
 }
 
 int	handle_words(int *i, char *input, t_token **head)
@@ -89,8 +111,15 @@ int	handle_words(int *i, char *input, t_token **head)
 		start = *i;
 		while (input[*i] && input[*i] != ' ' && input[*i] != '|'
 			&& input[*i] != '<' && input[*i] != '>')
+		{
+			if (input[*i] == '"' || input[*i] == '\'')
+				return (handle_quoted_part(i, input, head, start));
 			(*i)++;
+		}
 		word = ft_substr(input, start, *i - start);
+		if (!word)
+			return (0);
+		printf("word = %s\n", word);
 		add_token(head, word, WORD);
 		free(word);
 		return (1);
