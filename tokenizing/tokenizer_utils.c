@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 01:01:38 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/08 22:27:49 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/18 21:43:34 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,32 @@ void	add_token(t_token **head, char *value, t_token_type type)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
+}
+
+void	remove_last_token(t_token **head)
+{
+	t_token	*tmp;
+	t_token	*prev;
+
+	if (!head || !*head)
+		return ;
+	tmp = *head;
+	prev = NULL;
+	while (tmp->next)
+	{
+		prev = tmp;
+		tmp = tmp->next;
+	}
+	if (!prev)
+	{
+		free(tmp->value);
+		free(tmp);
+		*head = NULL;
+	}
+	else
+	{
+		prev->next = NULL;
+		free(tmp->value);
+		free(tmp);
+	}
 }
