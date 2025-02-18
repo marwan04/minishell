@@ -3,74 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 00:48:38 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/18 16:00:15 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	print_env_vars(char **env)
+void	handle_export(char **args, t_env **env)
 {
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		printf("declare -x %s\n", env[i]);
-		i++;
-	}
-}
-
-void	export_variable(char *arg, char ***env)
-{
+	int		i;
+	char	*equal;
 	char	*key;
 	char	*value;
-	int		i;
+	t_env	*tmp;
 
 	i = 0;
-	key = ft_substr(arg, 0, ft_strchr(arg, '=') - arg);
-	value = ft_strdup(ft_strchr(arg, '=') + 1);
-	while ((*env)[i])
+	if (!args[i])
 	{
-		if (ft_strncmp((*env)[i], key, ft_strlen(key)) == 0
-			&& (*env)[i][ft_strlen(key)] == '=')
+		tmp = *env;
+		while (tmp)
 		{
-			free((*env)[i]);
-			(*env)[i] = ft_strjoin_free(ft_strjoin(key, "="), value);
-			free(key);
-			free(value);
-			return ;
+			printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+			tmp = tmp->next;
 		}
-		i++;
-	}
-	(*env) = ft_realloc_env(*env, key, value);
-	free(key);
-	free(value);
-}
-
-void	handle_export(char **args, char ***env)
-{
-	int		i;
-	char	*var_value;
-
-	if (!args[1])
-	{
-		print_env_vars(*env);
 		return ;
 	}
-	i = 1;
 	while (args[i])
 	{
-		if (ft_strchr(args[i], '='))
-			export_variable(args[i], env);
+		equal = ft_strchr(args[i], '=');
+		if (!equal)
+			add_or_update_env(env, args[i], "");
 		else
 		{
-			var_value = getenv(args[i]);
-			if (var_value)
-				printf("declare -x %s=\"%s\"\n", args[i], var_value);
+			key = ft_substr(args[i], 0, equal - args[i]);
+			value = ft_strdup(equal + 1);
+			add_or_update_env(env, key, value);
+			free(key);
+			free(value);
 		}
 		i++;
 	}

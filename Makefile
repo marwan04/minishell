@@ -6,7 +6,7 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/23 10:22:03 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/02/23 10:36:29 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
 PARSING		=
 
-BUILTINS	= builtins/echo.c builtins/export.c
+BUILTINS	= builtins/echo.c builtins/export.c builtins/env_utils.c
 
 SIGNAL		= signal/signal_handler.c
 
