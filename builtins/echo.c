@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 19:32:08 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 01:27:35 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/18 15:40:58 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	handle_echo(char **args)
 		newline = 0;
 		i++;
 	}
-	printf("echo :");
 	while (args[i])
 	{
 		printf("%s", args[i]);

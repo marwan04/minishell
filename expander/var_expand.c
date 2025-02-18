@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_expand.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:51:48 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 00:37:59 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/18 21:53:17 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ char	*expand_extract_var(t_expand *expand, char *token, int last_exit_status)
 3- Preserve spaces if the variable is inside " ".
 4- Split spaces into separate arguments if the variable is unquoted.
 */
-char	*expand_replace_var(char *var_name, int preserve_spaces)
+char	*expand_replace_var(char *var_name, int preserve_spaces, t_env *env)
 {
 	char	*var_value;
 	char	*expanded;
 	char	**splited;
 	int		j;
 
-	var_value = getenv(var_name);
+	var_value = get_env_value(env, var_name);
 	if (!var_value)
 		return (ft_strdup(""));
 	if (preserve_spaces)
@@ -104,7 +104,7 @@ void	expand_append_char(t_expand *expand, char c)
  - Replacing variables (expand_replace_var())
  - Appending normal characters (expand_append_char())
 */
-char	*expand_variables(char *token, int last_exit_status)
+char	*expand_variables(char *token, int last_exit_status, t_env *env)
 {
 	t_expand	exp;
 
@@ -119,10 +119,9 @@ char	*expand_variables(char *token, int last_exit_status)
 		expand_track_quotes(&exp, token[exp.i]);
 		if (token[exp.i] == '$' && exp.quote != '\'')
 		{
-			exp.var_name = expand_extract_var(&exp, \
-				token, last_exit_status);
+			exp.var_name = expand_extract_var(&exp, token, last_exit_status);
 			exp.var_value = expand_replace_var(exp.var_name, \
-				exp.preserve_spaces);
+				exp.preserve_spaces, env);
 			exp.expanded = ft_strjoin_free(exp.expanded, exp.var_value);
 			free(exp.var_name);
 			free(exp.var_value);
