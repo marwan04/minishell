@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 18:05:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/19 22:49:49 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,17 @@ char	*remove_quotes(char *input)
 void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
 	char	*expanded;
+	int		is_export;
 
+	if (!tokens)
+		return;
+	is_export = (tokens && ft_strcmp(tokens->value, "export") == 0);
 	while (tokens)
 	{
 		expanded = expand_tilde(tokens->value);
 		expanded = expand_variables(expanded, last_exit_status, env);
-		expanded = remove_quotes(expanded);
+		if (!is_export || tokens == tokens->next)
+			expanded = remove_quotes(expanded);
 		if (expanded != tokens->value)
 		{
 			free(tokens->value);

@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/18 18:06:10 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/19 22:45:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_read(t_minishell *data)
 		data->tokens = tokenizer(input);
 		if (data->tokens)
 		{
-			expand_tokens(data->tokens, 0, data->env);
+			expand_tokens(data->tokens, data->last_exit_status, data->env);
 			data->cmds = parse_tokens(data->tokens);
 		}
 	}
@@ -89,6 +89,7 @@ void	ft_read(t_minishell *data)
 		printf("\033[H\033[2J");
 	free(input);
 }
+
 
 int	main(int ac, char **av, char **envp)
 {
