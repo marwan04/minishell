@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/22 15:56:36 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:13:02 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,16 @@ void				signals_handler(void);
 int					is_n_flag(char *arg);
 void				handle_echo(char **args);
 
-// builtins/export.c
+// builtins/export/export.c
 void				handle_export(char **args, t_env **env);
+
+// builtins/export/print_env.c
+void				print_env_sorted(t_env *env);
+
+// builtins/export/check.c
+int					is_valid_identifier(char *key);
+int					has_space_after_equal(char *arg);
+int					has_space_before_equal(char *arg);
 
 // builtins/pwd.c
 void				handle_pwd(void);
