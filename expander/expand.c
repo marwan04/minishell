@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 00:21:14 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/19 22:49:49 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,20 @@ char	*remove_quotes(char *input)
 	return (cleaned);
 }
 
-void	expand_tokens(t_token *tokens, int last_exit_status)
+void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
 	char	*expanded;
+	int		is_export;
 
+	if (!tokens)
+		return;
+	is_export = (tokens && ft_strcmp(tokens->value, "export") == 0);
 	while (tokens)
 	{
 		expanded = expand_tilde(tokens->value);
-		expanded = expand_variables(expanded, last_exit_status);
-		expanded = remove_quotes(expanded);
+		expanded = expand_variables(expanded, last_exit_status, env);
+		if (!is_export || tokens == tokens->next)
+			expanded = remove_quotes(expanded);
 		if (expanded != tokens->value)
 		{
 			free(tokens->value);

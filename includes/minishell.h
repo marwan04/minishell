@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/18 00:42:52 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/22 15:56:36 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,23 @@ typedef struct s_token
 	t_token_type	type;
 }					t_token;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}					t_env;
+
 typedef struct s_minishell
 {
-	t_cmd			*cmds;
-	t_token			*tokens;
-	char			**env;
-	int				last_exit_status;
+	t_cmd	*cmds;
+	t_token	*tokens;
+	t_env	*env;
+	int		last_exit_status;
 }					t_minishell;
 
 // tokenizing/check.c
+void				check_separator(int *i, char *input);
 int					check_quote(int *i, char *input, t_token **head);
 int					check_redirections(int *i, char *input, t_token **head,
 						char symbol[2]);
@@ -95,6 +103,7 @@ t_cmd				*parse_tokens(t_token *tokens);
 t_token				*new_token(char *value, t_token_type type);
 t_token				*last_token(t_token *token);
 void				add_token(t_token **head, char *value, t_token_type type);
+void				remove_last_token(t_token **head);
 
 // tokenizing/tokenizer.c
 t_token				*tokenizer(char *input);
@@ -102,35 +111,48 @@ t_token				*tokenizer(char *input);
 // expander/expand.c
 char				*expand_tilde(char *token);
 char				*remove_quotes(char *input);
-void				expand_tokens(t_token *tokens, int last_exit_status);
+void				expand_tokens(t_token *tokens, int last_exit_status,
+						t_env *env);
 
 // expander/utils.c
 char				*ft_strjoin_free(char *s1, char *s2);
-char				**ft_realloc_env(char **env, char *key, char *value);
-char				**ft_dup_env(char **env);
 
 // expander/var_expand.c
 void				expand_track_quotes(t_expand *expand, char c);
 void				expand_append_char(t_expand *expand, char c);
 char				*expand_extract_var(t_expand *expand, char *token,
 						int last_exit_status);
-char				*expand_replace_var(char *var_name, int preserve_spaces);
-char				*expand_variables(char *token, int last_exit_status);
+char				*expand_replace_var(char *var_name,
+						int preserve_spaces, t_env *env);
+char				*expand_variables(char *token,
+						int last_exit_status, t_env *env);
 
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void				signals_handler(void);
 
 // builtins/echo.c
+int					is_n_flag(char *arg);
 void				handle_echo(char **args);
 
 // builtins/export.c
-void				print_env_vars(char **env);
-void				export_variable(char *arg, char ***env);
-void				handle_export(char **args, char ***env);
+void				handle_export(char **args, t_env **env);
+
+// builtins/pwd.c
+void				handle_pwd(void);
+
+// builtins/env.c
+void				handle_env(t_env *env);
+
+// builtins/env_utils.c
+t_env				*init_env_list(char **envp);
+void				add_or_update_env(t_env **env, char *key, char *value);
+void				free_env(t_env *env);
+char				**build_env(t_env *env);
+char				*get_env_value(t_env *env, char *key);
 
 // exec/exec.c
-void				execute_cmds(t_cmd *cmds,
-						int *last_exit_status, char ***env);
+void				execute_cmds(t_cmd *cmds, int *last_exit_status,
+						t_env **env);
 
 #endif

@@ -3,74 +3,163 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 00:48:38 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/22 17:16:23 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	print_env_vars(char **env)
+int is_valid_identifier(char *key)
 {
-	int	i;
+	int i = 0;
+
+	if (!key || !ft_isalpha(key[0]) || key[0] == '=')
+		return (0);
+	while (key[i])
+	{
+		if (!ft_isalnum(key[i]) && key[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int has_space_before_equal(char *arg)
+{
+	int i = 0;
+
+	while (arg[i] && arg[i] != '=')
+	{
+		if (arg[i] == ' ')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int has_space_after_equal(char *equal)
+{
+	int i;
+	char quote;
 
 	i = 0;
-	while (env[i])
-	{
-		printf("declare -x %s\n", env[i]);
+	while (equal[i] != '=')
 		i++;
+	if (equal[i + 1] == ' ')
+	{
+		i++;
+		while (equal[i] == ' ')
+			i++;
+		if (equal[i] == '"' || equal[i] == '\'')
+		{
+			i++;
+			quote = equal[i];
+			while (equal[i] && equal[i] != quote)
+			{
+				if (equal[i] == ' ')
+					return (1);
+				i++;
+			}
+		}
+		else
+			return (2);
+	}
+	return (0);
+}
+
+#include "../includes/minishell.h"
+
+void sort_env_list(t_env **env)
+{
+    int     swapped;
+    t_env   *ptr;
+    t_env   *last = NULL;
+
+	swapped = 1;
+    if (!env || !*env)
+	{
+        return ;
+	}
+	while (swapped)
+	{
+        swapped = 0;
+        ptr = *env;
+        while (ptr->next != last)
+        {
+            if (ft_strcmp(ptr->key, ptr->next->key) > 0)
+            {
+                char *tmp_key = ptr->key;
+                char *tmp_value = ptr->value;
+                ptr->key = ptr->next->key;
+                ptr->value = ptr->next->value;
+                ptr->next->key = tmp_key;
+                ptr->next->value = tmp_value;
+
+                swapped = 1;
+            }
+            ptr = ptr->next;
+        }
+        last = ptr;
 	}
 }
 
-void	export_variable(char *arg, char ***env)
+void print_env_sorted(t_env *env)
 {
+    sort_env_list(&env);
+    while (env)
+    {
+        if (env->value)
+            printf("declare -x %s=\"%s\"\n", env->key, env->value);
+        else
+            printf("declare -x %s\n", env->key);
+        env = env->next;
+    }
+}
+
+void handle_export(char **args, t_env **env)
+{
+	int		i;
+	char	*equal;
 	char	*key;
 	char	*value;
-	int		i;
+	int		res;
 
 	i = 0;
-	key = ft_substr(arg, 0, ft_strchr(arg, '=') - arg);
-	value = ft_strdup(ft_strchr(arg, '=') + 1);
-	while ((*env)[i])
+	if (!args[i+1])
 	{
-		if (ft_strncmp((*env)[i], key, ft_strlen(key)) == 0
-			&& (*env)[i][ft_strlen(key)] == '=')
-		{
-			free((*env)[i]);
-			(*env)[i] = ft_strjoin_free(ft_strjoin(key, "="), value);
-			free(key);
-			free(value);
-			return ;
-		}
-		i++;
-	}
-	(*env) = ft_realloc_env(*env, key, value);
-	free(key);
-	free(value);
-}
-
-void	handle_export(char **args, char ***env)
-{
-	int		i;
-	char	*var_value;
-
-	if (!args[1])
-	{
-		print_env_vars(*env);
+		print_env_sorted(*env);
 		return ;
 	}
-	i = 1;
 	while (args[i])
 	{
-		if (ft_strchr(args[i], '='))
-			export_variable(args[i], env);
+		equal = ft_strchr(args[i], '=');
+		if (!equal)
+		{
+			if (!is_valid_identifier(args[i]))
+				printf("bash: export: `%s': not a valid identifier\n", args[i]);
+		}
 		else
 		{
-			var_value = getenv(args[i]);
-			if (var_value)
-				printf("declare -x %s=\"%s\"\n", args[i], var_value);
+			res = has_space_after_equal(args[i]);
+			if (res == 2)
+			{
+				key = ft_strdup(" ");
+			}
+			else if (has_space_before_equal(args[i]) || res == 1)
+			{
+				printf("bash1: export: `%s': not a valid identifier\n", args[i]);
+				i++;
+				continue;
+			}
+			else
+				key = ft_substr(args[i], 0, equal - args[i]);
+			value = ft_strdup(equal + 1);
+			add_or_update_env(env, key, value);
+			free(key);
+			free(value);
 		}
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/18 01:16:20 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/02/19 22:45:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_read(t_minishell *data)
 		data->tokens = tokenizer(input);
 		if (data->tokens)
 		{
-			expand_tokens(data->tokens, 0);
+			expand_tokens(data->tokens, data->last_exit_status, data->env);
 			data->cmds = parse_tokens(data->tokens);
 		}
 	}
@@ -90,7 +90,8 @@ void	ft_read(t_minishell *data)
 	free(input);
 }
 
-int	main(int ac, char **av, char **env)
+
+int	main(int ac, char **av, char **envp)
 {
 	t_minishell	data;
 
@@ -98,11 +99,12 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	if (ac != 1)
 		return (1);
-	data.env = ft_dup_env(env);
-    data.last_exit_status = 0; 
+	data.env = init_env_list(envp);  
+	data.last_exit_status = 0; 
 	while (1)
 	{
 		ft_read(&data);
 	}
+	free_env(data.env);
 	return (0);
 }
