@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/22 17:16:23 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:05:58 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ int has_space_after_equal(char *equal)
 	}
 	return (0);
 }
-
-#include "../includes/minishell.h"
 
 void sort_env_list(t_env **env)
 {
