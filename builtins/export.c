@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/20 20:39:43 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/22 17:16:23 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,54 @@ int has_space_after_equal(char *equal)
 	return (0);
 }
 
-void print_env(t_env *env)
+#include "../includes/minishell.h"
+
+void sort_env_list(t_env **env)
 {
-	while (env)
+    int     swapped;
+    t_env   *ptr;
+    t_env   *last = NULL;
+
+	swapped = 1;
+    if (!env || !*env)
 	{
-		if (env->value)
-			printf("declare -x %s=\"%s\"\n", env->key, env->value);
-		else
-			printf("declare -x %s\n", env->key);
-		env = env->next;
+        return ;
+	}
+	while (swapped)
+	{
+        swapped = 0;
+        ptr = *env;
+        while (ptr->next != last)
+        {
+            if (ft_strcmp(ptr->key, ptr->next->key) > 0)
+            {
+                char *tmp_key = ptr->key;
+                char *tmp_value = ptr->value;
+                ptr->key = ptr->next->key;
+                ptr->value = ptr->next->value;
+                ptr->next->key = tmp_key;
+                ptr->next->value = tmp_value;
+
+                swapped = 1;
+            }
+            ptr = ptr->next;
+        }
+        last = ptr;
 	}
 }
 
+void print_env_sorted(t_env *env)
+{
+    sort_env_list(&env);
+    while (env)
+    {
+        if (env->value)
+            printf("declare -x %s=\"%s\"\n", env->key, env->value);
+        else
+            printf("declare -x %s\n", env->key);
+        env = env->next;
+    }
+}
 
 void handle_export(char **args, t_env **env)
 {
@@ -94,7 +130,7 @@ void handle_export(char **args, t_env **env)
 	i = 0;
 	if (!args[i+1])
 	{
-		print_env(*env);
+		print_env_sorted(*env);
 		return ;
 	}
 	while (args[i])
