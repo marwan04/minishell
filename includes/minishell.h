@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/18 21:52:23 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/22 15:56:36 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,12 @@ void				handle_echo(char **args);
 
 // builtins/export.c
 void				handle_export(char **args, t_env **env);
+
+// builtins/pwd.c
+void				handle_pwd(void);
+
+// builtins/env.c
+void				handle_env(t_env *env);
 
 // builtins/env_utils.c
 t_env				*init_env_list(char **envp);
