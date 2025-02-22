@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/19 23:59:05 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/20 20:39:43 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,32 @@ int has_space_before_equal(char *arg)
 
 int has_space_after_equal(char *equal)
 {
-	return (equal && equal[1] == ' ');
+	int i;
+	char quote;
+
+	i = 0;
+	while (equal[i] != '=')
+		i++;
+	if (equal[i + 1] == ' ')
+	{
+		i++;
+		while (equal[i] == ' ')
+			i++;
+		if (equal[i] == '"' || equal[i] == '\'')
+		{
+			i++;
+			quote = equal[i];
+			while (equal[i] && equal[i] != quote)
+			{
+				if (equal[i] == ' ')
+					return (1);
+				i++;
+			}
+		}
+		else
+			return (2);
+	}
+	return (0);
 }
 
 void print_env(t_env *env)
@@ -52,7 +77,7 @@ void print_env(t_env *env)
 		if (env->value)
 			printf("declare -x %s=\"%s\"\n", env->key, env->value);
 		else
-			printf("declare -x %s\n", env->key); // ✅ Handle empty value case
+			printf("declare -x %s\n", env->key);
 		env = env->next;
 	}
 }
@@ -64,6 +89,7 @@ void handle_export(char **args, t_env **env)
 	char	*equal;
 	char	*key;
 	char	*value;
+	int		res;
 
 	i = 0;
 	if (!args[i+1])
@@ -81,18 +107,21 @@ void handle_export(char **args, t_env **env)
 		}
 		else
 		{
-			if (has_space_before_equal(args[i]) || has_space_after_equal(equal))
+			res = has_space_after_equal(args[i]);
+			if (res == 2)
 			{
-				printf("bash: export: `%s': not a valid identifier\n", args[i]);
+				key = ft_strdup(" ");
+			}
+			else if (has_space_before_equal(args[i]) || res == 1)
+			{
+				printf("bash1: export: `%s': not a valid identifier\n", args[i]);
 				i++;
 				continue;
 			}
-			key = ft_substr(args[i], 0, equal - args[i]);
-			value = ft_strdup(equal + 1);
-			if (!is_valid_identifier(key))
-				printf("bash: export: `%s': not a valid identifier\n", key);
 			else
-				add_or_update_env(env, key, value);
+				key = ft_substr(args[i], 0, equal - args[i]);
+			value = ft_strdup(equal + 1);
+			add_or_update_env(env, key, value);
 			free(key);
 			free(value);
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/08 22:20:37 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:57:31 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	ft_free(t_minishell *data, int flag, char *msg)
 		free_cmds(data);
 	if (flag)
 		ft_putendl_fd(msg, 2);
+	else
+		ft_putendl_fd(msg, 1);
 	exit(flag);
 }
 
