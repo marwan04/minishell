@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
+#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/22 15:57:18 by malrifai         ###   ########.fr        #
+#    Updated: 2025/02/23 11:07:19 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,12 +22,13 @@ RESET   	= \033[0m
 ARROW   	= ✔
 BUILTINS	=	
 
-EXEC		= exec/exec.c
+EXEC		= exec/exec.c exec/path.c
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
 PARSING		=
 
+BUILTINS	= builtins/echo.c builtins/export.c builtins/pwd.c builtins/env.c builtins/env_utils.c
 BUILTINS	= builtins/echo.c builtins/export.c builtins/pwd.c builtins/env.c builtins/env_utils.c
 
 SIGNAL		= signal/signal_handler.c

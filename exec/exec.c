@@ -3,19 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/22 15:57:53 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/23 11:07:57 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../includes/minishell.h"
 
 void	execute_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
-	
 	if (!cmds || !cmds->args)
+		return ;
+	if (ft_strcmp(cmds->args[0], "pwd") == 0)
+	{
+		handle_pwd();
+		*last_exit_status = 0;
+		return ;
+	}
+	if (ft_strcmp(cmds->args[0], "env") == 0)
+    {
+        handle_env(*env);
+        *last_exit_status = 0;
+        return ;
+    }
 		return ;
 	if (ft_strcmp(cmds->args[0], "pwd") == 0)
 	{

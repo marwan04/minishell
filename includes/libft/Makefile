@@ -15,6 +15,7 @@ SRC_FILES =     ft_atoi.c \
 		ft_bzero.c \
 		ft_calloc.c \
 		ft_isalnum.c \
+		ft_free_double_list.c \
 		ft_isalpha.c \
 		ft_isascii.c \
 		ft_isdigit.c \
