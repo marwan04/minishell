@@ -6,55 +6,66 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/22 19:58:52 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/23 20:39:51 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
+int count_equal(char *str)
+{
+	int count = 0;
+	int i = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+			count++;
+		i++;
+	}
+	return (count);
+}
 void handle_export(char **args, t_env **env)
 {
-	int		i;
 	char	*equal;
 	char	*key;
 	char	*value;
 	int		res;
 
-	i = 0;
-	if (!args[i+1])
+	if (!args[1])
 	{
 		print_env_sorted(*env);
 		return ;
 	}
-	while (args[i])
+	equal = ft_strchr(args[1], '=');
+	if (!equal)
 	{
-		equal = ft_strchr(args[i], '=');
-		if (!equal)
+		if (!is_valid_identifier(args[1]))
 		{
-			if (!is_valid_identifier(args[i]))
-				printf("bash: export: `%s': not a valid identifier\n", args[i]);
+			printf("bash: export: `%s': not a valid identifier\n", args[1]);
+			add_or_update_env(env, args[1], "");
+			return ;
 		}
-		else
+	}
+	else
+	{
+		res = has_space_after_equal(args[1]);
+		printf("res: %d\n", res);
+		key = ft_substr(args[1], 0, equal - args[1]);
+		if (has_space_before_equal(args[1]) || res == 1)
 		{
-			res = has_space_after_equal(args[i]);
-			printf("res: %d\n", res);
-			if (res == 2)
-			{
-				key = ft_strdup(" ");
-			}
-			else if (has_space_before_equal(args[i]) || res == 1)
-			{
-				printf("bash: export: `%s': not a valid identifier\n", args[i]);
-				i++;
-				continue;
-			}
-			else
-				key = ft_substr(args[i], 0, equal - args[i]);
-			value = ft_strdup(equal + 1);
-			add_or_update_env(env, key, value);
+			printf("bash: export: `%s': not a valid identifier\n", args[1]);
+			add_or_update_env(env, key, "");
 			free(key);
-			free(value);
+			return ;
 		}
-		i++;
+		if (res == 2)
+		{
+			add_or_update_env(env, key, "");
+			free(key);
+			return ;
+		}
+		value = ft_strdup(equal + 1);
+		add_or_update_env(env, key, value);
+		free(key);
+		free(value);
 	}
 }
