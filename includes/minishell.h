@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/22 15:56:36 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/23 11:02:42 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,5 +154,7 @@ char				*get_env_value(t_env *env, char *key);
 // exec/exec.c
 void				execute_cmds(t_cmd *cmds, int *last_exit_status,
 						t_env **env);
-
+						
+// exec/path.c
+char				*ft_get_path(char *s, t_env **envp);
 #endif
