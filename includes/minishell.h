@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 10:38:04 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:54:45 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 
 typedef enum e_token_type
 {
@@ -35,6 +36,7 @@ typedef struct s_cmd
 	char			**args;
 	char			*input;
 	char			*output;
+	int				has_redirection;
 	int				append;
 	int				pipe;
 	struct s_cmd	*next;
@@ -161,14 +163,16 @@ void				add_or_update_env(t_env **env, char *key, char *value);
 void				free_env(t_env *env);
 
 // exec/exec.c
-int 				ft_execute_without_pipes(t_cmd *cmds, int *last_exit_status, t_env **env);						
-void				execute_cmds(t_cmd *cmds, int *last_exit_status, t_env **env);
+int 				ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env);						
+void				execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env);
+void    			ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env);
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
 
 // exec/error_utilites.c
 void				close_on_exit(int *fds, int fd_count);
 void				ft_perror(char *msg, int errno);
+void    			ft_set_exit_status(int *ptr, int status);
 
 // exec/exec_utilites.c
 int 				initialize_execution_params(char ***full_cmd, char **full_path, char *args, t_env **env);

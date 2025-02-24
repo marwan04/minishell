@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/08 21:27:35 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:30:25 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_cmd	*new_cmd(void)
 	cmd->output = NULL;
 	cmd->append = 0;
 	cmd->pipe = 0;
+	cmd->has_redirection = 0;
 	cmd->next = NULL;
 	return (cmd);
 }

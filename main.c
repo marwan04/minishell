@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 10:33:22 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:49:38 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_read(t_minishell *data)
 		ft_free(data, 0, "exit");
 	}
 	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
-	ft_execute_without_pipes(data->cmds, &data->last_exit_status, &data->env);
+	ft_execute(data->cmds, &data->last_exit_status, &data->env);
 	print_tokens(data->tokens);
 	printf("\n");
 	print_commands(data->cmds);
