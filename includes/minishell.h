@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 10:20:41 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:38:04 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,18 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}					t_env;
-
 typedef struct s_minishell
 {
 	int		last_exit_status;
-	int		last_exit_status;
-	t_cmd	*cmds;
 	t_cmd	*cmds;
 	t_env	*env;
-	t_env	*env;
-	t_token	*tokens;
 	t_token	*tokens;
 }					t_minishell;
 
 // tokenizing/check.c
 int					check_quote(int *i, char *input, t_token **head);
-int					heck_redirections(int *i, char *input, t_token **head, char symbol[2]);
+int					check_redirections(int *i, char *input, t_token **head, char symbol[2]);
 int					handle_words(int *i, char *input, t_token **head);
-void				check_separator(int *i, char *input);
 void				check_separator(int *i, char *input);
 
 // tokenizing/cmd_utils.c
@@ -115,7 +103,6 @@ t_token				*last_token(t_token *token);
 t_token				*new_token(char *value, t_token_type type);
 void				add_token(t_token **head, char *value, t_token_type type);
 void				remove_last_token(t_token **head);
-void				remove_last_token(t_token **head);
 
 // tokenizing/tokenizer.c
 t_token				*tokenizer(char *input);
@@ -124,7 +111,6 @@ t_token				*tokenizer(char *input);
 char				*expand_tilde(char *token);
 char				*remove_quotes(char *input);
 void				expand_tokens(t_token *tokens, int last_exit_status, t_env *env);
-void				expand_tokens(t_token *tokens, int last_exit_status, t_env *env);
 
 // expander/utils.c
 char				*ft_strjoin_free(char *s1, char *s2);
@@ -132,8 +118,6 @@ char				*ft_strjoin_free(char *s1, char *s2);
 // expander/var_expand.c
 char				*expand_extract_var(t_expand *expand, char *token, int last_exit_status);
 char				*expand_replace_var(char *var_name, int preserve_spaces, t_env *env);
-char				*expand_replace_var(char *var_name, int preserve_spaces, t_env *env);
-char				*expand_variables(char *token, int last_exit_status, t_env *env);
 char				*expand_variables(char *token, int last_exit_status, t_env *env);
 void				expand_append_char(t_expand *expand, char c);
 void				expand_track_quotes(t_expand *expand, char c);
@@ -177,8 +161,8 @@ void				add_or_update_env(t_env **env, char *key, char *value);
 void				free_env(t_env *env);
 
 // exec/exec.c
+int 				ft_execute_without_pipes(t_cmd *cmds, int *last_exit_status, t_env **env);						
 void				execute_cmds(t_cmd *cmds, int *last_exit_status, t_env **env);
-						
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
 
