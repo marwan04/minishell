@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:22:11 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 10:09:30 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:54:04 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,12 @@ void	close_on_exit(int *fds, int fd_count)
 			close(fds[i]);
 		i++;
 	}
+}
+
+void    ft_set_exit_status(int  *ptr, int status)
+{
+    if (WIFEXITED(status))
+	    *ptr = WEXITSTATUS(status);
+    else 
+	    *ptr =  128 + WTERMSIG(status);
 }
