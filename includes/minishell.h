@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 10:19:48 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:20:41 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ typedef struct s_minishell
 }					t_minishell;
 
 // tokenizing/check.c
-int				check_quote(int *i, char *input, t_token **head);
-int				heck_redirections(int *i, char *input, t_token **head, char symbol[2]);
-int				handle_words(int *i, char *input, t_token **head);
+int					check_quote(int *i, char *input, t_token **head);
+int					heck_redirections(int *i, char *input, t_token **head, char symbol[2]);
+int					handle_words(int *i, char *input, t_token **head);
 void				check_separator(int *i, char *input);
 void				check_separator(int *i, char *input);
 
@@ -177,8 +177,7 @@ void				add_or_update_env(t_env **env, char *key, char *value);
 void				free_env(t_env *env);
 
 // exec/exec.c
-void				execute_cmds(t_cmd *cmds, int *last_exit_status,
-						t_env **env);
+void				execute_cmds(t_cmd *cmds, int *last_exit_status, t_env **env);
 						
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
