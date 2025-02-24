@@ -6,7 +6,7 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/23 11:07:19 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/02/24 10:08:50 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ RESET   	= \033[0m
 ARROW   	= ✔
 BUILTINS	=	
 
-EXEC		= exec/exec.c exec/path.c
+EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
