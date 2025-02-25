@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/19 22:49:49 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:07:23 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ char	*expand_tilde(char *token)
 	char	*home;
 	char	*expanded_token;
 
-	if (!token || token[0] != '~')
+	if (!token)
+		return (NULL);
+	if (token[0] != '~')
 		return (ft_strdup(token));
 	home = getenv("HOME");
 	if (!home)
@@ -25,6 +27,8 @@ char	*expand_tilde(char *token)
 	if (token[1] == '\0')
 		return (ft_strdup(home));
 	expanded_token = ft_strjoin(home, token + 1);
+	if (!expanded_token)
+		return (NULL);
 	return (expanded_token);
 }
 
@@ -59,16 +63,22 @@ void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
 	char	*expanded;
 	int		is_export;
-
+	char 	*temp;
+	
 	if (!tokens)
 		return;
 	is_export = (tokens && ft_strcmp(tokens->value, "export") == 0);
 	while (tokens)
 	{
-		expanded = expand_tilde(tokens->value);
-		expanded = expand_variables(expanded, last_exit_status, env);
+		temp = expand_tilde(tokens->value);
+		expanded = expand_variables(temp, last_exit_status, env);
+		free(temp);
 		if (!is_export || tokens == tokens->next)
-			expanded = remove_quotes(expanded);
+		{
+			temp = remove_quotes(expanded);
+			free(expanded);
+			expanded = temp;
+		}
 		if (expanded != tokens->value)
 		{
 			free(tokens->value);
