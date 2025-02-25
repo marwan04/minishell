@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 11:54:45 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/25 08:32:34 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,6 @@ void				ft_perror(char *msg, int errno);
 void    			ft_set_exit_status(int *ptr, int status);
 
 // exec/exec_utilites.c
-int 				initialize_execution_params(char ***full_cmd, char **full_path, char *args, t_env **env);
+int 				initialize_execution_params(char **full_path, char ***envp, char **args, t_env **env);
 
 #endif
