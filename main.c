@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 11:49:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/02/25 07:43:12 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ void	ft_read(t_minishell *data)
 	}
 	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
 	ft_execute(data->cmds, &data->last_exit_status, &data->env);
-	print_tokens(data->tokens);
-	printf("\n");
-	print_commands(data->cmds);
-	printf("You entered: %s\n", input);
+	// print_tokens(data->tokens);
+	// printf("\n");
+	// print_commands(data->cmds);
+	// printf("You entered: %s\n", input);
 	if (!ft_strcmp(input, "clear"))
 		printf("\033[H\033[2J");
 	free(input);
