@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/25 07:43:12 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:18:10 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,10 @@ void	ft_read(t_minishell *data)
 		free(input);
 		ft_free(data, 0, "exit");
 	}
+	execute_builtin_cmds(data->cmds, &data->last_exit_status, &data->env);
 	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
-	ft_execute(data->cmds, &data->last_exit_status, &data->env);
-	// print_tokens(data->tokens);
+	// ft_execute(data->cmds, &data->last_exit_status, &data->env);
+	print_tokens(data->tokens);
 	// printf("\n");
 	// print_commands(data->cmds);
 	// printf("You entered: %s\n", input);
@@ -90,7 +91,6 @@ void	ft_read(t_minishell *data)
 		printf("\033[H\033[2J");
 	free(input);
 }
-
 
 int	main(int ac, char **av, char **envp)
 {
@@ -100,8 +100,8 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	if (ac != 1)
 		return (1);
-	data.env = init_env_list(envp);  
-	data.last_exit_status = 0; 
+	data.env = init_env_list(envp);
+	data.last_exit_status = 0;
 	while (1)
 	{
 		ft_read(&data);

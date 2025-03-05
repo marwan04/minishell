@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/05 15:43:47 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:06:20 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ typedef struct s_minishell
 
 // tokenizing/check.c
 int					check_quote(int *i, char *input, t_token **head);
-int					check_redirections(int *i, char *input, t_token **head, char symbol[2]);
+int					check_redirections(int *i, char *input, t_token **head,
+						char symbol[2]);
 int					handle_words(int *i, char *input, t_token **head);
 void				check_separator(int *i, char *input);
 
@@ -112,15 +113,19 @@ t_token				*tokenizer(char *input);
 // expander/expand.c
 char				*expand_tilde(char *token);
 char				*remove_quotes(char *input);
-void				expand_tokens(t_token *tokens, int last_exit_status, t_env *env);
+void				expand_tokens(t_token *tokens,
+						int last_exit_status, t_env *env);
 
 // expander/utils.c
 char				*ft_strjoin_free(char *s1, char *s2);
 
 // expander/var_expand.c
-char				*expand_extract_var(t_expand *expand, char *token, int last_exit_status);
-char				*expand_replace_var(char *var_name, int preserve_spaces, t_env *env);
-char				*expand_variables(char *token, int last_exit_status, t_env *env);
+char				*expand_extract_var(t_expand *expand,
+						char *token, int last_exit_status);
+char				*expand_replace_var(char *var_name,
+						int preserve_spaces, t_env *env);
+char				*expand_variables(char *token,
+						int last_exit_status, t_env *env);
 void				expand_append_char(t_expand *expand, char c);
 void				expand_track_quotes(t_expand *expand, char c);
 
@@ -132,8 +137,19 @@ void				signals_handler(void);
 int					is_n_flag(char *arg);
 void				handle_echo(char **args);
 
-// builtins/export.c
+// builtins/export/export.c
 void				handle_export(char **args, t_env **env);
+
+// builtins/export/check.c
+int					is_valid_identifier(char *arg);
+int					has_space_after_equal(char *arg);
+int					has_space_before_equal(char *arg);
+
+// builtins/export/print_env.c
+void				print_env_sorted(t_env *env);
+
+// builtins/cd.c
+void				handle_cd(char **args, t_env **env);
 
 // builtins/pwd.c
 void				handle_pwd(void);
@@ -163,18 +179,21 @@ void				add_or_update_env(t_env **env, char *key, char *value);
 void				free_env(t_env *env);
 
 // exec/exec.c
-int 				ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env);						
-void				execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env);
-void    			ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env);
+int					ft_execute_command(t_cmd *cmds, int *last_exit_status,
+						t_env **env);						
+void				execute_builtin_cmds(t_cmd *cmds, int *last_exit_status,
+						t_env **env);
+void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env);
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
 
 // exec/error_utilites.c
 void				close_on_exit(int *fds, int fd_count);
 void				ft_perror(char *msg, int errno);
-void    			ft_set_exit_status(int *ptr, int status);
+void				ft_set_exit_status(int *ptr, int status);
 
 // exec/exec_utilites.c
-int 				initialize_execution_params(char **full_path, char ***envp, char **args, t_env **env);
+int					initialize_execution_params(char **full_path,
+						char ***envp, char **args, t_env **env);
 
 #endif

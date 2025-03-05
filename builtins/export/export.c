@@ -6,15 +6,19 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/23 20:39:51 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:16:18 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-int count_equal(char *str)
+
+int	count_equal(char *str)
 {
-	int count = 0;
-	int i = 0;
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
 	while (str[i])
 	{
 		if (str[i] == '=')
@@ -23,7 +27,8 @@ int count_equal(char *str)
 	}
 	return (count);
 }
-void handle_export(char **args, t_env **env)
+
+void	handle_export(char **args, t_env **env)
 {
 	char	*equal;
 	char	*key;
