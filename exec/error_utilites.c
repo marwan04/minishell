@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_utilites.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:22:11 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/24 11:54:04 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:28:20 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ void	close_on_exit(int *fds, int fd_count)
 	}
 }
 
-void    ft_set_exit_status(int  *ptr, int status)
+void	ft_set_exit_status(int *ptr, int status)
 {
-    if (WIFEXITED(status))
-	    *ptr = WEXITSTATUS(status);
-    else 
-	    *ptr =  128 + WTERMSIG(status);
+	if (WIFEXITED(status))
+		*ptr = WEXITSTATUS(status);
+	else
+		*ptr = 128 + WTERMSIG(status);
 }

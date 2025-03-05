@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 08:39:20 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/23 11:00:49 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:26:16 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,16 @@ static char	*ft_build_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-static void		ft_free_both(char **lst1, char **lst2)
+static void	ft_free_both(char **lst1, char **lst2)
 {
 	ft_free_double_list(lst1);
-	ft_free_double_list(lst2);	
+	ft_free_double_list(lst2);
 }
 
 char	*ft_get_path(char *s, t_env **envp)
 {
 	char	**paths;
-	char 	**env;
+	char	**env;
 	char	*full_path;
 	int		i;
 

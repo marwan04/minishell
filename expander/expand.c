@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/25 10:07:23 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:10:30 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,10 @@ void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
 	char	*expanded;
 	int		is_export;
-	char 	*temp;
-	
+	char	*temp;
+
 	if (!tokens)
-		return;
+		return ;
 	is_export = (tokens && ft_strcmp(tokens->value, "export") == 0);
 	while (tokens)
 	{

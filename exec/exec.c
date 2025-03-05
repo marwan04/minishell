@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/25 08:33:56 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:23:13 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../includes/minishell.h"
 
@@ -24,57 +23,59 @@ void	execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
 	if (ft_strcmp(cmds->args[0], "pwd") == 0)
 		handle_pwd();
 	else if (ft_strcmp(cmds->args[0], "env") == 0)
-        handle_env(*env);
+		handle_env(*env);
 	else if (ft_strcmp(cmds->args[0], "pwd") == 0)
 		handle_pwd();
 	else if (ft_strcmp(cmds->args[0], "env") == 0)
-        handle_env(*env);
+		handle_env(*env);
 	else if (ft_strcmp(cmds->args[0], "echo") == 0)
 		handle_echo(cmds->args);
 	else if (ft_strcmp(cmds->args[0], "export") == 0)
 		handle_export(cmds->args, env);
+	else if (ft_strcmp(cmds->args[0], "cd") == 0)
+		handle_cd(cmds->args, env);
 	return ;
 }
 
-int ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
+int	ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
-    char *full_path;
-    char **envp;
+	char	*full_path;
+	char	**envp;
 
-    if (initialize_execution_params(&full_path, &envp ,cmds->args, env) == -1)
-        return (-1);
-    execve(full_path, cmds->args, envp);
-    ft_perror("Execve Failed", 5);
-    free(full_path);
-    ft_free_double_list(envp);
+	if (initialize_execution_params(&full_path, &envp, cmds->args, env) == -1)
+		return (-1);
+	execve(full_path, cmds->args, envp);
+	ft_perror("Execve Failed", 5);
+	free(full_path);
+	ft_free_double_list(envp);
 	*last_exit_status = -1;
-    return (-1);
+	return (-1);
 }
 
-void    ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
+void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
-    pid_t  pidId;
-    int    status;
-    
-    // if (cmds->pipe != 0)
-    // {
-    //     ft_execute_pipes(&cmds, &last_exit_status, &env); // need to be created
-    //     return ;
-    // }
-    pidId = fork();
-    if (pidId == -1)
-    {
-        *last_exit_status = -1;
-        return ;
-    }
-    if (pidId == 0)
-    {
-        // if (cmds->has_redirection)
-        //     ft_execute_with_redirections();   // need to be created 
-        // else
-            ft_execute_command(cmds, last_exit_status, env);
-    }
-    waitpid(pidId, &status, 0);
-    ft_set_exit_status(last_exit_status, status);
-    return ;
+	pid_t	pid_id;
+	int		status;
+
+// if (cmds->pipe != 0)
+// {
+//     ft_execute_pipes(&cmds, &last_exit_status, &env); // need to be created
+//     return ;
+// }
+	pid_id = fork();
+	if (pid_id == -1)
+	{
+		*last_exit_status = -1;
+		return ;
+	}
+	if (pid_id == 0)
+	{
+// if (cmds->has_redirection)
+//     ft_execute_with_redirections();   // need to be created 
+// else
+		ft_execute_command(cmds, last_exit_status, env);
+	}
+	waitpid(pid_id, &status, 0);
+	ft_set_exit_status(last_exit_status, status);
+	return ;
 }

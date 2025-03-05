@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:19:03 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/22 15:41:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:32:46 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ int	handle_export_tokenization(int *i, char *input, t_token **head)
 	return (0);
 }
 
+void	skip_whitespace(char *input, int *i)
+{
+	while (input[*i] == ' ' || input[*i] == '\t')
+		(*i)++;
+}
+
 t_token	*tokenizer(char *input)
 {
 	t_token	*head;
@@ -38,8 +44,7 @@ t_token	*tokenizer(char *input)
 	i = 0;
 	while (input[i])
 	{
-		while (input[i] == ' ' || input[i] == '\t')
-			i++;
+		skip_whitespace(input, &i);
 		if (handle_export_tokenization(&i, input, &head))
 			break ;
 		if (input[i] == '|')

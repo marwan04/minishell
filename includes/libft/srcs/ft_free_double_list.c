@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_double_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 09:46:32 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/23 10:00:07 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:07:16 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
