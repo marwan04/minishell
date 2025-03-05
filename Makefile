@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/22 19:19:35 by malrifai         ###   ########.fr        #
+#    Updated: 2025/03/05 15:43:13 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,14 @@ RESET   	= \033[0m
 ARROW   	= ✔
 BUILTINS	=	
 
-EXEC		= exec/exec.c
+EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
 PARSING		=
 
-BUILTINS	= builtins/echo.c builtins/export/export.c builtins/export/print_env.c builtins/export/check.c builtins/pwd.c builtins/env.c builtins/env_utils.c
+BUILTINS	= builtins/echo.c builtins/export.c builtins/pwd.c builtins/env.c builtins/env_utils.c
+BUILTINS	= builtins/echo.c builtins/export.c builtins/pwd.c builtins/env.c builtins/env_utils.c
 
 SIGNAL		= signal/signal_handler.c
 

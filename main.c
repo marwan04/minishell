@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/02/19 22:45:52 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/02/25 07:43:12 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,12 @@ void	ft_read(t_minishell *data)
 		free(input);
 		ft_free(data, 0, "exit");
 	}
-	execute_cmds(data->cmds, &data->last_exit_status, &data->env);
-	print_tokens(data->tokens);
-	printf("\n");
-	print_commands(data->cmds);
-	printf("You entered: %s\n", input);
+	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
+	ft_execute(data->cmds, &data->last_exit_status, &data->env);
+	// print_tokens(data->tokens);
+	// printf("\n");
+	// print_commands(data->cmds);
+	// printf("You entered: %s\n", input);
 	if (!ft_strcmp(input, "clear"))
 		printf("\033[H\033[2J");
 	free(input);
