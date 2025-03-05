@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
+#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/02/24 10:08:50 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/03/05 15:43:13 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
