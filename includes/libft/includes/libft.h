@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 15:07:36 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/05 23:08:07 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:55:42 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char		*ft_strrchr(const char *s, int c);
 char		*ft_strdup(const char *src);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
+char		*ft_strjoin_var(int count, ...);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_strtrim(char const *s1, char const *set);
 char		**ft_split(char const *s, char c);
