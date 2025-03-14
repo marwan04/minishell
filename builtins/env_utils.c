@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:49:41 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/19 17:58:00 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:48:39 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ char	**build_env(t_env *env)
 	int		size;
 	t_env	*tmp;
 	char	**env_array;
-	char	*entry;
 
 	size = 0;
 	tmp = env;
@@ -109,9 +108,7 @@ char	**build_env(t_env *env)
 	size = 0;
 	while (tmp)
 	{
-		entry = ft_strjoin(tmp->key, "=");
-		env_array[size] = ft_strjoin(entry, tmp->value);
-		free(entry);
+		env_array[size] = ft_strjoin_var(3, tmp->key, "=", tmp->value);
 		size++;
 		tmp = tmp->next;
 	}
