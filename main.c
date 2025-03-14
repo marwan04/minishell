@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/05 23:18:10 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:18:46 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,16 @@ void	print_commands(t_cmd *cmds)
 	}
 }
 
+void ft_exit(t_minishell *data, char *input)
+{
+	free(input);
+	if (!data->cmds->args[1])
+		data->last_exit_status = 0;
+	else
+		data->last_exit_status = ft_atoi(data->cmds->args[1]);
+	ft_free(data, 0, "exit");	
+}
+
 void	ft_read(t_minishell *data)
 {
 	char	*input;
@@ -76,10 +86,7 @@ void	ft_read(t_minishell *data)
 		}
 	}
 	if (!ft_strcmp(input, "exit"))
-	{
-		free(input);
-		ft_free(data, 0, "exit");
-	}
+		ft_exit(data, input);
 	execute_builtin_cmds(data->cmds, &data->last_exit_status, &data->env);
 	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
 	// ft_execute(data->cmds, &data->last_exit_status, &data->env);
