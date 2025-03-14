@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:19:03 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/05 23:32:46 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:48:58 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ t_token	*tokenizer(char *input)
 	while (input[i])
 	{
 		skip_whitespace(input, &i);
-		if (handle_export_tokenization(&i, input, &head))
-			break ;
 		if (input[i] == '|')
 		{
 			add_token(&head, "|", PIPE);

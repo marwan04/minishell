@@ -42,6 +42,7 @@ SRC_FILES =     ft_atoi.c \
 		ft_strcmp.c \
 		ft_strdup.c \
 		ft_striteri.c \
+		ft_strjoin_var.c \
 		ft_strjoin.c \
 		ft_strlcat.c \
 		ft_strlcpy.c \

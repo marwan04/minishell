@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/05 23:23:13 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:06:58 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
 		handle_export(cmds->args, env);
 	else if (ft_strcmp(cmds->args[0], "cd") == 0)
 		handle_cd(cmds->args, env);
+	else if (ft_strcmp(cmds->args[0], "unset") == 0)
+		handle_unset(cmds->args, env);
 	return ;
 }
 
