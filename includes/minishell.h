@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/14 15:02:48 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:30:22 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int					is_n_flag(char *arg);
 void				handle_echo(char **args);
 
 // builtins/unset.c
-void handle_unset(char **args, t_env **env);
+void				handle_unset(char **args, t_env **env);
 
 // builtins/export/export.c
 void				handle_export(char **args, t_env **env);

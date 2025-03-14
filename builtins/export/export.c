@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/12 18:25:00 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:42:19 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@
 // 	}
 // }
 
-
 int	is_valid_identifier(char *key)
 {
 	int	i;
@@ -92,11 +91,38 @@ int	is_valid_identifier(char *key)
 	return (1);
 }
 
+int	set_env(char **args, t_env **env, char *equal, int i)
+{
+	char	*key;
+	char	*value;
+
+	if (!equal)
+	{
+		if (!is_valid_identifier(args[i]))
+		{
+			printf("bash: export: `%s': not a valid identifier\n", args[i]);
+			return (1);
+		}
+	}
+	else
+	{
+		key = ft_substr(args[i], 0, equal - args[i]);
+		value = ft_strdup(equal + 1);
+		if (!is_valid_identifier(key))
+		{
+			printf("bash: export: `%s': not a valid identifier\n", key);
+			return (1);
+		}
+		add_or_update_env(env, key, value);
+		free(key);
+		free(value);
+	}
+	return (0);
+}
+
 void	handle_export(char **args, t_env **env)
 {
 	char	*equal;
-	char	*key;
-	char	*value;
 	int		i;
 
 	i = 0;
@@ -108,27 +134,8 @@ void	handle_export(char **args, t_env **env)
 	while (args[i])
 	{
 		equal = ft_strchr(args[i], '=');
-		if (!equal)
-		{
-			if (!is_valid_identifier(args[i]))
-			{
-				printf("bash: export: `%s': not a valid identifier\n", args[i]);
-				return ;
-			}
-		}
-		else 
-		{
-			key = ft_substr(args[i], 0, equal - args[i]);
-			value = ft_strdup(equal + 1);
-			if (!is_valid_identifier(key))
-			{
-				printf("bash: export: `%s': not a valid identifier\n", key);
-				return ;
-			}
-			add_or_update_env(env, key, value);
-			free(key);
-			free(value);
-		}
+		if (set_env(args, env, equal, i))
+			return ;
 		i++;
 	}
 }
