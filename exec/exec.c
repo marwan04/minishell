@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/19 20:48:27 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/24 08:22:38 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
 	return ;
 }
 
-int	ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
+int		ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
 	char	*full_path;
 	char	**envp;
@@ -46,7 +46,7 @@ int	ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
 	ft_perror("Execve Failed", 5);
 	free(full_path);
 	ft_free_double_list(envp);
-	*last_exit_status = -1;
+	*last_exit_status = 127;
 	return (-1);
 }
 
@@ -71,7 +71,8 @@ void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
 // if (cmds->has_redirection)
 //     ft_execute_with_redirections();   // need to be created 
 // else
-		ft_execute_command(cmds, last_exit_status, env);
+		if (ft_execute_command(cmds, last_exit_status, env) == -1)
+			return ;
 	}
 	waitpid(pid_id, &status, 0);
 	ft_set_exit_status(last_exit_status, status);

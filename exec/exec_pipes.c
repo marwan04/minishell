@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_double_list.c                              :+:      :+:    :+:   */
+/*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/23 09:46:32 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/24 08:33:28 by eaqrabaw         ###   ########.fr       */
+/*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
+/*   Updated: 2025/03/24 08:11:00 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "../includes/minishell.h"
 
-/**
- * Frees a double list (a list of strings).
- * 
- * The function will loop through the list and free each string, then
- * free the list itself.
- * 
- * If the list is NULL, the function will simply return.
- * 
- * @param lst The double list to be freed.
- */
-void	ft_free_double_list(char **lst)
+void  	ft_exec_cmd1()
 {
-	int	i;
+	
+}
 
-	if (!lst)
-		return ;
-	i = 0;
-	while (lst[i])
+void  	ft_exec_cmd2()
+{
+	
+}
+
+void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
+{
+	int 	pipefd[2];
+	int		status;
+	
+	if (pipe(pipefd) == -1)
 	{
-		free(lst[i]);
-		i++;
+		*last_exit_status = -1;
+		return ;
 	}
-	free(lst);
+	
 }
