@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 08:39:20 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/05 23:26:16 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:09:50 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,23 @@ static char	*ft_get_path_from_env(char **env)
 	return (NULL);
 }
 
-static char	**ft_split_path(char **env)
+static char	**ft_split_path(t_env **envp)
 {
+	char	**env;
 	char	*path;
 	char	**splitted;
 
+	env = build_env(*(envp));
+	if (!env)
+		return (NULL);
 	path = ft_get_path_from_env(env);
 	if (!path)
+	{
+		ft_free_double_list(env);
 		return (NULL);
+	}
 	splitted = ft_split(path, ':');
+	ft_free_double_list(env);
 	if (!splitted || !splitted[0])
 	{
 		ft_free_double_list(splitted);
@@ -58,37 +66,30 @@ static char	*ft_build_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-static void	ft_free_both(char **lst1, char **lst2)
-{
-	ft_free_double_list(lst1);
-	ft_free_double_list(lst2);
-}
-
-char	*ft_get_path(char *s, t_env **envp)
+char	*ft_get_path(char *cmd, t_env **envp)
 {
 	char	**paths;
-	char	**env;
 	char	*full_path;
 	int		i;
 
-	i = 0;
-	env = build_env(*(envp));
-	if (!env)
+	if (!cmd)
 		return (NULL);
-	paths = ft_split_path(env);
+	paths = ft_split_path(envp);
 	if (!paths)
 		return (NULL);
-	while (paths[i])
+	i = -1;
+	while (paths[++i])
 	{
-		full_path = ft_build_path(paths[i], s); // this have to be changed ...
+		full_path = ft_build_path(paths[i], cmd);
+		if (!full_path)
+			continue;
 		if (access(full_path, X_OK) == 0)
 		{
-			ft_free_both(paths, env);
+			ft_free_double_list(paths);
 			return (full_path);
 		}
 		free(full_path);
-		i++;
 	}
-	ft_free_both(paths, env);
+	ft_free_double_list(paths);
 	return (NULL);
 }
