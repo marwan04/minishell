@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/24 09:10:57 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/29 15:50:04 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	ft_read(t_minishell *data)
 	}
 	if (!ft_strcmp(input, "exit"))
 		ft_exit(data, input);
-	//execute_builtin_cmds(data->cmds, &data->last_exit_status, &data->env);
+	// execute_builtin_cmds(data->cmds, &data->last_exit_status, &data->env);
 	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
 	ft_execute(data->cmds, &data->last_exit_status, &data->env);
 	print_tokens(data->tokens);
