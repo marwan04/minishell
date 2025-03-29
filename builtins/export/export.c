@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/14 15:42:19 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:47:31 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,11 @@ int	set_env(char **args, t_env **env, char *equal, int i)
 	else
 	{
 		key = ft_substr(args[i], 0, equal - args[i]);
+		if (key == NULL)
+			exit(1);
 		value = ft_strdup(equal + 1);
+		if (value == NULL)
+			exit(1);
 		if (!is_valid_identifier(key))
 		{
 			printf("bash: export: `%s': not a valid identifier\n", key);
@@ -134,6 +138,8 @@ void	handle_export(char **args, t_env **env)
 	while (args[i])
 	{
 		equal = ft_strchr(args[i], '=');
+		if (equal == NULL)
+			exit(0);
 		if (set_env(args, env, equal, i))
 			return ;
 		i++;

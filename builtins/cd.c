@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 22:12:06 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/05 23:39:06 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:47:17 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	update_pwd_env(t_env **env)
 
 	oldpwd = get_env_value(*env, "PWD");
 	newpwd = getcwd(NULL, 0);
-	if (oldpwd)
-		add_or_update_env(env, "OLDPWD", oldpwd);
-	if (newpwd)
-		add_or_update_env(env, "PWD", newpwd);
+	if (!newpwd || !oldpwd)
+		exit(0);
+	add_or_update_env(env, "OLDPWD", oldpwd);
+	add_or_update_env(env, "PWD", newpwd);
 	free(newpwd);
 }
 
