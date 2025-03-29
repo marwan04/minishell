@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:51:48 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/18 21:53:17 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:04:20 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,36 @@ void	expand_track_quotes(t_expand *expand, char c)
 char	*expand_extract_var(t_expand *expand, char *token, int last_exit_status)
 {
 	expand->start = ++expand->i;
+	expand->skip_env_lookup = 0;
 	if (token[expand->start] == '?')
 	{
 		expand->exit_status = ft_itoa(last_exit_status);
 		expand->i++;
 		return (expand->exit_status);
 	}
-	while (token[expand->i] && (ft_isalnum(token[expand->i]) \
-		|| token[expand->i] == '_'))
+	if (token[expand->start] == '0')
+	{
 		expand->i++;
-	return (ft_substr(token, expand->start, expand->i - expand->start));
+		expand->skip_env_lookup = 1;
+		return ft_strdup("minishell");
+	}
+	if (ft_isdigit(token[expand->start]) && token[expand->start] != '0')
+	{
+		expand->start++;
+		expand->i = expand->start;
+		while (token[expand->i] && (ft_isalnum(token[expand->i]) || token[expand->i] == '_'))
+			expand->i++;
+		expand->skip_env_lookup = 1;
+		if (expand->i > expand->start)
+			return ft_substr(token, expand->start, expand->i - expand->start);
+		else
+			return ft_strdup("");
+	}
+	while (token[expand->i] && (ft_isalnum(token[expand->i]) || token[expand->i] == '_'))
+		expand->i++;
+	return ft_substr(token, expand->start, expand->i - expand->start);
 }
+
 
 /* This function for the following
 1- Retrieves the variable value using getenv().
@@ -110,21 +129,23 @@ char	*expand_variables(char *token, int last_exit_status, t_env *env)
 
 	if (!token || !ft_strchr(token, '$'))
 		return (ft_strdup(token));
-	exp.quote = 0;
-	exp.preserve_spaces = 0;
+	ft_bzero(&exp, sizeof(t_expand));
 	exp.expanded = ft_strdup("");
-	exp.i = 0;
 	while (token[exp.i])
 	{
 		expand_track_quotes(&exp, token[exp.i]);
 		if (token[exp.i] == '$' && exp.quote != '\'')
 		{
 			exp.var_name = expand_extract_var(&exp, token, last_exit_status);
-			exp.var_value = expand_replace_var(exp.var_name, \
-				exp.preserve_spaces, env);
-			exp.expanded = ft_strjoin_free(exp.expanded, exp.var_value);
+			if (exp.skip_env_lookup)
+				exp.expanded = ft_strdup(exp.var_name);
+			else
+			{
+				exp.var_value = expand_replace_var(exp.var_name, exp.preserve_spaces, env);
+				exp.expanded = ft_strjoin_free(exp.expanded, exp.var_value);
+				free(exp.var_value);
+			}
 			free(exp.var_name);
-			free(exp.var_value);
 		}
 		else
 			expand_append_char(&exp, token[exp.i++]);

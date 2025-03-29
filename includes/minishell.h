@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/14 15:30:22 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/29 17:19:14 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ typedef struct s_expand
 	int				i;
 	int				preserve_spaces;
 	int				start;
+	int				skip_env_lookup;
 }					t_expand;
+
 
 typedef struct s_token
 {
