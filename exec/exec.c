@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/24 08:22:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/03/29 15:49:57 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	is_builtin(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	return (
+		ft_strcmp(cmd, "cd") == 0 ||
+		ft_strcmp(cmd, "echo") == 0 ||
+		ft_strcmp(cmd, "pwd") == 0 ||
+		ft_strcmp(cmd, "export") == 0 ||
+		ft_strcmp(cmd, "unset") == 0 ||
+		ft_strcmp(cmd, "env") == 0 ||
+		ft_strcmp(cmd, "exit") == 0
+	);
+}
 
 void	execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
@@ -60,6 +75,12 @@ void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
 //     ft_execute_pipes(&cmds, &last_exit_status, &env); // need to be created
 //     return ;
 // }
+	if (is_builtin(cmds->args[0]) && cmds->pipe == 0)
+	{
+		// 👈 Parent process executes built-in if no pipe
+		execute_builtin_cmds(cmds, last_exit_status, env);
+		return ;
+	}
 	pid_id = fork();
 	if (pid_id == -1)
 	{
