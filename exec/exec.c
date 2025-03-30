@@ -6,26 +6,11 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/29 15:49:57 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/30 15:29:32 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	is_builtin(char *cmd)
-{
-	if (!cmd)
-		return (0);
-	return (
-		ft_strcmp(cmd, "cd") == 0 ||
-		ft_strcmp(cmd, "echo") == 0 ||
-		ft_strcmp(cmd, "pwd") == 0 ||
-		ft_strcmp(cmd, "export") == 0 ||
-		ft_strcmp(cmd, "unset") == 0 ||
-		ft_strcmp(cmd, "env") == 0 ||
-		ft_strcmp(cmd, "exit") == 0
-	);
-}
 
 void	execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
@@ -70,32 +55,36 @@ void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
 	pid_t	pid_id;
 	int		status;
 
-// if (cmds->pipe != 0)
-// {
-//     ft_execute_pipes(&cmds, &last_exit_status, &env); // need to be created
-//     return ;
-// }
-	if (is_builtin(cmds->args[0]) && cmds->pipe == 0)
+	// ✅ If there's a pipe, use pipe logic instead of regular fork/exec
+	// printf("cmds->pipe %d\n", cmds->next->pipe);
+	printf("CMD IN EXECUTE\n");
+	print_commands(cmds);
+	if (cmds->next != NULL)
+		if (cmds->next->pipe != 0)
+		{
+			// printf("TEST PRINT \n");
+			exec_pipes(cmds, last_exit_status, env);
+			return;
+		}
+	// ✅ Execute builtins without forking
+	if (is_builtin(cmds->args[0]))
 	{
-		// 👈 Parent process executes built-in if no pipe
 		execute_builtin_cmds(cmds, last_exit_status, env);
-		return ;
+		return;
 	}
 	pid_id = fork();
 	if (pid_id == -1)
 	{
 		*last_exit_status = -1;
-		return ;
+		return;
 	}
 	if (pid_id == 0)
 	{
-// if (cmds->has_redirection)
-//     ft_execute_with_redirections();   // need to be created 
-// else
+		// 🛠️ Future redirection handling can go here
+		// ✅ Execute external command
 		if (ft_execute_command(cmds, last_exit_status, env) == -1)
-			return ;
+			return;
 	}
 	waitpid(pid_id, &status, 0);
 	ft_set_exit_status(last_exit_status, status);
-	return ;
 }

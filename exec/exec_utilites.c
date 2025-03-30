@@ -6,11 +6,26 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:07:13 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/05 23:24:23 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/30 14:38:09 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	is_builtin(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	return (
+		ft_strcmp(cmd, "cd") == 0 ||
+		ft_strcmp(cmd, "echo") == 0 ||
+		ft_strcmp(cmd, "pwd") == 0 ||
+		ft_strcmp(cmd, "export") == 0 ||
+		ft_strcmp(cmd, "unset") == 0 ||
+		ft_strcmp(cmd, "env") == 0 ||
+		ft_strcmp(cmd, "exit") == 0
+	);
+}
 
 int	initialize_execution_params(char **full_path, char ***envp,
 	char **args, t_env **env)

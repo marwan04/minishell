@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/30 13:58:39 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/30 15:04:03 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,10 @@ void	ft_read(t_minishell *data)
 	}
 	if (!ft_strcmp(data->cmds->args[0], "exit"))
 		ft_exit(data);
-	// execute_builtin_cmds(data->cmds, &data->last_exit_status, &data->env);
-	//execute_cmds(data->cmds, &data->last_exit_status, &data->env);
+	// print_commands(data->cmds);
 	ft_execute(data->cmds, &data->last_exit_status, &data->env);
 	print_tokens(data->tokens);
 	// printf("\n");
-	// print_commands(data->cmds);
 	// printf("You entered: %s\n", input);
 	if (!ft_strcmp(input, "clear"))
 		printf("\033[H\033[2J");
