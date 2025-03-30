@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/30 15:29:32 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:05:27 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
 
 	// ✅ If there's a pipe, use pipe logic instead of regular fork/exec
 	// printf("cmds->pipe %d\n", cmds->next->pipe);
-	printf("CMD IN EXECUTE\n");
-	print_commands(cmds);
+	// printf("CMD IN EXECUTE\n");
+	// print_commands(cmds);
 	if (cmds->next != NULL)
 		if (cmds->next->pipe != 0)
 		{
