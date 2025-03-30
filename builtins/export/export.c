@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/30 15:30:24 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/30 17:40:09 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ int	is_valid_identifier(char *key)
 {
 	int	i;
 
-	i = 0;
 	if (!key || !ft_isalpha(key[0]) || key[0] == '=')
 		return (0);
+	i = 0;
 	while (key[i])
 	{
 		if (!ft_isalnum(key[i]) && key[i] != '_')
@@ -107,14 +107,21 @@ int	set_env(char **args, t_env **env, char *equal, int i)
 	else
 	{
 		key = ft_substr(args[i], 0, equal - args[i]);
-		if (key == NULL)
-			exit(1);
 		value = ft_strdup(equal + 1);
-		if (value == NULL)
-			exit(1);
+		if (!key || !value)
+		{
+			if (key)
+				free(key);
+			if (value)
+				free(value);
+			printf("bash: export: memory allocation failed\n");
+			return (1);
+		}
 		if (!is_valid_identifier(key))
 		{
 			printf("bash: export: `%s': not a valid identifier\n", key);
+			free(key);
+			free(value);
 			return (1);
 		}
 		add_or_update_env(env, key, value);
@@ -129,17 +136,20 @@ void	handle_export(char **args, t_env **env)
 	char	*equal;
 	int		i;
 
-	i = 0;
 	if (!args[1])
 	{
 		print_env_sorted(*env);
 		return ;
 	}
+	i = 1;
 	while (args[i])
 	{
 		equal = ft_strchr(args[i], '=');
 		if (set_env(args, env, equal, i))
-			return ;
+		{
+			i++;
+			continue;
+		}
 		i++;
 	}
 }
