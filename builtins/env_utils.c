@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:49:41 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/13 15:48:39 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:22:38 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,17 @@ void	free_env(t_env *env)
 
 t_env	*init_env_list(char **envp)
 {
-	t_env	*head;
+	t_env	*head = NULL;
 	t_env	*new_node;
 	char	*equal;
 	int		i;
 
 	i = 0;
-	head = NULL;
 	while (envp[i])
 	{
 		new_node = malloc(sizeof(t_env));
+		if (!new_node)
+			return (free_env(head), NULL);
 		equal = ft_strchr(envp[i], '=');
 		if (equal)
 		{
@@ -59,6 +60,14 @@ t_env	*init_env_list(char **envp)
 		{
 			new_node->key = ft_strdup(envp[i]);
 			new_node->value = NULL;
+		}
+		if (!new_node->key || (equal && !new_node->value))
+		{
+			if (new_node->key) free(new_node->key);
+			if (new_node->value) free(new_node->value);
+			free(new_node);
+			free_env(head);
+			return (NULL);
 		}
 		new_node->next = head;
 		head = new_node;
@@ -77,15 +86,30 @@ void	add_or_update_env(t_env **env, char *key, char *value)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
+			char *new_val = ft_strdup(value);
+			if (!new_val)
+			{
+				perror("malloc");
+				return ;
+			}
 			free(tmp->value);
-			tmp->value = ft_strdup(value);
+			tmp->value = new_val;
 			return ;
 		}
 		tmp = tmp->next;
 	}
 	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return ;
 	new_node->key = ft_strdup(key);
 	new_node->value = ft_strdup(value);
+	if (!new_node->key || !new_node->value)
+	{
+		free(new_node->key);
+		free(new_node->value);
+		free(new_node);
+		return ;
+	}
 	new_node->next = *env;
 	*env = new_node;
 }
@@ -104,11 +128,20 @@ char	**build_env(t_env *env)
 		tmp = tmp->next;
 	}
 	env_array = malloc(sizeof(char *) * (size + 1));
+	if (!env_array)
+		return (NULL);
 	tmp = env;
 	size = 0;
 	while (tmp)
 	{
 		env_array[size] = ft_strjoin_var(3, tmp->key, "=", tmp->value);
+		if (!env_array[size])
+		{
+			while (size--)
+				free(env_array[size]);
+			free(env_array);
+			return (NULL);
+		}
 		size++;
 		tmp = tmp->next;
 	}
