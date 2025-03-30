@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/03/14 15:01:46 by malrifai         ###   ########.fr        #
+#    Updated: 2025/03/30 14:37:35 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ RESET   	= \033[0m
 ARROW   	= ✔
 BUILTINS	=	
 
-EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c
+EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
