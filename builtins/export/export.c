@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/16 15:47:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/03/30 15:30:24 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,6 @@ void	handle_export(char **args, t_env **env)
 	while (args[i])
 	{
 		equal = ft_strchr(args[i], '=');
-		if (equal == NULL)
-			exit(0);
 		if (set_env(args, env, equal, i))
 			return ;
 		i++;
