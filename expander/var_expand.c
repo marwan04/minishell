@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:51:48 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/29 18:04:20 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/01 18:22:08 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*expand_extract_var(t_expand *expand, char *token, int last_exit_status)
 	{
 		expand->i++;
 		expand->skip_env_lookup = 1;
-		return ft_strdup("minishell");
+		return (ft_strdup("minishell"));
 	}
 	if (ft_isdigit(token[expand->start]) && token[expand->start] != '0')
 	{
@@ -60,13 +60,13 @@ char	*expand_extract_var(t_expand *expand, char *token, int last_exit_status)
 			expand->i++;
 		expand->skip_env_lookup = 1;
 		if (expand->i > expand->start)
-			return ft_substr(token, expand->start, expand->i - expand->start);
+			return (ft_substr(token, expand->start, expand->i - expand->start));
 		else
-			return ft_strdup("");
+			return (ft_strdup(""));
 	}
 	while (token[expand->i] && (ft_isalnum(token[expand->i]) || token[expand->i] == '_'))
 		expand->i++;
-	return ft_substr(token, expand->start, expand->i - expand->start);
+	return (ft_substr(token, expand->start, expand->i - expand->start));
 }
 
 
@@ -88,20 +88,44 @@ char	*expand_replace_var(char *var_name, int preserve_spaces, t_env *env)
 		return (ft_strdup(""));
 	if (preserve_spaces)
 		return (ft_strdup(var_value));
-	expanded = ft_strdup("");
 	splited = ft_split(var_value, ' ');
+	if (!splited)
+		return (NULL);
+	expanded = ft_strdup("");
+	if (!expanded)
+	{
+		ft_free_double_list(splited);
+		return (NULL);
+	}
 	j = 0;
 	while (splited[j])
 	{
-		expanded = ft_strjoin_free(expanded, splited[j]);
+		char *temp = ft_strjoin(expanded, splited[j]);
+		free(expanded);
+		if (!temp)
+		{
+			ft_free_double_list(splited);
+			return (NULL);
+		}
+		expanded = temp;
 		if (splited[j + 1])
-			expanded = ft_strjoin_free(expanded, " ");
+		{
+			temp = ft_strjoin(expanded, " ");
+			free(expanded);
+			if (!temp)
+			{
+				ft_free_double_list(splited);
+				return (NULL);
+			}
+			expanded = temp;
+		}
 		free(splited[j]);
 		j++;
 	}
 	free(splited);
 	return (expanded);
 }
+
 
 /* This function for the following
 1- Handles characters that are not part of a variable ($VAR).

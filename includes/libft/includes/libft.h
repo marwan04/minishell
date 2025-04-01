@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 15:07:36 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/30 13:41:54 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/01 19:39:39 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int			ft_memcmp(const void *s1, const void *s2, size_t n);
 int			ft_strcmp(char *s1, char *s2);
 int			ft_isalpha(int i);
 int			ft_isdigit(int i);
-int	ft_isnumeric(const char *str);
+int			ft_isnumeric(const char *str);
 int			ft_isascii(int i);
 int			ft_isprint(int i);
 int			ft_atoi(const char *str);
