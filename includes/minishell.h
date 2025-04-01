@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/30 14:50:55 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/01 19:41:06 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_expand
 	int				start;
 	int				skip_env_lookup;
 }					t_expand;
-
 
 typedef struct s_token
 {
@@ -197,12 +196,12 @@ void				ft_set_exit_status(int *ptr, int status);
 // exec/exec_utilites.c
 int					initialize_execution_params(char **full_path,
 						char ***envp, char **args, t_env **env);
-int	is_builtin(char *cmd);
-						
+int					is_builtin(char *cmd);
+
 // exec/exec_pipes.c
-void exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env);
+void				exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env);
 
 // Testing
-void	print_commands(t_cmd *cmds);
+void				print_commands(t_cmd *cmds);
 
 #endif
