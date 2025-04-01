@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 22:12:06 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/31 01:13:32 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/01 15:50:21 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ void	handle_cd(char **args, t_env **env)
 		printf("%s\n", target_dir);
 	}
 	else
+	{
 		target_dir = args[1];
-		if (chdir(target_dir) == -1)
+	}
+	if (chdir(target_dir) == -1)
 	{
 		perror("cd");
 		return ;
