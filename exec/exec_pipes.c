@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/30 15:47:53 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:00:23 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 
 void	ft_exec_cmd1(t_cmd *cmd, int pipefd[2], t_env *env, int *last_exit_status)
 {
-	dup2(pipefd[1], STDOUT_FILENO);
+	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(1);
+	}
 	close(pipefd[0]);
 	close(pipefd[1]);
 	if (is_builtin(cmd->args[0]))
@@ -26,7 +30,11 @@ void	ft_exec_cmd1(t_cmd *cmd, int pipefd[2], t_env *env, int *last_exit_status)
 
 void	ft_exec_cmd2(t_cmd *cmd, int pipefd[2], t_env *env, int *last_exit_status)
 {
-	dup2(pipefd[0], STDIN_FILENO);
+	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(1);
+	}
 	close(pipefd[0]);
 	close(pipefd[1]);
 	if (is_builtin(cmd->args[0]))
@@ -41,7 +49,8 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 	int		pipefd[2];
 	pid_t	pid1;
 	pid_t	pid2;
-	int		status;
+	int		status1;
+	int		status2;
 
 	if (!cmds || !cmds->next)
 		return ;
@@ -55,6 +64,8 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 	if (pid1 == -1)
 	{
 		perror("fork");
+		close(pipefd[0]);
+		close(pipefd[1]);
 		*last_exit_status = 1;
 		return;
 	}
@@ -64,6 +75,9 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 	if (pid2 == -1)
 	{
 		perror("fork");
+		close(pipefd[0]);
+		close(pipefd[1]);
+		waitpid(pid1, NULL, 0); // avoid zombie from first child
 		*last_exit_status = 1;
 		return;
 	}
@@ -71,7 +85,7 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 		ft_exec_cmd2(cmds->next, pipefd, *env, last_exit_status);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(pid1, &status, 0);
-	waitpid(pid2, &status, 0);
-	ft_set_exit_status(last_exit_status, status);
+	waitpid(pid1, &status1, 0);
+	waitpid(pid2, &status2, 0);
+	ft_set_exit_status(last_exit_status, status2); // follow bash: use last command
 }

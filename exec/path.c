@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 08:39:20 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/24 09:09:50 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:30:06 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ static char	**ft_split_path(t_env **envp)
 	}
 	splitted = ft_split(path, ':');
 	ft_free_double_list(env);
-	if (!splitted || !splitted[0])
+	if (!splitted)
+		return (NULL);
+	if (!splitted[0])
 	{
 		ft_free_double_list(splitted);
 		return (NULL);
@@ -61,8 +63,6 @@ static char	*ft_build_path(char *dir, char *cmd)
 		return (NULL);
 	full_path = ft_strjoin(temp, cmd);
 	free(temp);
-	if (!full_path)
-		return (NULL);
 	return (full_path);
 }
 
@@ -77,18 +77,22 @@ char	*ft_get_path(char *cmd, t_env **envp)
 	paths = ft_split_path(envp);
 	if (!paths)
 		return (NULL);
-	i = -1;
-	while (paths[++i])
+	i = 0;
+	while (paths[i])
 	{
 		full_path = ft_build_path(paths[i], cmd);
 		if (!full_path)
+		{
+			i++;
 			continue;
+		}
 		if (access(full_path, X_OK) == 0)
 		{
 			ft_free_double_list(paths);
 			return (full_path);
 		}
 		free(full_path);
+		i++;
 	}
 	ft_free_double_list(paths);
 	return (NULL);
