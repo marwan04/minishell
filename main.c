@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/03/30 16:05:19 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/06 20:00:18 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_exit(t_minishell *data)
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(data->cmds->args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		ft_free(data, 255, "exit");
+		ft_free(data, 2, "exit");
 	}
 	if (data->cmds->args[2])
 	{
@@ -84,7 +84,10 @@ void	ft_read(t_minishell *data)
 	signals_handler();
 	input = readline("minishell> ");
 	if (!input)
+	{
+		free_env(data->env);
 		ft_free(data, 1, "exit");
+	}
 	if (*input)
 	{
 		add_history(input);
@@ -98,9 +101,12 @@ void	ft_read(t_minishell *data)
 		}
 	}
 	if (!ft_strcmp(data->cmds->args[0], "exit"))
+	{
+		free_env(data->env);
 		ft_exit(data);
+	}
 	// print_commands(data->cmds);
-	ft_execute(data->cmds, &data->last_exit_status, &data->env);
+	ft_execute(data->cmds, &data->last_exit_status, &data->env, data);
 	// print_tokens(data->tokens);
 	// printf("\n");
 	// printf("You entered: %s\n", input);
@@ -123,6 +129,5 @@ int	main(int ac, char **av, char **envp)
 	{
 		ft_read(&data);
 	}
-	free_env(data.env);
 	return (0);
 }
