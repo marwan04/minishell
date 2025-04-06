@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/06 20:00:18 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/06 18:59:56 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	print_commands(t_cmd *cmds)
 
 void	ft_exit(t_minishell *data)
 {
+	if (data->env)
+		free_env(data->env);
 	if (!data->cmds->args[1])
 		ft_free(data, data->last_exit_status, "exit");
 	if (!ft_isnumeric(data->cmds->args[1]))
@@ -101,15 +103,8 @@ void	ft_read(t_minishell *data)
 		}
 	}
 	if (!ft_strcmp(data->cmds->args[0], "exit"))
-	{
-		free_env(data->env);
 		ft_exit(data);
-	}
-	// print_commands(data->cmds);
-	ft_execute(data->cmds, &data->last_exit_status, &data->env, data);
-	// print_tokens(data->tokens);
-	// printf("\n");
-	// printf("You entered: %s\n", input);
+	ft_execute(data->cmds, &data->last_exit_status, &data->env);
 	if (!ft_strcmp(input, "clear"))
 		printf("\033[H\033[2J");
 	free(input);
