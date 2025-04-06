@@ -44,7 +44,7 @@
 // 	exit(*last_exit_status);
 // }
 
-void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
+void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data)
 {
 	int		pipefd[2];
 	int		prev_fd;
@@ -94,6 +94,8 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 				execute_builtin_cmds(current, last_exit_status, env);
 			else
 				ft_execute_command(current, last_exit_status, env);
+			free_env(*env);
+			ft_free(data, 1, "");
 			exit(*last_exit_status);
 		}
 		if (prev_fd != -1)
