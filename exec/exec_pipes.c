@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/01 20:04:54 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/06 18:27:09 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 	int		prev_fd;
 	pid_t	pid;
 	int		status;
-	t_cmd	*current = cmds;
+	t_cmd	*current = cmds; // edit this
 	int		is_last;
 	int		child_count;
 
@@ -101,7 +101,7 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 		if (!is_last)
 		{
 			close(pipefd[1]);
-			prev_fd = pipefd[0];
+			prev_fd = pipefd[0]; 
 		}
 		current = current->next;
 		child_count++;
