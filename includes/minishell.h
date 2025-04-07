@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 07:24:29 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/07 07:31:37 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,9 @@ void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell 
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
+
+// exec/path.c
+void				ft_read(t_minishell *data);
 
 // exec/error_utilites.c
 void				close_on_exit(int *fds, int fd_count);

@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 06:53:59 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/07 07:34:36 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	ft_read(t_minishell *data)
     if (data->cmds)
     {
         ft_handle_exit(data, input);
-        ft_execute(data->cmds, &data->last_exit_status, &data->env);
+        ft_execute(data->cmds, &data->last_exit_status, &data->env, data);
     }
     free(input);
 }
