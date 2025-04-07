@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/01 16:23:35 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/06 19:58:38 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,14 @@ int	ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
 	return (-1);
 }
 
-void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env)
+void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data)
 {
 	pid_t	pid_id;
 	int		status;
 
 	if (cmds->next && cmds->next->pipe != 0)
 	{
-		exec_pipes(cmds, last_exit_status, env);
+		exec_pipes(cmds, last_exit_status, env, data);
 		return;
 	}
 	if (is_builtin(cmds->args[0]))

@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 06:52:07 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/07 07:24:29 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,8 +170,7 @@ int					ft_execute_command(t_cmd *cmds, int *last_exit_status,
 						t_env **env);						
 void				execute_builtin_cmds(t_cmd *cmds, int *last_exit_status,
 						t_env **env);
-void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env);
-void				ft_read(t_minishell *data);
+void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
@@ -187,7 +186,7 @@ int					initialize_execution_params(char **full_path,
 int					is_builtin(char *cmd);
 
 // exec/exec_pipes.c
-void				exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env);
+void				exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data);
 
 // Testing
 void				print_commands(t_cmd *cmds);
