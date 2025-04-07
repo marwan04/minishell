@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/06 18:27:09 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/07 06:36:28 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 // 		ft_execute_command(cmd, last_exit_status, &env);
 // 	exit(*last_exit_status);
 // }
+
 
 void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env)
 {
