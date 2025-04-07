@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
+#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/03/30 17:55:39 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/07 06:53:21 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,8 @@ GREEN   	= \033[0;32m
 RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
-BUILTINS	=	
 
-EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c
+EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c exec/read.c
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 
@@ -40,6 +39,7 @@ TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/parsing_utils.c
 
 SRCS		= main.c \
+			  test.c \
 			  $(TOKENIZING) \
 			  $(EXPANDER) \
 			  $(SIGNAL) \
