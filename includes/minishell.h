@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 07:31:37 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/07 08:03:56 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,13 +156,18 @@ void				handle_pwd(void);
 
 // builtins/env.c
 void				handle_env(t_env *env);
-
-// builtins/env_utils.c
 char				**build_env(t_env *env);
 char				*get_env_value(t_env *env, char *key);
-t_env				*init_env_list(char **envp);
 void				add_or_update_env(t_env **env, char *key, char *value);
+
+
+// builtins/env_utils.c (1 Static function)
+char				**ft_free_env_array(char **env_array, int last);
+t_env				*init_env_list(char **envp);
 void				free_env(t_env *env);
+void				free_env_node(t_env *node);
+
+// builtins/export/export.c
 void				handle_export(char **args, t_env **env);
 
 // exec/exec.c
@@ -175,7 +180,7 @@ void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
 
-// exec/path.c
+// exec/read.c
 void				ft_read(t_minishell *data);
 
 // exec/error_utilites.c
