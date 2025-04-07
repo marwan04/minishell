@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/06 20:00:00 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/07 08:03:56 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,40 +78,40 @@ typedef struct s_minishell
 	t_token	*tokens;
 }					t_minishell;
 
-// tokenizing/check.c
+//tokenizing/check.c
 int					check_quote(int *i, char *input, t_token **head);
 int					check_redirections(int *i, char *input, t_token **head,
 						char symbol[2]);
 int					handle_words(int *i, char *input, t_token **head);
 void				check_separator(int *i, char *input);
 
-// tokenizing/cmd_utils.c
+//tokenizing/cmd_utils.c
 t_cmd				*new_cmd(void);
 void				add_argument(t_cmd *cmd, char *arg);
 void				handle_redirection(t_cmd *cmd, t_token *token);
 
-// tokenizing/free.c
+//tokenizing/free.c
 void				free_cmd(t_cmd *cmd);
 void				free_cmds(t_minishell *data);
 void				free_cmds_list(t_cmd *head);
 void				free_tokens(t_minishell *data);
 void				ft_free(t_minishell *data, int flag, char *msg);
 
-// tokenizing/parsing_utils.c
+//tokenizing/parsing_utils.c
 t_cmd				*create_new_cmd(t_cmd **current);
 t_cmd				*parse_tokens(t_token *tokens);
 void				handle_args_in_cmd(t_cmd *cmd, t_token **tokens);
 
-// tokenizing/tokenizer_utils.c
+//tokenizing/tokenizer_utils.c
 t_token				*last_token(t_token *token);
 t_token				*new_token(char *value, t_token_type type);
 void				add_token(t_token **head, char *value, t_token_type type);
 void				remove_last_token(t_token **head);
 
-// tokenizing/tokenizer.c
+//tokenizing/tokenizer.c
 t_token				*tokenizer(char *input);
 
-// expander/expand.c
+//expander/expand.c
 char				*expand_tilde(char *token);
 char				*remove_quotes(char *input);
 void				expand_tokens(t_token *tokens,
@@ -156,27 +156,19 @@ void				handle_pwd(void);
 
 // builtins/env.c
 void				handle_env(t_env *env);
-
-// builtins/env_utils.c
 char				**build_env(t_env *env);
 char				*get_env_value(t_env *env, char *key);
-t_env				*init_env_list(char **envp);
 void				add_or_update_env(t_env **env, char *key, char *value);
+
+
+// builtins/env_utils.c (1 Static function)
+char				**ft_free_env_array(char **env_array, int last);
+t_env				*init_env_list(char **envp);
 void				free_env(t_env *env);
+void				free_env_node(t_env *node);
+
+// builtins/export/export.c
 void				handle_export(char **args, t_env **env);
-
-// builtins/pwd.c
-void				handle_pwd(void);
-
-// builtins/env.c
-void				handle_env(t_env *env);
-
-// builtins/env_utils.c
-char				**build_env(t_env *env);
-char				*get_env_value(t_env *env, char *key);
-t_env				*init_env_list(char **envp);
-void				add_or_update_env(t_env **env, char *key, char *value);
-void				free_env(t_env *env);
 
 // exec/exec.c
 int					ft_execute_command(t_cmd *cmds, int *last_exit_status,
@@ -187,6 +179,9 @@ void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell 
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
+
+// exec/read.c
+void				ft_read(t_minishell *data);
 
 // exec/error_utilites.c
 void				close_on_exit(int *fds, int fd_count);
@@ -203,5 +198,5 @@ void				exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell 
 
 // Testing
 void				print_commands(t_cmd *cmds);
-
+void				print_tokens(t_token *head);
 #endif

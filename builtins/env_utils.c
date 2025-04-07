@@ -3,23 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:49:41 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/31 01:22:38 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/07 08:03:42 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*get_env_value(t_env *env, char *key)
+void	free_env_node(t_env *node)
 {
-	while (env)
+	if (node)
 	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env->value);
-		env = env->next;
+		free(node->key);
+		free(node->value);
+		free(node);
 	}
+}
+
+char	**ft_free_env_array(char **env_array, int last)
+{
+	while (last--)
+		free(env_array[last]);
+	free(env_array);
 	return (NULL);
 }
 
@@ -30,42 +37,52 @@ void	free_env(t_env *env)
 	while (env)
 	{
 		tmp = env->next;
-		free(env->key);
-		free(env->value);
-		free(env);
+		free_env_node(env);
 		env = tmp;
 	}
 }
 
-t_env	*init_env_list(char **envp)
+static t_env	*create_env_node(char *envp_entry)
 {
-	t_env	*head = NULL;
 	t_env	*new_node;
 	char	*equal;
+
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return (NULL);
+	equal = ft_strchr(envp_entry, '=');
+	if (equal)
+	{
+		new_node->key = ft_substr(envp_entry, 0, equal - envp_entry);
+		new_node->value = ft_strdup(equal + 1);
+	}
+	else
+	{
+		new_node->key = ft_strdup(envp_entry);
+		new_node->value = NULL;
+	}
+	if (!new_node->key || (equal && !new_node->value))
+	{
+		free_env_node(new_node);
+		return (NULL);
+	}
+	new_node->next = NULL;
+	return (new_node);
+}
+
+t_env	*init_env_list(char **envp)
+{
+	t_env	*head;
+	t_env	*new_node;
 	int		i;
 
+	head = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		new_node = malloc(sizeof(t_env));
+		new_node = create_env_node(envp[i]);
 		if (!new_node)
-			return (free_env(head), NULL);
-		equal = ft_strchr(envp[i], '=');
-		if (equal)
 		{
-			new_node->key = ft_substr(envp[i], 0, equal - envp[i]);
-			new_node->value = ft_strdup(equal + 1);
-		}
-		else
-		{
-			new_node->key = ft_strdup(envp[i]);
-			new_node->value = NULL;
-		}
-		if (!new_node->key || (equal && !new_node->value))
-		{
-			if (new_node->key) free(new_node->key);
-			if (new_node->value) free(new_node->value);
-			free(new_node);
 			free_env(head);
 			return (NULL);
 		}
@@ -76,75 +93,3 @@ t_env	*init_env_list(char **envp)
 	return (head);
 }
 
-void	add_or_update_env(t_env **env, char *key, char *value)
-{
-	t_env	*tmp;
-	t_env	*new_node;
-
-	tmp = *env;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, key) == 0)
-		{
-			char *new_val = ft_strdup(value);
-			if (!new_val)
-			{
-				perror("malloc");
-				return ;
-			}
-			free(tmp->value);
-			tmp->value = new_val;
-			return ;
-		}
-		tmp = tmp->next;
-	}
-	new_node = malloc(sizeof(t_env));
-	if (!new_node)
-		return ;
-	new_node->key = ft_strdup(key);
-	new_node->value = ft_strdup(value);
-	if (!new_node->key || !new_node->value)
-	{
-		free(new_node->key);
-		free(new_node->value);
-		free(new_node);
-		return ;
-	}
-	new_node->next = *env;
-	*env = new_node;
-}
-
-char	**build_env(t_env *env)
-{
-	int		size;
-	t_env	*tmp;
-	char	**env_array;
-
-	size = 0;
-	tmp = env;
-	while (tmp)
-	{
-		size++;
-		tmp = tmp->next;
-	}
-	env_array = malloc(sizeof(char *) * (size + 1));
-	if (!env_array)
-		return (NULL);
-	tmp = env;
-	size = 0;
-	while (tmp)
-	{
-		env_array[size] = ft_strjoin_var(3, tmp->key, "=", tmp->value);
-		if (!env_array[size])
-		{
-			while (size--)
-				free(env_array[size]);
-			free(env_array);
-			return (NULL);
-		}
-		size++;
-		tmp = tmp->next;
-	}
-	env_array[size] = NULL;
-	return (env_array);
-}

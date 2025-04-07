@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/06 18:27:09 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/07 07:29:33 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,14 @@
 // 	exit(*last_exit_status);
 // }
 
+
 void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data)
 {
 	int		pipefd[2];
 	int		prev_fd;
 	pid_t	pid;
 	int		status;
-	t_cmd	*current = cmds;
+	t_cmd	*current = cmds; // edit this
 	int		is_last;
 	int		child_count;
 
@@ -103,7 +104,7 @@ void	exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *da
 		if (!is_last)
 		{
 			close(pipefd[1]);
-			prev_fd = pipefd[0];
+			prev_fd = pipefd[0]; 
 		}
 		current = current->next;
 		child_count++;
