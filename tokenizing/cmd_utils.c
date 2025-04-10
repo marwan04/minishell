@@ -3,77 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/02/24 11:30:25 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/10 15:58:01 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmd	*new_cmd(void)
+t_ast *new_ast_cmd(void)
 {
-	t_cmd	*cmd;
+	t_ast *node;
 
-	cmd = malloc(sizeof(*cmd));
-	if (!cmd)
+	node = malloc(sizeof(t_ast));
+	if (!node)
 		return (NULL);
-	cmd->args = NULL;
-	cmd->input = NULL;
-	cmd->output = NULL;
-	cmd->append = 0;
-	cmd->pipe = 0;
-	cmd->has_redirection = 0;
-	cmd->next = NULL;
-	return (cmd);
+	node->type = NODE_CMD;
+	node->args = NULL;
+	node->file = NULL;
+	node->left = NULL;
+	node->right = NULL;
+	return (node);
 }
 
-void	add_argument(t_cmd *cmd, char *arg)
+void add_argument(t_ast *node, char *arg)
 {
-	int		count;
+	int		count = 0;
+	int		i = 0;
 	char	**new_args;
-	int		i;
 
-	i = 0;
-	count = 0;
-	while (cmd->args && cmd->args[count])
+	if (!node || node->type != NODE_CMD)
+		return ;
+	while (node->args && node->args[count])
 		count++;
 	new_args = malloc(sizeof(char *) * (count + 2));
 	if (!new_args)
 		return ;
 	while (i < count)
 	{
-		new_args[i] = cmd->args[i];
+		new_args[i] = node->args[i];
 		i++;
 	}
 	new_args[count] = ft_strdup(arg);
 	new_args[count + 1] = NULL;
-	free(cmd->args);
-	cmd->args = new_args;
+	free(node->args);
+	node->args = new_args;
 }
 
-void	handle_redirection(t_cmd *cmd, t_token *token)
+t_ast *handle_redirection(t_ast *cmd_node, t_token *token)
 {
-	char	*new_value;
+	t_ast *redir_node;
+
+	if (!cmd_node || !token || !token->next)
+		return NULL;
+
+	redir_node = malloc(sizeof(t_ast));
+	if (!redir_node)
+		return NULL;
 
 	if (token->type == REDIR_IN)
-	{
-		new_value = ft_strdup(token->next->value);
-		if (new_value)
-		{
-			free(cmd->input);
-			cmd->input = new_value;
-		}
-	}
-	else if (token->type == REDIR_OUT || token->type == APPEND)
-	{
-		new_value = ft_strdup(token->next->value);
-		if (new_value)
-		{
-			free(cmd->output);
-			cmd->output = new_value;
-		}
-		cmd->append = (token->type == APPEND);
-	}
+		redir_node->type = NODE_REDIR_IN;
+	else if (token->type == REDIR_OUT)
+		redir_node->type = NODE_REDIR_OUT;
+	else if (token->type == APPEND)
+		redir_node->type = NODE_APPEND;
+	else if (token->type == HEREDOC)
+		redir_node->type = NODE_HEREDOC;
+
+	redir_node->file = ft_strdup(token->next->value); // The filename or limiter
+	redir_node->left = cmd_node;
+	redir_node->right = NULL;
+	redir_node->args = NULL;
+
+	return redir_node;
 }
