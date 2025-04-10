@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:48:42 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 06:48:53 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/10 19:14:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,33 +25,53 @@ void	print_tokens(t_token *head)
 	}
 }
 
-void	print_commands(t_cmd *cmds)
+char *node_type_to_str(t_node_type type)
 {
-	int		i;
-	char	*append;
-	t_cmd	*tmp;
-	// THIS FUNCTION IS FOR TESTING ONLY
-	tmp = cmds;
-	while (tmp)
+	if (type == NODE_CMD) return "CMD";
+	if (type == NODE_PIPE) return "PIPE";
+	if (type == NODE_REDIR_IN) return "REDIR_IN";
+	if (type == NODE_REDIR_OUT) return "REDIR_OUT";
+	if (type == NODE_APPEND) return "APPEND";
+	if (type == NODE_HEREDOC) return "HEREDOC";
+	return "UNKNOWN";
+}
+
+void print_indent(int depth, int is_left)
+{
+	for (int i = 0; i < depth; i++)
+		printf("│   ");
+	if (depth > 0)
+		printf("%s── ", is_left ? "├" : "└");
+}
+
+void print_ast(t_ast *node, int depth, int is_left)
+{
+	if (!node)
 	{
-		printf("Command: ");
-		i = 0;
-		while (tmp->args && tmp->args[i])
-			printf("[%s] ", tmp->args[i++]);
-		printf("\n");
-		if (tmp->input)
-			printf("  Input Redirection: %s\n", tmp->input);
-		if (tmp->output)
-		{
-			if (tmp->append)
-				append = "append";
-			else
-				append = "overwrite";
-			printf("  Output Redirection: %s (%s)\n", tmp->output, append);
-		}
-		if (tmp->pipe)
-			printf("  Pipe: Yes\n");
-		printf("\n");
-		tmp = tmp->next;
+		print_indent(depth, is_left);
+		printf("(null)\n");
+		return;
+	}
+
+	print_indent(depth, is_left);
+	printf("[%s]", node_type_to_str(node->type));
+
+	if (node->type == NODE_CMD && node->args)
+	{
+		printf(" args: ");
+		for (int i = 0; node->args[i]; i++)
+			printf("\"%s\" ", node->args[i]);
+	}
+	else if (node->file)
+	{
+		printf(" file: \"%s\"", node->file);
+	}
+	printf("\n");
+
+	// Recursively print children
+	if (node->left || node->right)
+	{
+		print_ast(node->left, depth + 1, 1);  // LEFT
+		print_ast(node->right, depth + 1, 0); // RIGHT
 	}
 }
