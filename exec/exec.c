@@ -6,43 +6,46 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/06 19:58:38 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/11 18:35:56 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	execute_builtin_cmds(t_cmd *cmds, int *last_exit_status, t_env **env)
+void execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env)
 {
-	if (!cmds || !cmds->args)
+	if (!node || !node->args)
 	{
 		*last_exit_status = 100;
 		return;
 	}
 	*last_exit_status = 0;
-	if (ft_strcmp(cmds->args[0], "pwd") == 0)
+
+	if (ft_strcmp(node->args[0], "pwd") == 0)
 		handle_pwd();
-	else if (ft_strcmp(cmds->args[0], "env") == 0)
+	else if (ft_strcmp(node->args[0], "env") == 0)
 		handle_env(*env);
-	else if (ft_strcmp(cmds->args[0], "echo") == 0)
-		handle_echo(cmds->args);
-	else if (ft_strcmp(cmds->args[0], "export") == 0)
-		handle_export(cmds->args, env);
-	else if (ft_strcmp(cmds->args[0], "cd") == 0)
-		handle_cd(cmds->args, env);
-	else if (ft_strcmp(cmds->args[0], "unset") == 0)
-		handle_unset(cmds->args, env);
+	else if (ft_strcmp(node->args[0], "echo") == 0)
+		handle_echo(node->args);
+	else if (ft_strcmp(node->args[0], "export") == 0)
+		handle_export(node->args, env);
+	else if (ft_strcmp(node->args[0], "cd") == 0)
+		handle_cd(node->args, env);
+	else if (ft_strcmp(node->args[0], "unset") == 0)
+		handle_unset(node->args, env);
 }
 
-int	ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
+
+int	ft_execute_command(t_ast *node, int *last_exit_status, t_env **env)
 {
 	char	*full_path;
 	char	**envp;
 
-	if (initialize_execution_params(&full_path, &envp, cmds->args, env) == -1)
+	if (initialize_execution_params(&full_path, &envp, node->args, env) == -1)
 		return (-1);
 
-	execve(full_path, cmds->args, envp);
+	execve(full_path, node->args, envp);
+
 	free(full_path);
 	ft_free_double_list(envp);
 	ft_perror("Execve Failed", 5);
@@ -50,33 +53,112 @@ int	ft_execute_command(t_cmd *cmds, int *last_exit_status, t_env **env)
 	return (-1);
 }
 
-void	ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data)
+int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 {
-	pid_t	pid_id;
-	int		status;
+	pid_t pid;
+	int status;
 
-	if (cmds->next && cmds->next->pipe != 0)
+	if (is_builtin(node->args[0]))
+		{
+			execute_builtin_cmds(node, &data->last_exit_status, &data->env);
+			return (0);
+		}
+	pid = fork();
+	if (pid == 0)
 	{
-		exec_pipes(cmds, last_exit_status, env, data);
-		return;
+		if (prev_fd != -1)
+		{
+			dup2(prev_fd, STDIN_FILENO);
+			close(prev_fd);
+		}
+		ft_execute_command(node, &data->last_exit_status, &data->env);
+		exit(data->last_exit_status);
 	}
-	if (is_builtin(cmds->args[0]))
+	if (prev_fd != -1)
+		close(prev_fd);
+	waitpid(pid, &status, 0);
+	data->last_exit_status = WEXITSTATUS(status);
+	return data->last_exit_status;
+}
+
+int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
+{
+	if (!node)
+		return 1;
+	if (node->type == NODE_PIPE)
+		return handle_pipe_node(node, prev_fd, data);
+	else if (node->type == NODE_CMD)
+		return handle_cmd_node(node, prev_fd, data);
+	// (Redirection nodes will go here later)
+	return 0;
+}
+
+int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
+{
+	int pipefd[2];
+	pid_t pid;
+	int status;
+
+	if (!node)
+		return 1;
+
+	// Handle pipe nodes
+	if (node->type == NODE_PIPE)
 	{
-		execute_builtin_cmds(cmds, last_exit_status, env);
-		return;
+		if (pipe(pipefd) == -1)
+		{
+			perror("pipe");
+			return 1;
+		}
+
+		// Fork left side
+		pid = fork();
+		if (pid == 0)
+		{
+			if (prev_fd != -1)
+			{
+				dup2(prev_fd, STDIN_FILENO);
+				close(prev_fd);
+			}
+			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[0]);
+			close(pipefd[1]);
+			exec_ast(node->left, -1, data); // recursive call for left child
+			exit(data->last_exit_status);
+		}
+
+		// Close write, prepare to use read side as prev_fd
+		close(pipefd[1]);
+		if (prev_fd != -1)
+			close(prev_fd);
+
+		// Fork right side
+		exec_ast(node->right, pipefd[0], data); // use read side as stdin
+		waitpid(pid, &status, 0);
+		data->last_exit_status = WEXITSTATUS(status);
+		return data->last_exit_status;
 	}
-	pid_id = fork();
-	if (pid_id == -1)
+	// Handle command execution
+	if (node->type == NODE_CMD)
 	{
-		perror("fork");
-		*last_exit_status = 1;
-		return;
+		pid = fork();
+		if (pid == 0)
+		{
+			if (prev_fd != -1)
+			{
+				dup2(prev_fd, STDIN_FILENO);
+				close(prev_fd);
+			}
+			if (is_builtin(node->args[0]))
+				execute_builtin_cmds(node, &data->last_exit_status, &data->env);
+			else
+				ft_execute_command(node, &data->last_exit_status, &data->env);
+			exit(data->last_exit_status);
+		}
+		if (prev_fd != -1)
+			close(prev_fd);
+		waitpid(pid, &status, 0);
+		data->last_exit_status = WEXITSTATUS(status);
 	}
-	if (pid_id == 0)
-	{
-		if (ft_execute_command(cmds, last_exit_status, env) == -1)
-			exit(*last_exit_status);
-	}
-	waitpid(pid_id, &status, 0);
-	ft_set_exit_status(last_exit_status, status);
+	return data->last_exit_status;
 }

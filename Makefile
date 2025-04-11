@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/10 16:21:21 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/11 15:55:42 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
-EXEC		= exec/read.c #exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c 
+EXEC		= exec/read.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c 
 
 EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
 

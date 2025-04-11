@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/10 19:01:18 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/11 17:27:07 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,11 +189,9 @@ void				free_env_node(t_env *node);
 void				handle_export(char **args, t_env **env);
 
 // exec/exec.c
-// int					ft_execute_command(t_cmd *cmds, int *last_exit_status,
-// 						t_env **env);						
-// void				execute_builtin_cmds(t_cmd *cmds, int *last_exit_status,
-// 						t_env **env);
-// void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data);
+int	ft_execute_command(t_ast *node, int *last_exit_status, t_env **env);
+void execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env);
+int	exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
@@ -212,7 +210,7 @@ int					initialize_execution_params(char **full_path,
 int					is_builtin(char *cmd);
 
 // exec/exec_pipes.c
-// void				exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data);
+int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data);
 
 // // Testing
 
