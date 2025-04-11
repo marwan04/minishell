@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/11 18:50:47 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/11 20:36:38 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,10 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 		return handle_pipe_node(node, prev_fd, data);
 	else if (node->type == NODE_CMD)
 		return handle_cmd_node(node, prev_fd, data);
-	// (Redirection nodes will go here later)
+	else if (node->type == NODE_REDIR_IN
+	|| node->type == NODE_REDIR_OUT
+	|| node->type == NODE_APPEND)
+		return handle_redirection_node(node, prev_fd, data);
 	return 0;
 }
 
