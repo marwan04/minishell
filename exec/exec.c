@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/11 18:35:56 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/11 18:50:47 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,72 +93,72 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 	return 0;
 }
 
-int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
-{
-	int pipefd[2];
-	pid_t pid;
-	int status;
+// int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
+// {
+// 	int pipefd[2];
+// 	pid_t pid;
+// 	int status;
 
-	if (!node)
-		return 1;
+// 	if (!node)
+// 		return 1;
 
-	// Handle pipe nodes
-	if (node->type == NODE_PIPE)
-	{
-		if (pipe(pipefd) == -1)
-		{
-			perror("pipe");
-			return 1;
-		}
+// 	// Handle pipe nodes
+// 	if (node->type == NODE_PIPE)
+// 	{
+// 		if (pipe(pipefd) == -1)
+// 		{
+// 			perror("pipe");
+// 			return 1;
+// 		}
 
-		// Fork left side
-		pid = fork();
-		if (pid == 0)
-		{
-			if (prev_fd != -1)
-			{
-				dup2(prev_fd, STDIN_FILENO);
-				close(prev_fd);
-			}
-			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[0]);
-			close(pipefd[1]);
-			exec_ast(node->left, -1, data); // recursive call for left child
-			exit(data->last_exit_status);
-		}
+// 		// Fork left side
+// 		pid = fork();
+// 		if (pid == 0)
+// 		{
+// 			if (prev_fd != -1)
+// 			{
+// 				dup2(prev_fd, STDIN_FILENO);
+// 				close(prev_fd);
+// 			}
+// 			dup2(pipefd[1], STDOUT_FILENO);
+// 			close(pipefd[0]);
+// 			close(pipefd[1]);
+// 			exec_ast(node->left, -1, data); // recursive call for left child
+// 			exit(data->last_exit_status);
+// 		}
 
-		// Close write, prepare to use read side as prev_fd
-		close(pipefd[1]);
-		if (prev_fd != -1)
-			close(prev_fd);
+// 		// Close write, prepare to use read side as prev_fd
+// 		close(pipefd[1]);
+// 		if (prev_fd != -1)
+// 			close(prev_fd);
 
-		// Fork right side
-		exec_ast(node->right, pipefd[0], data); // use read side as stdin
-		waitpid(pid, &status, 0);
-		data->last_exit_status = WEXITSTATUS(status);
-		return data->last_exit_status;
-	}
-	// Handle command execution
-	if (node->type == NODE_CMD)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			if (prev_fd != -1)
-			{
-				dup2(prev_fd, STDIN_FILENO);
-				close(prev_fd);
-			}
-			if (is_builtin(node->args[0]))
-				execute_builtin_cmds(node, &data->last_exit_status, &data->env);
-			else
-				ft_execute_command(node, &data->last_exit_status, &data->env);
-			exit(data->last_exit_status);
-		}
-		if (prev_fd != -1)
-			close(prev_fd);
-		waitpid(pid, &status, 0);
-		data->last_exit_status = WEXITSTATUS(status);
-	}
-	return data->last_exit_status;
-}
+// 		// Fork right side
+// 		exec_ast(node->right, pipefd[0], data); // use read side as stdin
+// 		waitpid(pid, &status, 0);
+// 		data->last_exit_status = WEXITSTATUS(status);
+// 		return data->last_exit_status;
+// 	}
+// 	// Handle command execution
+// 	if (node->type == NODE_CMD)
+// 	{
+// 		pid = fork();
+// 		if (pid == 0)
+// 		{
+// 			if (prev_fd != -1)
+// 			{
+// 				dup2(prev_fd, STDIN_FILENO);
+// 				close(prev_fd);
+// 			}
+// 			if (is_builtin(node->args[0]))
+// 				execute_builtin_cmds(node, &data->last_exit_status, &data->env);
+// 			else
+// 				ft_execute_command(node, &data->last_exit_status, &data->env);
+// 			exit(data->last_exit_status);
+// 		}
+// 		if (prev_fd != -1)
+// 			close(prev_fd);
+// 		waitpid(pid, &status, 0);
+// 		data->last_exit_status = WEXITSTATUS(status);
+// 	}
+// 	return data->last_exit_status;
+// }
