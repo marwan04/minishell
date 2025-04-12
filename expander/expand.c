@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 14:33:43 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:13:21 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 		free(temp);
 		if (!is_export || tokens == tokens->next)
 		{
-			temp = remove_quotes(expanded);// temp
+			temp = remove_quotes(expanded);
 			free(expanded);
 			expanded = temp;
 		}
@@ -86,5 +86,4 @@ void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 		}
 		tokens = tokens->next;
 	}
-	// free(expanded);
 }
