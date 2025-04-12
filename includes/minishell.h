@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/11 20:49:16 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:12:21 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,18 @@ typedef enum e_token_type
 	WORD
 }					t_token_type;
 
-typedef enum e_node_type {
+typedef enum e_node_type
+{
 	NODE_CMD,
 	NODE_PIPE,
 	NODE_REDIR_IN,
 	NODE_REDIR_OUT,
 	NODE_APPEND,
 	NODE_HEREDOC,
-}	t_node_type;
+}					t_node_type;
 
-typedef struct s_ast {
+typedef struct s_ast
+{
 	t_node_type		type;
 	char			**args;
 	char			*file;
@@ -58,8 +60,6 @@ typedef struct s_ast {
 // 	int				pipe;
 // 	struct s_cmd	*next;
 // }					t_cmd;
-
-
 
 typedef struct s_expand
 {
@@ -92,8 +92,7 @@ typedef struct s_env
 typedef struct s_minishell
 {
 	int		last_exit_status;
-	// t_cmd	*cmds;
-	t_ast		*ast_root;
+	t_ast	*ast_root;
 	t_env	*env;
 	t_token	*tokens;
 }					t_minishell;
@@ -106,19 +105,18 @@ int					handle_words(int *i, char *input, t_token **head);
 void				check_separator(int *i, char *input);
 
 //tokenizing/cmd_utils.c
-t_ast *new_ast_cmd(void);
-void add_argument(t_ast *node, char *arg);
-t_ast *handle_redirection(t_ast *cmd_node, t_token *token);
+t_ast				*new_ast_cmd(void);
+void				add_argument(t_ast *node, char *arg);
+t_ast				*handle_redirection(t_ast *cmd_node, t_token *token);
 
 //tokenizing/free.c
 void				free_tokens(t_minishell *data);
 void				ft_free(t_minishell *data, int flag, char *msg);
-void	free_ast(t_ast *node);
+void				free_ast(t_ast *node);
 
 //tokenizing/parsing_utils.c
-t_ast *parse_command(t_token **tokens);
-t_ast *parse_pipeline(t_token **tokens);
-t_ast *parse_ast(t_token **tokens);
+t_ast				*parse_command(t_token **tokens);
+t_ast				*parse_ast(t_token **tokens);
 
 //tokenizing/tokenizer_utils.c
 t_token				*last_token(t_token *token);
@@ -178,7 +176,6 @@ char				**build_env(t_env *env);
 char				*get_env_value(t_env *env, char *key);
 void				add_or_update_env(t_env **env, char *key, char *value);
 
-
 // builtins/env_utils.c (1 Static function)
 char				**ft_free_env_array(char **env_array, int last);
 t_env				*init_env_list(char **envp);
@@ -189,9 +186,11 @@ void				free_env_node(t_env *node);
 void				handle_export(char **args, t_env **env);
 
 // exec/exec.c
-int	ft_execute_command(t_ast *node, int *last_exit_status, t_env **env);
-void execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env);
-int	exec_ast(t_ast *node, int prev_fd, t_minishell *data);
+int					ft_execute_command(t_ast *node,
+						int *last_exit_status, t_env **env);
+void				execute_builtin_cmds(t_ast *node,
+						int *last_exit_status, t_env **env);
+int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
@@ -210,12 +209,13 @@ int					initialize_execution_params(char **full_path,
 int					is_builtin(char *cmd);
 
 // exec/exec_pipes.c
-int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data);
-
-int handle_redirection_node(t_ast *node, int prev_fd, t_minishell *data);
+int					handle_pipe_node(t_ast *node,
+						int prev_fd, t_minishell *data);
+int					handle_redirection_node(t_ast *node,
+						int prev_fd, t_minishell *data);
 
 // // Testing
 
-void print_ast(t_ast *node, int depth, int is_left);
+void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 #endif
