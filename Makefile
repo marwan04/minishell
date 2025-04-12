@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/11 20:36:13 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/12 17:30:54 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ ARROW   	= ✔
 
 EXEC		= exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c 
 
-EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
+EXPANDER	= expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
 
 PARSING		=
 
