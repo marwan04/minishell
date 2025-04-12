@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
+#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/07 06:53:21 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/04/12 18:51:33 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,13 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
-EXEC		= exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c exec/read.c
+EXEC		= exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c 
 
-EXPANDER	= expander/expand.c expander/utils.c expander/var_expand.c
+EXPANDER	= expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
 
 PARSING		=
 
-BUILTINS	= builtins/echo.c builtins/unset.c builtins/export/export.c builtins/export/print_env.c builtins/pwd.c builtins/env.c builtins/env_utils.c builtins/cd.c
+BUILTINS	= builtins/update_env_cd.c builtins/update_env.c builtins/echo.c builtins/unset.c builtins/export/export.c builtins/export/copy_env.c builtins/export/print_env.c builtins/pwd.c builtins/env.c builtins/env_utils.c builtins/cd.c
 
 SIGNAL		= signal/signal_handler.c
 

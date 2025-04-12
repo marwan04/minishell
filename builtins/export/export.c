@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:10:00 by malrifai          #+#    #+#             */
-/*   Updated: 2025/03/30 17:40:09 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:13:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	is_valid_identifier(char *key)
 	}
 	return (1);
 }
-
+/*
 int	set_env(char **args, t_env **env, char *equal, int i)
 {
 	char	*key;
@@ -130,6 +130,54 @@ int	set_env(char **args, t_env **env, char *equal, int i)
 	}
 	return (0);
 }
+*/
+
+int	handle_export_with_value(char *arg, t_env **env, char *equal)
+{
+	char	*key;
+	char	*value;
+
+	key = ft_substr(arg, 0, equal - arg);
+	value = ft_strdup(equal + 1);
+	if (!key || !value)
+	{
+		if (key)
+			free(key);
+		if (value)
+			free(value);
+		printf("bash: export: memory allocation failed\n");
+		return (1);
+	}
+	if (!is_valid_identifier(key))
+	{
+		printf("bash: export: `%s': not a valid identifier\n", key);
+		free(key);
+		free(value);
+		return (1);
+	}
+	add_or_update_env(env, key, value);
+	free(key);
+	free(value);
+	return (0);
+}
+
+int	handle_export_without_value(char *arg)
+{
+	if (!is_valid_identifier(arg))
+	{
+		printf("bash: export: `%s': not a valid identifier\n", arg);
+		return (1);
+	}
+	return (0);
+}
+
+int	set_env(char **args, t_env **env, char *equal, int i)
+{
+	if (!equal)
+		return (handle_export_without_value(args[i]));
+	else
+		return (handle_export_with_value(args[i], env, equal));
+}
 
 void	handle_export(char **args, t_env **env)
 {
@@ -148,7 +196,7 @@ void	handle_export(char **args, t_env **env)
 		if (set_env(args, env, equal, i))
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		i++;
 	}
