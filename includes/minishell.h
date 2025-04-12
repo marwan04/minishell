@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/12 18:23:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:51:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,4 +220,6 @@ void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 
 t_env				*copy_env(t_env *original);
+
+int					update_pwd_env(t_env **env);
 #endif

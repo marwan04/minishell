@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/12 18:45:04 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/12 18:51:33 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ EXPANDER	= expander/replace_var.c expander/expand_special.c expander/expand.c ex
 
 PARSING		=
 
-BUILTINS	= builtins/update_env.c builtins/echo.c builtins/unset.c builtins/export/export.c builtins/export/copy_env.c builtins/export/print_env.c builtins/pwd.c builtins/env.c builtins/env_utils.c builtins/cd.c
+BUILTINS	= builtins/update_env_cd.c builtins/update_env.c builtins/echo.c builtins/unset.c builtins/export/export.c builtins/export/copy_env.c builtins/export/print_env.c builtins/pwd.c builtins/env.c builtins/env_utils.c builtins/cd.c
 
 SIGNAL		= signal/signal_handler.c
 
