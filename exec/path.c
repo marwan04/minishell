@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 08:39:20 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/01 16:30:06 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:56:46 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,11 @@ static char	*ft_build_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-char	*ft_get_path(char *cmd, t_env **envp)
+char	*try_resolve_path(char **paths, char *cmd)
 {
-	char	**paths;
 	char	*full_path;
 	int		i;
 
-	if (!cmd)
-		return (NULL);
-	paths = ft_split_path(envp);
-	if (!paths)
-		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
@@ -84,16 +78,59 @@ char	*ft_get_path(char *cmd, t_env **envp)
 		if (!full_path)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_double_list(paths);
 			return (full_path);
-		}
 		free(full_path);
 		i++;
 	}
-	ft_free_double_list(paths);
 	return (NULL);
 }
+
+char	*ft_get_path(char *cmd, t_env **envp)
+{
+	char	**paths;
+	char	*resolved;
+
+	if (!cmd)
+		return (NULL);
+	paths = ft_split_path(envp);
+	if (!paths)
+		return (NULL);
+	resolved = try_resolve_path(paths, cmd);
+	ft_free_double_list(paths);
+	return (resolved);
+}
+
+// char	*ft_get_path(char *cmd, t_env **envp)
+// {
+// 	char	**paths;
+// 	char	*full_path;
+// 	int		i;
+
+// 	if (!cmd)
+// 		return (NULL);
+// 	paths = ft_split_path(envp);
+// 	if (!paths)
+// 		return (NULL);
+// 	i = 0;
+// 	while (paths[i])
+// 	{
+// 		full_path = ft_build_path(paths[i], cmd);
+// 		if (!full_path)
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		if (access(full_path, X_OK) == 0)
+// 		{
+// 			ft_free_double_list(paths);
+// 			return (full_path);
+// 		}
+// 		free(full_path);
+// 		i++;
+// 	}
+// 	ft_free_double_list(paths);
+// 	return (NULL);
+// }
