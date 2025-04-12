@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/11 17:25:47 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:54:11 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
 		close(pipefd[0]);
 		close(pipefd[1]);
 		exec_ast(node->left, -1, data);
-		exit(data->last_exit_status);
+		ft_free(data,1,"");
 	}
 	close(pipefd[1]);
 	if (prev_fd != -1)

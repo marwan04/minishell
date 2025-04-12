@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/11 17:27:07 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/11 20:49:16 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,8 @@ int					is_builtin(char *cmd);
 
 // exec/exec_pipes.c
 int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data);
+
+int handle_redirection_node(t_ast *node, int prev_fd, t_minishell *data);
 
 // // Testing
 

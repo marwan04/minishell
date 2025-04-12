@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:48:42 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/10 19:14:40 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 14:42:47 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 void	print_tokens(t_token *head)
 {
 	t_token	*tmp;
-
 	// THIS FUNCTION IS FOR TESTING ONLY
 	tmp = head;
+	if(tmp == NULL)
+		printf("NO TOKENS FOUND");
 	while (tmp)
 	{
 		printf("Token: [%s] (Type: %d)\n", tmp->value, tmp->type);

@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:24:10 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/10 19:03:20 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:08:54 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,26 +57,23 @@ t_ast *parse_command(t_token **tokens)
 
 t_ast *parse_pipeline(t_token **tokens)
 {
-	t_ast *left = parse_command(tokens);
-
+	t_ast *left;
+	
+	left = parse_command(tokens);
 	while (*tokens && (*tokens)->type == PIPE)
 	{
 		*tokens = (*tokens)->next; // skip the PIPE token
 		t_ast *right = parse_command(tokens);
-
 		t_ast *pipe_node = malloc(sizeof(t_ast));
 		if (!pipe_node)
 			return NULL;
-
 		pipe_node->type = NODE_PIPE;
 		pipe_node->left = left;
 		pipe_node->right = right;
 		pipe_node->args = NULL;
 		pipe_node->file = NULL;
-
 		left = pipe_node; // chain pipe to the left
 	}
-
 	return left;
 }
 

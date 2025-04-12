@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/11 20:21:15 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:52:17 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void	ft_process_input(t_minishell *data, char *input)
 	{
 		add_history(input);
 		free_tokens(data);
-		free_ast(data->ast_root); // new
-		data->tokens = tokenizer(input);
-		if (data->tokens)
+		free_ast(data->ast_root);
+		t_token *head = tokenizer(input);      // 👈 Save original head
+		data->tokens = head;                   // For consistency (optional)
+		if (head)
 		{
-			expand_tokens(data->tokens, data->last_exit_status, data->env);
-			data->ast_root = parse_ast(&data->tokens); // new parser
-            // print_ast(data->ast_root, 0, 0);
+			expand_tokens(head, data->last_exit_status, data->env);
+			data->ast_root = parse_ast(&head); // 👈 this moves head internally
 		}
 	}
 }
@@ -69,15 +69,12 @@ void	ft_read(t_minishell *data)
     signals_handler();
     input = readline("minishell> ");
     if (!input)
-    {
-        free_env(data->env);
         ft_free(data, 1, "exit");
-    }
     ft_process_input(data, input);
     if (data->ast_root)
 	{
         ft_handle_exit(data, input);
         exec_ast(data->ast_root, -1, data);
     }
-    free(input);
+	free(input);
 }

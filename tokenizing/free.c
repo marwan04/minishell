@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/10 16:09:04 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:47:34 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ void	ft_free(t_minishell *data, int flag, char *msg)
 		free_tokens(data);
 	if (data->ast_root)
 		free_ast(data->ast_root);
+	if (data->env)
+		free_env(data->env);
 	if (flag)
 		ft_putendl_fd(msg, 2);
 	else

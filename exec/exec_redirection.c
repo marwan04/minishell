@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:02:30 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/11 19:05:42 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:54:02 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int handle_redirection_node(t_ast *node, int prev_fd, t_minishell *data)
 			dup2(fd, STDOUT_FILENO);
 		close(fd);
 		exec_ast(node->left, prev_fd, data);
-		exit(data->last_exit_status);
+		ft_free(data, 1, "");
 	}
 	close(fd);
 	if (prev_fd != -1)
