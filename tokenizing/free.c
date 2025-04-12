@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 16:47:34 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:55:33 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,12 @@ void	free_tokens(t_minishell *data)
 
 void	free_ast(t_ast *node)
 {
-	int i;
+	int	i;
 
 	if (!node)
 		return ;
-
-	// Recursively free children
 	free_ast(node->left);
 	free_ast(node->right);
-
-	// Free command args
 	if (node->type == NODE_CMD && node->args)
 	{
 		i = 0;
@@ -92,11 +88,8 @@ void	free_ast(t_ast *node)
 		}
 		free(node->args);
 	}
-
-	// Free file or heredoc limiter if exists
 	if (node->file)
 		free(node->file);
-
 	free(node);
 }
 
