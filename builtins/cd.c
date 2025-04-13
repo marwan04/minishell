@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 22:12:06 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/06 18:36:31 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/13 19:57:40 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,8 @@ void	handle_cd(char **args, t_env **env)
 	char	*target_dir;
 
 	if (!args[1])
-	{
 		if (no_args(env, &target_dir) == 1)
 			return ;
-	}
 	else if (ft_strcmp(args[1], "-") == 0)
 	{
 		target_dir = get_env_value(*env, "OLDPWD");
@@ -79,9 +77,7 @@ void	handle_cd(char **args, t_env **env)
 		printf("%s\n", target_dir);
 	}
 	else
-	{
 		target_dir = args[1];
-	}
 	if (chdir(target_dir) == -1)
 	{
 		perror("cd");
