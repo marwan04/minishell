@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 08:03:56 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/14 08:54:56 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef enum e_token_type
 	WORD
 }					t_token_type;
 
+
 typedef struct s_cmd
 {
 	char			**args;
@@ -41,6 +42,15 @@ typedef struct s_cmd
 	int				pipe;
 	struct s_cmd	*next;
 }					t_cmd;
+typedef struct s_exec_vars
+{
+	t_cmd	*current;
+	int		pipefd[2];
+	int		prev_fd;
+	int		child_count;
+	pid_t	pid;
+	int		is_last;
+}			t_exec_vars;
 
 typedef struct s_expand
 {
@@ -171,11 +181,9 @@ void				free_env_node(t_env *node);
 void				handle_export(char **args, t_env **env);
 
 // exec/exec.c
-int					ft_execute_command(t_cmd *cmds, int *last_exit_status,
-						t_env **env);						
-void				execute_builtin_cmds(t_cmd *cmds, int *last_exit_status,
-						t_env **env);
-void				ft_execute(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data);
+int					ft_execute_command(t_minishell *data);						
+void				execute_builtin_cmds(t_minishell *data);
+void				ft_execute(t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
@@ -194,7 +202,7 @@ int					initialize_execution_params(char **full_path,
 int					is_builtin(char *cmd);
 
 // exec/exec_pipes.c
-void				exec_pipes(t_cmd *cmds, int *last_exit_status, t_env **env, t_minishell *data);
+void				exec_pipes(t_minishell *data);
 
 // Testing
 void				print_commands(t_cmd *cmds);
