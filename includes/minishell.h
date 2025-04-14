@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/14 08:54:56 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/14 10:05:20 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,16 @@ typedef struct s_cmd
 	int				pipe;
 	struct s_cmd	*next;
 }					t_cmd;
+
 typedef struct s_exec_vars
 {
-	t_cmd	*current;
-	int		pipefd[2];
-	int		prev_fd;
-	int		child_count;
-	pid_t	pid;
-	int		is_last;
-}			t_exec_vars;
+    int prev_fd;
+    int pipefd[2];
+    int is_last;
+    int child_count;
+    t_cmd *current;
+}   t_exec_vars;
+
 
 typedef struct s_expand
 {

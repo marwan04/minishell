@@ -6,20 +6,20 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/14 08:59:31 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/14 10:17:18 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void init_exec_vars(t_exec_vars *vars, t_minishell *data)
+static void	init_exec_vars(t_exec_vars *vars, t_minishell *data)
 {
     vars->prev_fd = -1;
     vars->child_count = 0;
     vars->current = data->cmds;
 }
 
-static int setup_pipe(t_minishell *data, int pipefd[2], int is_last)
+static int	setup_pipe(t_minishell *data, int pipefd[2], int is_last)
 {
     if (!is_last && pipe(pipefd) == -1)
     {
@@ -30,9 +30,9 @@ static int setup_pipe(t_minishell *data, int pipefd[2], int is_last)
     return (1);
 }
 
-static pid_t create_process(t_minishell *data)
+static pid_t	create_process(t_minishell *data)
 {
-    pid_t pid;
+    pid_t	pid;
 
     pid = fork();
     if (pid == -1)
@@ -43,8 +43,8 @@ static pid_t create_process(t_minishell *data)
     return (pid);
 }
 
-static void handle_child(t_minishell *data, t_cmd *cmd,
-                         int prev_fd, int pipefd[2], int is_last)
+static void	handle_child(t_minishell *data, t_cmd *cmd, int prev_fd,
+    int pipefd[2], int is_last)
 {
     if (prev_fd != -1)
     {
@@ -74,7 +74,7 @@ static void handle_child(t_minishell *data, t_cmd *cmd,
     exit(data->last_exit_status);
 }
 
-static void close_fds(int *prev_fd, int pipefd[2], int is_last)
+static void	close_fds(int *prev_fd, int pipefd[2], int is_last)
 {
     if (*prev_fd != -1)
         close(*prev_fd);
@@ -85,38 +85,45 @@ static void close_fds(int *prev_fd, int pipefd[2], int is_last)
     }
 }
 
-static void wait_for_children(int count, int *status, int *exit_status)
+static void	wait_for_children(int count, int *status, int *exit_status)
 {
     while (count-- > 0)
         wait(status);
     ft_set_exit_status(exit_status, *status);
 }
 
-static void exec_loop(t_minishell *data, t_exec_vars *vars)
+static void	exec_loop(t_minishell *data, t_exec_vars *vars)
 {
+    int	pid;
+    int	status;
+
     while (vars->current)
     {
         vars->is_last = (vars->current->next == NULL);
         if (!setup_pipe(data, vars->pipefd, vars->is_last))
             return ;
-        vars->pid = create_process(data);
-        if (vars->pid == -1)
-            return ;
-        if (vars->pid == 0)
-            handle_child(data, vars->current,
-                         vars->prev_fd, vars->pipefd, vars->is_last);
-        close_fds(&vars->prev_fd, vars->pipefd, vars->is_last);
+        pid = create_process(data);
+        if (pid == 0)
+        {
+            // Child process executes the command
+            handle_child(data, vars->current, vars->prev_fd,
+                vars->pipefd, vars->is_last);
+        }
+        else if (pid > 0)
+        {
+            // Parent process monitors and manages file descriptors
+            vars->child_count++;
+            close_fds(&vars->prev_fd, vars->pipefd, vars->is_last);
+        }
         vars->current = vars->current->next;
-        vars->child_count++;
     }
+    wait_for_children(vars->child_count, &status, &data->last_exit_status);
 }
 
-void exec_pipes(t_minishell *data)
+void	exec_pipes(t_minishell *data)
 {
-    t_exec_vars vars;
-    int status;
+    t_exec_vars	vars;
 
     init_exec_vars(&vars, data);
     exec_loop(data, &vars);
-    wait_for_children(vars.child_count, &status, &data->last_exit_status);
 }
