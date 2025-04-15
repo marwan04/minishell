@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/15 14:14:03 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/15 23:42:55 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_exit(t_minishell *data)
 {
-	if (data->env)
-		free_env(data->env);
+	// if (data->env)
+	// 	free_env(data->env);
 	if (!data->ast_root->args[1])
 		ft_free(data, data->last_exit_status, "exit");
 	if (!ft_isnumeric(data->ast_root->args[1]))
