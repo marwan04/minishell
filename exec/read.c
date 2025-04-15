@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/12 19:00:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:14:03 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,11 @@ void	ft_exit(t_minishell *data)
 	ft_free(data, data->last_exit_status, "exit");
 }
 
-void	ft_handle_exit(t_minishell *data, char *input)
+void	ft_handle_exit(t_minishell *data)
 {
 	if (data->ast_root && data->ast_root->type == NODE_CMD
 		&& data->ast_root->args && !ft_strcmp(data->ast_root->args[0], "exit"))
 		ft_exit(data);
-	if (!ft_strcmp(input, "clear"))
-		printf("\033[H\033[2J");
 }
 
 void	ft_process_input(t_minishell *data, char *input)
@@ -75,7 +73,7 @@ void	ft_read(t_minishell *data)
 	ft_process_input(data, input);
 	if (data->ast_root)
 	{
-		ft_handle_exit(data, input);
+		ft_handle_exit(data);
 		exec_ast(data->ast_root, -1, data);
 	}
 	free(input);
