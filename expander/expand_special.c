@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 17:29:23 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 17:30:17 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:18:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*handle_exit_and_shell_name(t_expand *expand,
 	{
 		expand->exit_status = ft_itoa(last_exit_status);
 		expand->i++;
+		expand->skip_env_lookup = 1;
 		return (expand->exit_status);
 	}
 	if (token[expand->start] == '0')

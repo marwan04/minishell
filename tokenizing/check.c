@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 00:47:37 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/02/18 22:15:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/15 20:02:19 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 void	check_separator(int *i, char *input)
 {
 	if (input[*i] != '\0' && input[*i] != ' ' && input[*i] != '|'
-		&& input[*i] != '<' && input[*i] != '>')
+		&& input[*i] != '<' && input[*i] != '>' && input[*i] != '&'
+		&& input[*i] != '(' && input[*i] != ')')
 	{
-		while (input[*i] && input[*i] != ' ' && input[*i] != '|'
-			&& input[*i] != '<' && input[*i] != '>')
+		while (input[*i] != '\0' && input[*i] != ' ' && input[*i] != '|'
+			&& input[*i] != '<' && input[*i] != '>' && input[*i] != '&'
+			&& input[*i] != '(' && input[*i] != ')')
 			(*i)++;
 	}
 }
@@ -105,11 +107,13 @@ int	handle_words(int *i, char *input, t_token **head)
 	char	*word;
 
 	if (input[*i] != '\0' && input[*i] != ' ' && input[*i] != '|'
-		&& input[*i] != '<' && input[*i] != '>')
+		&& input[*i] != '<' && input[*i] != '>' && input[*i] != '&'
+		&& input[*i] != '(' && input[*i] != ')')
 	{
 		start = *i;
-		while (input[*i] && input[*i] != ' ' && input[*i] != '|'
-			&& input[*i] != '<' && input[*i] != '>')
+		while (input[*i] != '\0' && input[*i] != ' ' && input[*i] != '|'
+			&& input[*i] != '<' && input[*i] != '>' && input[*i] != '&'
+			&& input[*i] != '(' && input[*i] != ')')
 		{
 			if (input[*i] == '"' || input[*i] == '\'')
 				return (handle_quoted_part(i, input, head, start));
