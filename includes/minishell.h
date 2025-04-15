@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/15 14:14:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:48:53 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ typedef enum e_token_type
 	PIPE,
 	REDIR_IN,
 	REDIR_OUT,
+	OR,
+	AND,
+	LPAREN,
+	RPAREN,
 	WORD
 }					t_token_type;
 
@@ -39,6 +43,10 @@ typedef enum e_node_type
 	NODE_REDIR_OUT,
 	NODE_APPEND,
 	NODE_HEREDOC,
+	NODE_AND,
+	NODE_OR,
+	NODE_LPAREN,
+	NODE_RPAREN
 }					t_node_type;
 
 typedef struct s_ast
