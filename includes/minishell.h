@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/15 19:48:53 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/16 15:40:27 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ typedef enum e_node_type
 	NODE_HEREDOC,
 	NODE_AND,
 	NODE_OR,
-	NODE_LPAREN,
-	NODE_RPAREN
+	NODE_GROUP,
 }					t_node_type;
 
 typedef struct s_ast
@@ -230,4 +229,6 @@ void				print_tokens(t_token *head);
 t_env				*copy_env(t_env *original);
 
 int					update_pwd_env(t_env **env);
+
+t_ast *parse_group(t_token **tokens);
 #endif
