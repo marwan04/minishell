@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/15 23:42:55 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/16 14:30:10 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_exit(t_minishell *data)
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(data->ast_root->args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		ft_free(data, 2, "exit");
+		ft_free(data, 2, "exit\n");
 	}
 	if (data->ast_root->args[2])
 	{
@@ -33,7 +33,7 @@ void	ft_exit(t_minishell *data)
 		return ;
 	}
 	data->last_exit_status = ft_atoi(data->ast_root->args[1]);
-	ft_free(data, data->last_exit_status, "exit");
+	ft_free(data, data->last_exit_status, "exit\n");
 }
 
 void	ft_handle_exit(t_minishell *data)
@@ -69,7 +69,7 @@ void	ft_read(t_minishell *data)
 	signals_handler();
 	input = readline("minishell> ");
 	if (!input)
-		ft_free(data, 1, "exit");
+		ft_free(data, 1, "exit\n");
 	ft_process_input(data, input);
 	if (data->ast_root)
 	{
