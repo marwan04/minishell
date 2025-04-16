@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:48:42 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/12 19:38:34 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/16 15:41:24 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,12 @@ char	*node_type_to_str(t_node_type type)
 		return ("APPEND");
 	if (type == NODE_HEREDOC)
 		return ("HEREDOC");
+	if (type == NODE_AND)
+		return ("AND");
+	if (type == NODE_OR)
+		return ("OR");
+	if (type == NODE_GROUP)
+		return ("GROUP");
 	return ("UNKNOWN");
 }
 
