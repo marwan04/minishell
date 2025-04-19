@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/19 11:44:09 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/19 13:36:57 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,6 @@ int	handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
 		close(prev_fd);
 	exec_ast(node->right, pipefd[0], data);
 	waitpid(pid, &status, 0);
-	if (WIFEXITED(status) )
-		data->last_exit_status = WEXITSTATUS(status);
-	if ( WIFSIGNALED (status))
-		data->last_exit_status = WS(status);
-	
+	data->last_exit_status = WEXITSTATUS(status);
 	return (data->last_exit_status);
 }
