@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/14 10:05:20 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/19 06:50:18 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+
+
+extern volatile sig_atomic_t g_sigint;
 
 typedef enum e_token_type
 {
