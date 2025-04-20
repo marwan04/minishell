@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 19:24:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 10:13:16 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 		return (1);
 	if (node->type == NODE_PIPE)
 		return (handle_pipe_node(node, prev_fd, data));
-	else if (node->type == NODE_CMD)
+	else if (node->type == NODE_CMD || node->type == NODE_HEREDOC)
 		return (handle_cmd_node(node, prev_fd, data));
 	else if (node->type == NODE_REDIR_IN
 		|| node->type == NODE_REDIR_OUT
