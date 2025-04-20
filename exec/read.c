@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 07:58:46 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/20 09:58:44 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ void	ft_read(t_minishell *data)
 	if (data->ast_root)
 	{
 		ft_handle_exit(data);
-		//handle_all_heredocs(data); 
-		//exec_ast(data->ast_root, -1, data);
+		//print_ast(data->ast_root, 0, 0);
+		exec_ast(data->ast_root, -1, data);
 	}
 	free(input);
 }

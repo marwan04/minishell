@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:49:41 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 18:46:50 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 09:52:42 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	free_env(t_env *env)
 	}
 }
 
-static t_env	*create_env_node(char *envp_entry)
+static t_env	*s_create_env_node(char *envp_entry)
 {
 	t_env	*new_node;
 	char	*equal;
@@ -80,7 +80,7 @@ t_env	*init_env_list(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		new_node = create_env_node(envp[i]);
+		new_node = s_create_env_node(envp[i]);
 		if (!new_node)
 		{
 			free_env(head);

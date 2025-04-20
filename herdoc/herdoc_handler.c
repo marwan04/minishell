@@ -6,31 +6,50 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 08:04:27 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/20 09:56:07 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int     process_heredoc(t_minishell *data, t_ast *node)
+static int read_failed(int  pipe_fd[2])
 {
-    
+    close(pipe_fd[0]);
+    close(pipe_fd[1]);
+    return (HEREDOC_INTERRUPTED);
 }
 
-int     handle_heredoc(t_minishell *data)
+static void herdoc_success(t_ast *node, t_token *token)
 {
-    t_ast *node = data->ast_root;
-    
-    while (node)
+    close(node->heredoc_pipe[1]);
+    free(node->file);
+    node->type = NODE_HEREDOC;
+    delete_next_token(token);
+}
+
+int     handle_heredoc(t_ast *node, t_token *token)
+{
+    char *input = NULL;
+
+    if (pipe(node->heredoc_pipe) == -1)
     {
-        if (node->type == NODE_HEREDOC)
-        {
-            if (process_heredoc(data, node) == HEREDOC_INTERRUPTED)
-                return (HEREDOC_INTERRUPTED);
-        }
-        if (node->left)
-            handle_heredoc(data); 
-        node = node->right;
+        perror("Failed to create pipe for heredoc");
+        return (HEREDOC_INTERRUPTED);
     }
+    while (1)
+    {
+        input = readline("> ");
+        if (!input)
+            return (read_failed(node->heredoc_pipe));
+        if (strcmp(input, node->file) == 0)
+        {
+            free(input);
+            break;
+        }
+        write(node->heredoc_pipe[1], input, ft_strlen(input));
+        write(node->heredoc_pipe[1], "\n", 1);
+        free(input);
+    }
+    herdoc_success(node, token);
     return (0);
 }

@@ -6,23 +6,25 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 08:10:12 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/20 09:57:10 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # define HEREDOC_INTERRUPTED -1
-
+# define _GNU_SOURCE
 # include "libft/includes/libft.h"
+# include <signal.h>
+# include <sys/signal.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <bits/sigaction.h>
-# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
-# include <asm/signal.h>
+# include <sys/types.h>
+# include <bits/sigaction.h>
+
 
 extern volatile sig_atomic_t g_sig_int;
 
@@ -58,6 +60,7 @@ typedef struct s_ast
 	t_node_type		type;
 	char			**args;
 	char			*file;
+	int 			heredoc_pipe[2];
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
@@ -133,12 +136,14 @@ t_ast 				*parse_group(t_token **tokens);
 t_ast				*parse_pipeline(t_token **tokens);
 t_ast				*parse_and(t_token **tokens);
 t_ast				*parse_or(t_token **tokens);
+t_ast 				*parse_expression(t_token **tokens);
 
 //tokenizing/tokenizer_utils.c
 t_token				*last_token(t_token *token);
 t_token				*new_token(char *value, t_token_type type);
 void				add_token(t_token **head, char *value, t_token_type type);
 void				remove_last_token(t_token **head);
+void 				delete_next_token(t_token *prev_token);
 
 //tokenizing/tokenizer.c
 t_token				*tokenizer(char *input);
@@ -241,11 +246,11 @@ int					handle_redirection_node(t_ast *node,
 						int prev_fd, t_minishell *data);
 
 // herdoc/herdoc_handler.c
-int					process_heredoc(t_minishell *data, t_ast *node);
-int     			handle_heredoc(t_minishell *data);
+int     			handle_heredoc(t_ast *node, t_token *token);
 // // Testing
 
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
+void				test_heredoc_node(t_ast *node);
 
 #endif
