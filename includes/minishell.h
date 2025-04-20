@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 20:09:24 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 23:22:57 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,8 +195,7 @@ void				free_env_node(t_env *node);
 void				handle_export(char **args, t_env **env);
 
 // exec/exec.c
-int					ft_execute_command(t_ast *node,
-						int *last_exit_status, t_env **env);
+int ft_execute_command(t_ast *node, t_minishell *data);
 void				execute_builtin_cmds(t_ast *node,
 						int *last_exit_status, t_env **env);
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
