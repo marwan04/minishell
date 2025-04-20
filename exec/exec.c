@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/17 22:14:21 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 19:41:04 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 		return data->last_exit_status;
 	}
 	if (node->type == NODE_GROUP)
-		return exec_ast(node->left, prev_fd, data); // same behavior, grouped
+		return exec_ast(node->left, prev_fd, data);
 	if (node->type == NODE_PIPE)
 		return handle_pipe_node(node, prev_fd, data);
 	if (node->type == NODE_CMD)

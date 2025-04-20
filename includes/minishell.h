@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/16 15:40:27 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 20:09:24 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <dirent.h>
+# include <fnmatch.h>
 
 typedef enum e_token_type
 {
@@ -231,4 +233,6 @@ t_env				*copy_env(t_env *original);
 int					update_pwd_env(t_env **env);
 
 t_ast *parse_group(t_token **tokens);
+void expand_wildcards(t_token *tokens);
+
 #endif
