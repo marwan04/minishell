@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env)
 {

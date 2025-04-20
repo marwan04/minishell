@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/16 15:05:08 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 07:58:46 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_exit(t_minishell *data)
 {
@@ -67,7 +67,6 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 
-	signals_handler();
 	input = readline("minishell> ");
 	if (!input)
 		ft_free(data, 1, "exit\n");
@@ -75,7 +74,8 @@ void	ft_read(t_minishell *data)
 	if (data->ast_root)
 	{
 		ft_handle_exit(data);
-		// exec_ast(data->ast_root, -1, data);
+		//handle_all_heredocs(data); 
+		//exec_ast(data->ast_root, -1, data);
 	}
 	free(input);
 }

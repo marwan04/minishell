@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utilites.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:07:13 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/12 18:56:16 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 08:04:04 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-int	is_builtin(char *cmd)
+int		is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -34,7 +34,7 @@ int	is_builtin(char *cmd)
 		return (0);
 }
 
-int	initialize_execution_params(char **full_path, char ***envp,
+int		initialize_execution_params(char **full_path, char ***envp,
 	char **args, t_env **env)
 {
 	*envp = build_env(*env);

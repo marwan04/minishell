@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 // void	ft_exec_cmd1(t_cmd *cmd,
 // int pipefd[2], t_env *env, int *last_exit_status)

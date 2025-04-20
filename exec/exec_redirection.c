@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 // int	handle_redirection_node(t_ast *node, int prev_fd, t_minishell *data)
 // {

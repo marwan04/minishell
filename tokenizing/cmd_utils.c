@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 16:58:21 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 08:09:52 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
+
+t_ast *parse_ast(t_token **tokens)
+{
+	return parse_expression(tokens);
+}
 
 t_ast	*new_ast_cmd(void)
 {

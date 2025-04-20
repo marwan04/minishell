@@ -3,23 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/16 15:40:27 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 08:10:12 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define HEREDOC_INTERRUPTED -1
 
 # include "libft/includes/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <bits/sigaction.h>
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <asm/signal.h>
+
+extern volatile sig_atomic_t g_sig_int;
 
 typedef enum e_token_type
 {
@@ -115,6 +120,7 @@ void				check_separator(int *i, char *input);
 t_ast				*new_ast_cmd(void);
 void				add_argument(t_ast *node, char *arg);
 t_ast				*handle_redirection(t_ast *cmd_node, t_token *token);
+t_ast				*parse_ast(t_token **tokens);
 
 //tokenizing/free.c
 void				free_tokens(t_minishell *data);
@@ -123,7 +129,10 @@ void				free_ast(t_ast *node);
 
 //tokenizing/parsing_utils.c
 t_ast				*parse_command(t_token **tokens);
-t_ast				*parse_ast(t_token **tokens);
+t_ast 				*parse_group(t_token **tokens);
+t_ast				*parse_pipeline(t_token **tokens);
+t_ast				*parse_and(t_token **tokens);
+t_ast				*parse_or(t_token **tokens);
 
 //tokenizing/tokenizer_utils.c
 t_token				*last_token(t_token *token);
@@ -156,6 +165,7 @@ void				expand_track_quotes(t_expand *expand, char c);
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void				signals_handler(void);
+void				check_signal(void);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);
@@ -171,6 +181,11 @@ int					is_valid_identifier(char *arg);
 // builtins/export/print_env.c
 void				print_env_sorted(t_env *env);
 
+// builtins/export/copy_env.c
+t_env				*copy_env(t_env *original);
+void				append_env_node(t_env **head, t_env **tail, t_env *new_node);
+t_env				*create_env_node(t_env *src);
+
 // builtins/cd.c
 void				handle_cd(char **args, t_env **env);
 
@@ -183,7 +198,7 @@ char				**build_env(t_env *env);
 char				*get_env_value(t_env *env, char *key);
 void				add_or_update_env(t_env **env, char *key, char *value);
 
-// builtins/env_utils.c (1 Static function)
+// builtins/env_utils.c
 char				**ft_free_env_array(char **env_array, int last);
 t_env				*init_env_list(char **envp);
 void				free_env(t_env *env);
@@ -191,6 +206,10 @@ void				free_env_node(t_env *node);
 
 // builtins/export/export.c
 void				handle_export(char **args, t_env **env);
+
+// builtins/update_env_cd.c
+int					update_pwd_env(t_env **env);
+
 
 // exec/exec.c
 int					ft_execute_command(t_ast *node,
@@ -221,14 +240,12 @@ int					handle_pipe_node(t_ast *node,
 int					handle_redirection_node(t_ast *node,
 						int prev_fd, t_minishell *data);
 
+// herdoc/herdoc_handler.c
+int					process_heredoc(t_minishell *data, t_ast *node);
+int     			handle_heredoc(t_minishell *data);
 // // Testing
 
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 
-t_env				*copy_env(t_env *original);
-
-int					update_pwd_env(t_env **env);
-
-t_ast *parse_group(t_token **tokens);
 #endif

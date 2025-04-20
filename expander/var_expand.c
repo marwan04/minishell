@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 /* This function for the following
 1- Keeps track of whether we are inside single (') or double (") quotes.
