@@ -22,7 +22,7 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	data.env = init_env_list(envp);
 	data.last_exit_status = 0;
-	signals_handler();
+	init_signals();
 	while (1)
 	{
 		ft_read(&data);

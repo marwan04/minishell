@@ -33,7 +33,7 @@ void	check_signal(t_minishell *data)
 	}
 }
 
-void 	signals_handler(void)
+void 	init_signals(void)
 {
     struct sigaction sa;
 
