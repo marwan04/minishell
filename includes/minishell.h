@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 20:09:24 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:53:39 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 # include "libft/includes/libft.h"
 # include <signal.h>
 # include <sys/signal.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <dirent.h>
@@ -69,12 +69,10 @@ typedef struct s_ast
 
 // typedef struct s_cmd
 // {
+// 	char			*type;
 // 	char			**args;
 // 	char			*input;
-// 	char			*output;
-// 	int				has_redirection;
-// 	int				append;
-// 	int				pipe;
+// 	int				pipe[2];
 // 	struct s_cmd	*next;
 // }					t_cmd;
 
@@ -172,7 +170,7 @@ void				expand_track_quotes(t_expand *expand, char c);
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void				signals_handler(void);
-void				check_signal(void);
+void				check_signal(t_minishell *data);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);
@@ -248,13 +246,13 @@ int					handle_redirection_node(t_ast *node,
 						int prev_fd, t_minishell *data);
 
 // herdoc/herdoc_handler.c
-int     			handle_heredoc(t_ast *node, t_token *token);
+void 				collect_heredocs(t_ast *node);
 // // Testing
 
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 void				test_heredoc_node(t_ast *node);
 
-void expand_wildcards(t_token *tokens);
+void 				expand_wildcards(t_token *tokens);
 
 #endif

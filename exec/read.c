@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 21:56:29 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:54:40 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	ft_process_input(t_minishell *data, char *input)
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
 			data->ast_root = parse_ast(&head);
+			collect_heredocs(data->ast_root);
+			print_ast(data->ast_root, 0, 0);
 		}
 	}
 }
@@ -70,6 +72,7 @@ void	ft_read(t_minishell *data)
 	input = readline("minishell> ");
 	if (!input)
 		ft_free(data, 1, "exit\n");
+	check_signal(data);
 	ft_process_input(data, input);
 	if (data->ast_root)
 	{

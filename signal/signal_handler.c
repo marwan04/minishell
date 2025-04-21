@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/20 11:07:24 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:50:57 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_sigint(int sig)
 	write(1, "\n", 1);
 }
 
-void	check_signal(void)
+void	check_signal(t_minishell *data)
 {
 	if(g_sig_int)
 	{
@@ -29,17 +29,19 @@ void	check_signal(void)
 		rl_replace_line("", 0);
 		rl_redisplay();
 		g_sig_int = 0;
+		data->last_exit_status = 1;
 	}
 }
 
-void	signals_handler(void)
+void 	signals_handler(void)
 {
-	struct sigaction sa;
+    struct sigaction sa;
 
-	sa.sa_handler = handle_sigint;
-	sa.sa_flags = SA_RESTART;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
+    rl_catch_signals = 0;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags   = 0;
+    sa.sa_handler = handle_sigint;
+    sigaction(SIGINT, &sa, NULL);
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa, NULL);
 }
