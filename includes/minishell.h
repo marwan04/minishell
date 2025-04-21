@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/21 23:21:27 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:45:14 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void				expand_track_quotes(t_expand *expand, char c);
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void				signals_handler(void);
-void				check_signal(void);
+void				check_signal(t_minishell *data);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);
@@ -252,6 +252,6 @@ void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 void				test_heredoc_node(t_ast *node);
 
-void expand_wildcards(t_token *tokens);
+void 				expand_wildcards(t_token *tokens);
 
 #endif

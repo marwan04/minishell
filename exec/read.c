@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/21 23:01:51 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:50:20 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	ft_read(t_minishell *data)
 	input = readline("minishell> ");
 	if (!input)
 		ft_free(data, 1, "exit\n");
+	check_signal(data);
 	ft_process_input(data, input);
 	if (data->ast_root)
 	{

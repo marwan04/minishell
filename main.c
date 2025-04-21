@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 09:32:02 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:50:06 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		ft_read(&data);
-		check_signal();
 	}
 	return (0);
 }
