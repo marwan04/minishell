@@ -6,7 +6,7 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/20 06:40:50 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/04/22 00:30:27 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
-EXEC		= exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c 
+EXEC		= exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c  exec/exec_herdoc.c
 
 EXPANDER	= expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
 

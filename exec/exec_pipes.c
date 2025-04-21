@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/19 13:36:57 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:51:12 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,6 @@ void child_process_pipe(int prev_fd, int pipefd[2], t_ast *node, t_minishell *da
     exec_ast(node->left, -1, data);
     ft_free(data, 1, "");
 }
-
-
-// void	child_process_pipe(int prev_fd, int pipefd[2],
-// 			t_ast *node, t_minishell *data)
-// {
-// 	if (prev_fd != -1)
-// 	{
-// 		dup2(prev_fd, STDIN_FILENO);
-// 		close(prev_fd);
-// 	}
-// 	dup2(pipefd[1], STDOUT_FILENO);
-// 	close(pipefd[0]);
-// 	close(pipefd[1]);
-// 	exec_ast(node->left, -1, data);
-// 	ft_free(data, 1, "");
-// }
 
 pid_t	pipe_and_fork(int pipefd[2], int prev_fd,
 			t_ast *node, t_minishell *data)
