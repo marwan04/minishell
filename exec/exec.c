@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/21 21:19:27 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:54:52 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,30 +34,19 @@ void	execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env)
 		handle_unset(node->args, env);
 }
 
-int ft_execute_command(t_ast *node, t_minishell *data)
+int	ft_execute_command(t_ast *node, int *last_exit_status, t_env **env)
 {
-	char *full_path;
-	char **envp;
+	char	*full_path;
+	char	**envp;
 
-	if (initialize_execution_params(&full_path, &envp, node->args, &data->env) == -1)
-	{
-		data->last_exit_status = 127;
-		return -1;
-	}
-	if (!full_path)
-	{
-		ft_free_double_list(envp);
-		ft_putstr_fd(node->args[0], 2);
-		ft_putendl_fd(": command not found", 2);
-		ft_free(data, 127, "");
-	}
+	if (initialize_execution_params(&full_path, &envp, node->args, env) == -1)
+		return (-1);
 	execve(full_path, node->args, envp);
 	free(full_path);
 	ft_free_double_list(envp);
-	ft_putstr_fd(node->args[0], 2);
-	ft_putendl_fd(": command not found", 2);
-	ft_free(data, 127, "");
-	return 1;
+	ft_perror("Execve Failed", 5);
+	*last_exit_status = 127;
+	return (-1);
 }
 
 int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
@@ -78,7 +67,7 @@ int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 			dup2(prev_fd, STDIN_FILENO);
 			close(prev_fd);
 		}
-		ft_execute_command(node, data);
+		ft_execute_command(node, &data->last_exit_status, &data->env);
 		exit(data->last_exit_status);
 	}
 	if (prev_fd != -1)
