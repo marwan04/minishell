@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/21 23:28:30 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:08:44 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ static int process_heredoc(t_ast *node)
         return (herdoc_failed(node->heredoc_pipe));
     while ((line = readline("> ")))
     {
-        if (strcmp(line, node->file) == 0)
+        if (ft_strcmp(line, node->file) == 0)
         {
             free(line);
             break;
         }
-        write(node->heredoc_pipe[1], line, strlen(line));
+        write(node->heredoc_pipe[1], line, ft_strlen(line));
         write(node->heredoc_pipe[1], "\n", 1);
         free(line);
     }
