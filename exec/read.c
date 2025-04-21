@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
 /*   Updated: 2025/04/20 22:42:31 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_exit(t_minishell *data)
 {
@@ -59,8 +59,6 @@ void	ft_process_input(t_minishell *data, char *input)
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
 			data->ast_root = parse_ast(&head);
-			// print_tokens(data->tokens);
-			// print_ast(data->ast_root, 0, 0);
 		}
 	}
 }
@@ -69,7 +67,6 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 
-	signals_handler();
 	input = readline("minishell> ");
 	if (!input)
 		ft_free(data, 1, "exit\n");
