@@ -21,7 +21,7 @@ void	handle_sigint(int sig)
 	write(1, "\n", 1);
 }
 
-void	check_signal(t_minishell *data)
+void	init_signals(t_minishell *data)
 {
 	if(g_sig_int)
 	{
