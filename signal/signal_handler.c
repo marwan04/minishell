@@ -21,7 +21,7 @@ void	handle_sigint(int sig)
 	write(1, "\n", 1);
 }
 
-void	init_signals(t_minishell *data)
+void	check_signal(t_minishell *data)
 {
 	if(g_sig_int)
 	{
@@ -33,7 +33,7 @@ void	init_signals(t_minishell *data)
 	}
 }
 
-void 	signals_handler(void)
+void 	init_signals(void)
 {
     struct sigaction sa;
 
