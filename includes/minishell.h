@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/21 23:53:39 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:52:38 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,6 @@ typedef struct s_ast
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
-
-// typedef struct s_cmd
-// {
-// 	char			*type;
-// 	char			**args;
-// 	char			*input;
-// 	int				pipe[2];
-// 	struct s_cmd	*next;
-// }					t_cmd;
 
 typedef struct s_expand
 {
@@ -225,6 +216,10 @@ int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
+
+// exec/exec_herdoc.c
+
+int					handle_heredoc_node(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/read.c
 void				ft_read(t_minishell *data);
