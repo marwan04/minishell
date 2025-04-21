@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/21 20:59:03 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:21:27 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,10 @@ typedef struct s_ast
 
 // typedef struct s_cmd
 // {
+// 	char			*type;
 // 	char			**args;
 // 	char			*input;
-// 	char			*output;
-// 	int				has_redirection;
-// 	int				append;
-// 	int				pipe;
+// 	int				pipe[2];
 // 	struct s_cmd	*next;
 // }					t_cmd;
 
@@ -247,7 +245,7 @@ int					handle_redirection_node(t_ast *node,
 						int prev_fd, t_minishell *data);
 
 // herdoc/herdoc_handler.c
-int     			handle_heredoc(t_ast *node, t_token *token);
+void 				collect_heredocs(t_ast *node);
 // // Testing
 
 void				print_ast(t_ast *node, int depth, int is_left);
