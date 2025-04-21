@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 23:22:57 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/21 20:59:03 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 # include "libft/includes/libft.h"
 # include <signal.h>
 # include <sys/signal.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <dirent.h>
