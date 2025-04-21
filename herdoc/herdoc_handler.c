@@ -27,12 +27,12 @@ static int process_heredoc(t_ast *node)
         return (herdoc_failed(node->heredoc_pipe));
     while ((line = readline("> ")))
     {
-        if (strcmp(line, node->file) == 0)
+        if (ft_strcmp(line, node->file) == 0)
         {
             free(line);
             break;
         }
-        write(node->heredoc_pipe[1], line, strlen(line));
+        write(node->heredoc_pipe[1], line, ft_strlen(line));
         write(node->heredoc_pipe[1], "\n", 1);
         free(line);
     }
