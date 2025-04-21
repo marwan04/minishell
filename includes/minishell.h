@@ -169,7 +169,7 @@ void				expand_track_quotes(t_expand *expand, char c);
 
 // signal/signal_handler.c
 void				handle_sigint(int sig);
-void				signals_handler(void);
+void 				init_signals(void);
 void				check_signal(t_minishell *data);
 
 // builtins/echo.c
