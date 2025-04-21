@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 17:13:21 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 22:01:38 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,59 @@ void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 			tokens->value = expanded;
 		}
 		tokens = tokens->next;
+	}
+}
+
+void expand_wildcards(t_token *tokens)
+{
+	DIR *dir;
+	struct dirent *entry;
+	t_token *cur = tokens;
+	t_token *matches_head;
+	t_token *matches_tail;
+	t_token *new_tok;
+	t_token *tmp;
+	
+	while (cur)
+	{
+		if (cur->type == WORD && ft_strchr(cur->value, '*'))
+		{
+			dir = opendir(".");
+			if (!dir)
+				return;
+			matches_head = NULL;
+			matches_tail = NULL;
+			while ((entry = readdir(dir)))
+			{
+				if (entry->d_name[0] == '.')
+					continue;
+				if (fnmatch(cur->value, entry->d_name, 0) == 0)
+				{
+					new_tok = new_token(entry->d_name, WORD);
+					if (!matches_head)
+					{
+						matches_head = new_tok;
+						matches_tail = new_tok;
+					}
+					else
+					{
+						matches_tail->next = new_tok;
+						matches_tail = new_tok;
+					}
+				}
+			}
+			closedir(dir);
+			if (matches_head)
+			{
+				free(cur->value);
+				cur->value = ft_strdup(matches_head->value);
+				tmp = matches_head->next;
+				matches_tail->next = cur->next;
+				cur->next = tmp;
+				free(matches_head->value);
+				free(matches_head);
+			}
+		}
+		cur = cur->next;
 	}
 }

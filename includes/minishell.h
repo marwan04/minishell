@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 09:57:10 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/20 23:22:57 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <dirent.h>
+# include <fnmatch.h>
 # include <sys/types.h>
 # include <bits/sigaction.h>
 
@@ -217,8 +219,7 @@ int					update_pwd_env(t_env **env);
 
 
 // exec/exec.c
-int					ft_execute_command(t_ast *node,
-						int *last_exit_status, t_env **env);
+int ft_execute_command(t_ast *node, t_minishell *data);
 void				execute_builtin_cmds(t_ast *node,
 						int *last_exit_status, t_env **env);
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
@@ -252,5 +253,7 @@ int     			handle_heredoc(t_ast *node, t_token *token);
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 void				test_heredoc_node(t_ast *node);
+
+void expand_wildcards(t_token *tokens);
 
 #endif

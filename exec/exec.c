@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/20 10:13:16 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/20 23:23:56 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,30 @@ void	execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env)
 		handle_unset(node->args, env);
 }
 
-int	ft_execute_command(t_ast *node, int *last_exit_status, t_env **env)
+int ft_execute_command(t_ast *node, t_minishell *data)
 {
-	char	*full_path;
-	char	**envp;
+	char *full_path;
+	char **envp;
 
-	if (initialize_execution_params(&full_path, &envp, node->args, env) == -1)
-		return (-1);
+	if (initialize_execution_params(&full_path, &envp, node->args, &data->env) == -1)
+	{
+		data->last_exit_status = 127;
+		return -1;
+	}
+	if (!full_path)
+	{
+		ft_free_double_list(envp);
+		ft_putstr_fd(node->args[0], 2);
+		ft_putendl_fd(": command not found", 2);
+		ft_free(data, 127, "");
+	}
 	execve(full_path, node->args, envp);
 	free(full_path);
 	ft_free_double_list(envp);
-	ft_perror("Execve Failed", 5);
-	*last_exit_status = 127;
-	return (-1);
+	ft_putstr_fd(node->args[0], 2);
+	ft_putendl_fd(": command not found", 2);
+	ft_free(data, 127, "");
+	return 1;
 }
 
 int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
@@ -67,7 +78,7 @@ int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 			dup2(prev_fd, STDIN_FILENO);
 			close(prev_fd);
 		}
-		ft_execute_command(node, &data->last_exit_status, &data->env);
+		ft_execute_command(node, data);
 		exit(data->last_exit_status);
 	}
 	if (prev_fd != -1)
@@ -77,20 +88,38 @@ int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 	return (data->last_exit_status);
 }
 
-int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
+int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 {
 	if (!node)
-		return (1);
+		return 1;
+
+	if (node->type == NODE_AND)
+	{
+		exec_ast(node->left, prev_fd, data);
+		if (data->last_exit_status == 0)
+			exec_ast(node->right, prev_fd, data);
+		return data->last_exit_status;
+	}
+	if (node->type == NODE_OR)
+	{
+		exec_ast(node->left, prev_fd, data);
+		if (data->last_exit_status != 0)
+			exec_ast(node->right, prev_fd, data);
+		return data->last_exit_status;
+	}
+	if (node->type == NODE_GROUP)
+		return exec_ast(node->left, prev_fd, data);
 	if (node->type == NODE_PIPE)
-		return (handle_pipe_node(node, prev_fd, data));
-	else if (node->type == NODE_CMD || node->type == NODE_HEREDOC)
-		return (handle_cmd_node(node, prev_fd, data));
-	else if (node->type == NODE_REDIR_IN
+		return handle_pipe_node(node, prev_fd, data);
+	if (node->type == NODE_CMD)
+		return handle_cmd_node(node, prev_fd, data);
+	if (node->type == NODE_REDIR_IN
 		|| node->type == NODE_REDIR_OUT
 		|| node->type == NODE_APPEND)
-		return (handle_redirection_node(node, prev_fd, data));
-	return (0);
+		return handle_redirection_node(node, prev_fd, data);
+	return 0;
 }
+
 
 // int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 // {
