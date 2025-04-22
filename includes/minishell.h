@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 16:02:15 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:32:49 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void				expand_track_quotes(t_expand *expand, char c);
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void 				init_signals(void);
-void				check_signal(t_minishell *data);
+int				check_signal(t_minishell *data);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);
