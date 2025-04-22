@@ -3,16 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utilites.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:07:13 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 23:04:29 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:50:52 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-int	is_builtin(char *cmd)
+int		ft_execute_command(t_ast *node, int *last_exit_status, t_env **env)
+{
+	char	*full_path;
+	char	**envp;
+
+	if (initialize_execution_params(&full_path, &envp, node->args, env) == -1)
+		return (-1);
+	execve(full_path, node->args, envp);
+	free(full_path);
+	ft_free_double_list(envp);
+	ft_perror("Execve Failed", 5);
+	*last_exit_status = 127;
+	return (-1);
+}
+
+int		is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -34,17 +49,29 @@ int	is_builtin(char *cmd)
 		return (0);
 }
 
-int	initialize_execution_params(char **full_path, char ***envp,
+int		initialize_execution_params(char **full_path, char ***envp,
 	char **args, t_env **env)
 {
 	*envp = build_env(*env);
 	if (!*envp)
 		return (-1);
-
 	if (access(args[0], X_OK) == 0)
+	{
 		*full_path = ft_strdup(args[0]);
+		if (!*full_path)
+		{
+			ft_free_double_list(*envp);
+			return (-1);
+		}
+	}
 	else
+	{
 		*full_path = ft_get_path(args[0], env);
+		if (!*full_path)
+		{
+			ft_free_double_list(*envp);
+			return (-1);
+		}
+	}
 	return (0);
 }
-

@@ -3,32 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 22:42:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:56:21 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_exit(t_minishell *data)
 {
-	// if (data->env)
-	// 	free_env(data->env);
 	if (!data->ast_root->args[1])
-		ft_free(data, data->last_exit_status, "exit");
+		ft_free(data, data->last_exit_status, "exit\n");
 	if (!ft_isnumeric(data->ast_root->args[1]))
 	{
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(data->ast_root->args[1], 2);
-		ft_putendl_fd(": numeric argument required", 2);
+		ft_putendl_fd(": numeric argument required\n", 2);
 		ft_free(data, 2, "exit\n");
 	}
 	if (data->ast_root->args[2])
 	{
 		write(1, "exit\n", 5);
-		ft_putendl_fd("bash: exit: too many arguments", 2);
+		ft_putendl_fd("bash: exit: too many arguments\n", 2);
 		data->last_exit_status = 1;
 		return ;
 	}
@@ -59,8 +57,7 @@ void	ft_process_input(t_minishell *data, char *input)
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
 			data->ast_root = parse_ast(&head);
-			// print_tokens(data->tokens);
-			// print_ast(data->ast_root, 0, 0);
+			collect_heredocs(data->ast_root);
 		}
 	}
 }
@@ -69,10 +66,10 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 
-	signals_handler();
 	input = readline("minishell> ");
 	if (!input)
 		ft_free(data, 1, "exit\n");
+	check_signal(data);
 	ft_process_input(data, input);
 	if (data->ast_root)
 	{

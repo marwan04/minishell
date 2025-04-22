@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 char	*handle_exit_and_shell_name(t_expand *expand,
 			char *token, int last_exit_status)

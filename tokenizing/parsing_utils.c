@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:24:10 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/16 15:40:08 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/20 08:09:46 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 t_ast	*parse_command(t_token **tokens)
 {
@@ -136,7 +136,4 @@ t_ast *parse_group(t_token **tokens)
 	return (group_node);
 }
 
-t_ast *parse_ast(t_token **tokens)
-{
-	return parse_expression(tokens);
-}
+

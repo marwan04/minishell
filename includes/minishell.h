@@ -3,25 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 23:22:57 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:52:38 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
+# define HEREDOC_INTERRUPTED -1
+# define _GNU_SOURCE
 # include "libft/includes/libft.h"
+# include <signal.h>
+# include <sys/signal.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <signal.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <dirent.h>
 # include <fnmatch.h>
+# include <sys/types.h>
+# include <bits/sigaction.h>
+
+
+extern volatile sig_atomic_t g_sig_int;
 
 typedef enum e_token_type
 {
@@ -55,20 +62,10 @@ typedef struct s_ast
 	t_node_type		type;
 	char			**args;
 	char			*file;
+	int 			heredoc_pipe[2];
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
-
-// typedef struct s_cmd
-// {
-// 	char			**args;
-// 	char			*input;
-// 	char			*output;
-// 	int				has_redirection;
-// 	int				append;
-// 	int				pipe;
-// 	struct s_cmd	*next;
-// }					t_cmd;
 
 typedef struct s_expand
 {
@@ -117,6 +114,7 @@ void				check_separator(int *i, char *input);
 t_ast				*new_ast_cmd(void);
 void				add_argument(t_ast *node, char *arg);
 t_ast				*handle_redirection(t_ast *cmd_node, t_token *token);
+t_ast				*parse_ast(t_token **tokens);
 
 //tokenizing/free.c
 void				free_tokens(t_minishell *data);
@@ -125,13 +123,18 @@ void				free_ast(t_ast *node);
 
 //tokenizing/parsing_utils.c
 t_ast				*parse_command(t_token **tokens);
-t_ast				*parse_ast(t_token **tokens);
+t_ast 				*parse_group(t_token **tokens);
+t_ast				*parse_pipeline(t_token **tokens);
+t_ast				*parse_and(t_token **tokens);
+t_ast				*parse_or(t_token **tokens);
+t_ast 				*parse_expression(t_token **tokens);
 
 //tokenizing/tokenizer_utils.c
 t_token				*last_token(t_token *token);
 t_token				*new_token(char *value, t_token_type type);
 void				add_token(t_token **head, char *value, t_token_type type);
 void				remove_last_token(t_token **head);
+void 				delete_next_token(t_token *prev_token);
 
 //tokenizing/tokenizer.c
 t_token				*tokenizer(char *input);
@@ -157,7 +160,8 @@ void				expand_track_quotes(t_expand *expand, char c);
 
 // signal/signal_handler.c
 void				handle_sigint(int sig);
-void				signals_handler(void);
+void 				init_signals(void);
+void				check_signal(t_minishell *data);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);
@@ -173,6 +177,11 @@ int					is_valid_identifier(char *arg);
 // builtins/export/print_env.c
 void				print_env_sorted(t_env *env);
 
+// builtins/export/copy_env.c
+t_env				*copy_env(t_env *original);
+void				append_env_node(t_env **head, t_env **tail, t_env *new_node);
+t_env				*create_env_node(t_env *src);
+
 // builtins/cd.c
 void				handle_cd(char **args, t_env **env);
 
@@ -185,7 +194,7 @@ char				**build_env(t_env *env);
 char				*get_env_value(t_env *env, char *key);
 void				add_or_update_env(t_env **env, char *key, char *value);
 
-// builtins/env_utils.c (1 Static function)
+// builtins/env_utils.c
 char				**ft_free_env_array(char **env_array, int last);
 t_env				*init_env_list(char **envp);
 void				free_env(t_env *env);
@@ -194,14 +203,23 @@ void				free_env_node(t_env *node);
 // builtins/export/export.c
 void				handle_export(char **args, t_env **env);
 
+// builtins/update_env_cd.c
+int					update_pwd_env(t_env **env);
+
+
 // exec/exec.c
-int ft_execute_command(t_ast *node, t_minishell *data);
+int					ft_execute_command(t_ast *node,
+						int *last_exit_status, t_env **env);
 void				execute_builtin_cmds(t_ast *node,
 						int *last_exit_status, t_env **env);
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
+
+// exec/exec_herdoc.c
+
+int					handle_heredoc_node(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/read.c
 void				ft_read(t_minishell *data);
@@ -222,16 +240,14 @@ int					handle_pipe_node(t_ast *node,
 int					handle_redirection_node(t_ast *node,
 						int prev_fd, t_minishell *data);
 
+// herdoc/herdoc_handler.c
+void 				collect_heredocs(t_ast *node);
 // // Testing
 
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
+void				test_heredoc_node(t_ast *node);
 
-t_env				*copy_env(t_env *original);
-
-int					update_pwd_env(t_env **env);
-
-t_ast *parse_group(t_token **tokens);
-void expand_wildcards(t_token *tokens);
+void 				expand_wildcards(t_token *tokens);
 
 #endif

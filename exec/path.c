@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 08:39:20 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/12 18:56:46 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 00:51:53 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 static char	*ft_get_path_from_env(char **env)
 {
@@ -102,35 +102,3 @@ char	*ft_get_path(char *cmd, t_env **envp)
 	ft_free_double_list(paths);
 	return (resolved);
 }
-
-// char	*ft_get_path(char *cmd, t_env **envp)
-// {
-// 	char	**paths;
-// 	char	*full_path;
-// 	int		i;
-
-// 	if (!cmd)
-// 		return (NULL);
-// 	paths = ft_split_path(envp);
-// 	if (!paths)
-// 		return (NULL);
-// 	i = 0;
-// 	while (paths[i])
-// 	{
-// 		full_path = ft_build_path(paths[i], cmd);
-// 		if (!full_path)
-// 		{
-// 			i++;
-// 			continue ;
-// 		}
-// 		if (access(full_path, X_OK) == 0)
-// 		{
-// 			ft_free_double_list(paths);
-// 			return (full_path);
-// 		}
-// 		free(full_path);
-// 		i++;
-// 	}
-// 	ft_free_double_list(paths);
-// 	return (NULL);
-// }

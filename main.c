@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/07 06:48:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/21 23:50:06 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	data.env = init_env_list(envp);
 	data.last_exit_status = 0;
+	init_signals();
 	while (1)
 	{
 		ft_read(&data);
