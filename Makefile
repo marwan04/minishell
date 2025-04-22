@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
+#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/22 00:30:27 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/04/22 16:13:01 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,8 @@ BUILTINS	= builtins/update_env_cd.c builtins/update_env.c builtins/echo.c builti
 
 SIGNAL		= signal/signal_handler.c
 
+SYNTAX		= syntax/syntax_check.c syntax/syntax_utils.c
+
 TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/check.c \
 			  tokenizing/tokenizer_utils.c \
@@ -45,7 +47,8 @@ SRCS		= main.c \
 			  $(SIGNAL) \
 			  $(BUILTINS) \
 			  $(EXEC) \
-			  $(HERDOC)
+			  $(HERDOC) \
+			  $(SYNTAX)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)
 

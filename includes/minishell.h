@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 00:52:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:02:15 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,8 +242,19 @@ int					handle_redirection_node(t_ast *node,
 
 // herdoc/herdoc_handler.c
 void 				collect_heredocs(t_ast *node);
-// // Testing
 
+// syntax/syntax_check.c
+int					validate_token_sequence(t_token *tokens);
+int					syntax_error(char *input);
+
+// syntax/syntax_utils.c
+int					starts_with_pipe_or_logical(char *input);
+int					has_unmatched_quotes(char *input);
+int					has_empty_parentheses(char *input);
+int 				has_unmatched_parentheses(const char *input);
+int					has_invalid_operator_sequence(char *input);
+
+// // Testing
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 void				test_heredoc_node(t_ast *node);

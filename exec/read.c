@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 00:56:21 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:52:51 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,23 @@ void	ft_process_input(t_minishell *data, char *input)
 	if (*input)
 	{
 		add_history(input);
+		if (syntax_error(input))
+		{
+			write(2, "minishell: syntax error\n", 25);
+			data->last_exit_status = 2;
+			return ;
+		}
 		free_tokens(data);
 		free_ast(data->ast_root);
 		head = tokenizer(input);
 		data->tokens = head;
+		if (validate_token_sequence(data->tokens))
+		{
+			ft_putendl_fd("minishell: syntax error near unexpected token", 2);
+			data->last_exit_status = 2;
+			free_tokens(data);
+			return ;
+		}
 		if (head)
 		{
 			expand_tokens(head, data->last_exit_status, data->env);
