@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 16:52:51 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:33:11 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,19 @@ void	ft_process_input(t_minishell *data, char *input)
 void	ft_read(t_minishell *data)
 {
 	char	*input;
-
+	
+	dup2(1, 0);
 	input = readline("minishell> ");
-	if (!input)
+	if (!input && !g_sig_int)
 		ft_free(data, 1, "exit\n");
-	check_signal(data);
-	ft_process_input(data, input);
-	if (data->ast_root)
+	if (!check_signal(data))
 	{
-		ft_handle_exit(data);
-		exec_ast(data->ast_root, -1, data);
+		ft_process_input(data, input);
+		if (data->ast_root)
+		{
+			ft_handle_exit(data);
+			exec_ast(data->ast_root, -1, data);
+		}
+		free(input);
 	}
-	free(input);
 }
