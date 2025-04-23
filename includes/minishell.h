@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 06:30:35 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:34:59 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,9 @@ int					has_invalid_operator_sequence(char *input);
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 void				test_heredoc_node(t_ast *node);
+
+// normalize_tokens.c
+void				normalize_redirections(t_token **tokens);
 
 void 				expand_wildcards(t_token *tokens);
 

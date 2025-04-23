@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/22 16:13:01 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/23 17:35:17 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/tokenizer_utils.c \
 			  tokenizing/cmd_utils.c \
 			  tokenizing/free.c\
-			  tokenizing/parsing_utils.c
+			  tokenizing/parsing_utils.c \
+			  tokenizing/normalize_tokens.c
 
 SRCS		= main.c \
 			  test.c \

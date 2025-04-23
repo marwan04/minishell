@@ -6,11 +6,39 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 19:08:07 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:15:32 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
+
+void update_shlvl(t_env **env)
+{
+	t_env *var;
+	int shlvl;
+	char *shlvl_str;
+
+	var = *env;
+	while (var)
+	{
+		if (ft_strcmp(var->key, "SHLVL") == 0)
+		{
+			shlvl = ft_atoi(var->value);
+			if (shlvl < 0)
+				shlvl = 0;
+			else if (shlvl >= 999)
+				shlvl = 1;
+			else
+				shlvl += 1;
+			free(var->value);
+			shlvl_str = ft_itoa(shlvl);
+			var->value = shlvl_str;
+			return ;
+		}
+		var = var->next;
+	}
+	add_or_update_env(env, "SHLVL", "1");
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -21,6 +49,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac != 1)
 		return (1);
 	data.env = init_env_list(envp);
+	update_shlvl(&data.env);
 	data.last_exit_status = 0;
 	init_signals();
 	while (1)
