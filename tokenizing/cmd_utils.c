@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/21 21:41:13 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/23 06:29:12 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,34 +73,54 @@ t_ast	*new_ast_cmd(void)
 // 	node->args = new_args;
 // }
 
+static void	handle_heredoc_info(t_ast *redir_node, char *raw)
+{
+	if ((raw[0] == '\'' && raw[ft_strlen(raw) - 1] == '\'')
+		|| (raw[0] == '"' && raw[ft_strlen(raw) - 1] == '"'))
+	{
+		redir_node->heredoc_expand = 0;
+		redir_node->file = ft_substr(raw, 1, ft_strlen(raw) - 2);
+	}
+	else
+	{
+		redir_node->heredoc_expand = 1;
+		redir_node->file = ft_strdup(raw);
+	}
+}
+
 t_ast	*handle_redirection(t_ast *cmd_node, t_token *token)
 {
 	t_ast	*redir_node;
+	char	*raw;
 
 	if (!cmd_node || !token || !token->next)
 		return (NULL);
 	redir_node = malloc(sizeof(t_ast));
 	if (!redir_node)
 		return (NULL);
-	redir_node->file = ft_strdup(token->next->value);
-	if (!redir_node->file)
-	{
-		free(redir_node);
-		return (NULL);
-	}
+	raw = token->next->value;
 	redir_node->left = cmd_node;
 	redir_node->right = NULL;
 	redir_node->args = NULL;
-	if (token->type == REDIR_IN)
-		redir_node->type = NODE_REDIR_IN;
-	else if (token->type == REDIR_OUT)
-		redir_node->type = NODE_REDIR_OUT;
-	else if (token->type == APPEND)
-		redir_node->type = NODE_APPEND;
-	else if (token->type == HEREDOC)
+	if (token->type == HEREDOC)
+	{
 		redir_node->type = NODE_HEREDOC;
+		handle_heredoc_info(redir_node, raw);
+	}
+	else
+	{
+		redir_node->file = ft_strdup(raw);
+		redir_node->heredoc_expand = 0;
+		if (token->type == REDIR_IN)
+			redir_node->type = NODE_REDIR_IN;
+		else if (token->type == REDIR_OUT)
+			redir_node->type = NODE_REDIR_OUT;
+		else if (token->type == APPEND)
+			redir_node->type = NODE_APPEND;
+	}
 	return (redir_node);
 }
+
 
 void	add_argument(t_ast *node, char *arg)
 {
