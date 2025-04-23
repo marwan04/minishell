@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 19:32:49 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/23 06:30:35 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_ast
 	char			**args;
 	char			*file;
 	int 			heredoc_pipe[2];
+	int				heredoc_expand;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
@@ -140,6 +141,7 @@ void 				delete_next_token(t_token *prev_token);
 t_token				*tokenizer(char *input);
 
 //expander/expand.c
+char				*expand_line(char *line, t_minishell *data);
 char				*expand_tilde(char *token);
 char				*remove_quotes(char *input);
 void				expand_tokens(t_token *tokens,
@@ -241,7 +243,8 @@ int					handle_redirection_node(t_ast *node,
 						int prev_fd, t_minishell *data);
 
 // herdoc/herdoc_handler.c
-void 				collect_heredocs(t_ast *node);
+
+void				collect_heredocs(t_ast *node, t_minishell *data);
 
 // syntax/syntax_check.c
 int					validate_token_sequence(t_token *tokens);

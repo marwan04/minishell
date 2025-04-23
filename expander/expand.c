@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/20 22:01:38 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/23 06:14:31 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,4 +140,25 @@ void expand_wildcards(t_token *tokens)
 		}
 		cur = cur->next;
 	}
+}
+
+char	*expand_line(char *line, t_minishell *data)
+{
+	char	*tilde_expanded;
+	char	*vars_expanded;
+	char	*final;
+
+	if (!line)
+		return (NULL);
+	tilde_expanded = expand_tilde(line);
+	if (!tilde_expanded)
+		return (NULL);
+	vars_expanded = expand_variables(tilde_expanded,
+			data->last_exit_status, data->env);
+	free(tilde_expanded);
+	if (!vars_expanded)
+		return (NULL);
+	final = remove_quotes(vars_expanded);
+	free(vars_expanded);
+	return (final);
 }

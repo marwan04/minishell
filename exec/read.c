@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 19:33:11 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/23 06:30:53 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_process_input(t_minishell *data, char *input)
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
 			data->ast_root = parse_ast(&head);
-			collect_heredocs(data->ast_root);
+			collect_heredocs(data->ast_root, data);
 		}
 	}
 }

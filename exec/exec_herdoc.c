@@ -6,14 +6,14 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 00:29:25 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 00:45:19 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/23 06:18:03 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static pid_t	fork_and_exec_heredoc(t_ast *node,
-					int prev_fd, t_minishell *data)
+	int prev_fd, t_minishell *data)
 {
 	pid_t	pid;
 	t_ast	*cmd;
@@ -37,8 +37,7 @@ static pid_t	fork_and_exec_heredoc(t_ast *node,
 	return (pid);
 }
 
-int		handle_heredoc_node(t_ast *node,
-			int prev_fd, t_minishell *data)
+int	handle_heredoc_node(t_ast *node, int prev_fd, t_minishell *data)
 {
 	pid_t	pid;
 	int		status;
