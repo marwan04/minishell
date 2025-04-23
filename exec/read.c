@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 16:23:12 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:36:47 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,9 @@ void	ft_process_input(t_minishell *data, char *input)
 		{
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
+			normalize_redirections(&data->tokens); 
 			data->ast_root = parse_ast(&head);
-			print_ast(data->ast_root, 0 ,0);
+			// print_ast(data->ast_root, 0 ,0);
 			collect_heredocs(data->ast_root, data);
 		}
 	}
