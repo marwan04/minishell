@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/22 00:50:44 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:32:23 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 			dup2(prev_fd, STDIN_FILENO);
 			close(prev_fd);
 		}
-		ft_execute_command(node, &data->last_exit_status, &data->env);
+		ft_execute_command(node, data);
 		exit(data->last_exit_status);
 	}
 	if (prev_fd != -1)

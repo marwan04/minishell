@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 17:34:59 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:32:48 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,8 +210,7 @@ int					update_pwd_env(t_env **env);
 
 
 // exec/exec.c
-int					ft_execute_command(t_ast *node,
-						int *last_exit_status, t_env **env);
+int					ft_execute_command(t_ast *node, t_minishell *data);
 void				execute_builtin_cmds(t_ast *node,
 						int *last_exit_status, t_env **env);
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
