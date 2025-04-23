@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 17:36:47 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/24 01:27:41 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_exit(t_minishell *data)
-{
-	if (!data->ast_root->args[1])
-		ft_free(data, data->last_exit_status, "exit\n");
-	if (!ft_isnumeric(data->ast_root->args[1]))
-	{
-		ft_putstr_fd("bash: exit: ", 2);
-		ft_putstr_fd(data->ast_root->args[1], 2);
-		ft_putendl_fd(": numeric argument required\n", 2);
-		ft_free(data, 2, "exit\n");
-	}
-	if (data->ast_root->args[2])
-	{
-		write(1, "exit\n", 5);
-		ft_putendl_fd("bash: exit: too many arguments\n", 2);
-		data->last_exit_status = 1;
-		return ;
-	}
-	data->last_exit_status = ft_atoi(data->ast_root->args[1]);
-	ft_free(data, data->last_exit_status, "exit\n");
-}
 
 void	ft_handle_exit(t_minishell *data)
 {

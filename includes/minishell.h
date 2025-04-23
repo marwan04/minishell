@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 18:32:48 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/24 01:28:15 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,9 @@ void				handle_cd(char **args, t_env **env);
 
 // builtins/pwd.c
 void				handle_pwd(void);
+
+// builtins/exit.c
+void				ft_exit(t_minishell *data);
 
 // builtins/env.c
 void				handle_env(t_env *env);
