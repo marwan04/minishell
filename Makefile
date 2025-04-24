@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+         #
+#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/24 01:26:34 by alrfa3i          ###   ########.fr        #
+#    Updated: 2025/04/24 17:11:24 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ TOKENIZING	= tokenizing/tokenizer.c \
 
 SRCS		= main.c \
 			  test.c \
+			  generate_ast_diagram.c \
 			  $(TOKENIZING) \
 			  $(EXPANDER) \
 			  $(SIGNAL) \
