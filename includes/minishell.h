@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/24 01:28:15 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/24 17:11:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,7 @@ int					has_invalid_operator_sequence(char *input);
 void				print_ast(t_ast *node, int depth, int is_left);
 void				print_tokens(t_token *head);
 void				test_heredoc_node(t_ast *node);
+void 				generate_ast_diagram(t_ast *root);
 
 // normalize_tokens.c
 void				normalize_redirections(t_token **tokens);
