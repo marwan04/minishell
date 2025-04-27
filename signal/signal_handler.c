@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/27 18:55:10 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/27 20:44:18 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ void	handle_sigint(int sig)
 {
 	(void) sig;
 	g_sig_int = 1;
-	close(0);
+	close(STDIN_FILENO);
 }
 
 int	check_signal(t_minishell *data)
 {
 	if(g_sig_int)
 	{
-		dup2(1, 0);
+		dup2(STDOUT_FILENO, STDIN_FILENO);
 		g_sig_int = 0;
 		data->last_exit_status = 130;
 		return (1);
