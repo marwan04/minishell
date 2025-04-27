@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 16:15:32 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/27 15:48:05 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	data.env = init_env_list(envp);
 	update_shlvl(&data.env);
+	if (!isatty(1) || !isatty(0))
+		ft_free(&data, 0, "");
 	data.last_exit_status = 0;
 	init_signals();
 	while (1)
