@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/23 18:32:23 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/27 16:30:08 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env)
 		handle_unset(node->args, env);
 }
 
-int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
+int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 {
 	pid_t	pid;
 	int		status;
@@ -44,9 +44,14 @@ int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 		execute_builtin_cmds(node, &data->last_exit_status, &data->env);
 		return (0);
 	}
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+
 		if (prev_fd != -1)
 		{
 			dup2(prev_fd, STDIN_FILENO);
@@ -55,10 +60,14 @@ int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 		ft_execute_command(node, data);
 		exit(data->last_exit_status);
 	}
-	if (prev_fd != -1)
-		close(prev_fd);
-	waitpid(pid, &status, 0);
-	data->last_exit_status = WEXITSTATUS(status);
+	else
+	{
+		if (prev_fd != -1)
+			close(prev_fd);
+		waitpid(pid, &status, 0);
+		init_signals();
+		data->last_exit_status = WEXITSTATUS(status);
+	}
 	return (data->last_exit_status);
 }
 
