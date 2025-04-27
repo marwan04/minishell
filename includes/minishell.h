@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/27 23:04:28 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/28 00:42:36 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # include <sys/types.h>
 # include <bits/sigaction.h>
 
+#define HEREDOC_INTERRUPTED_SIG 1
+#define HEREDOC_EOF 2
+#define HEREDOC_SUCCESS 0
 
 extern volatile sig_atomic_t g_sig_int;
 
