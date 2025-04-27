@@ -6,73 +6,88 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:32:35 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/23 17:43:40 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/27 19:10:46 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
-static void extract_redirection_pairs(
-	t_token **tokens, t_token **redir_start, t_token **redir_end)
+int is_pipe_or_logical(t_token *token)
+{
+	if (!token)
+		return 0;
+	return (token->type == PIPE || token->type == AND || token->type == OR);
+}
+
+int is_redirection(t_token *token)
+{
+	if (!token)
+		return 0;
+	return (token->type == REDIR_IN || token->type == REDIR_OUT || token->type == APPEND || token->type == HEREDOC);
+}
+
+void	normalize_tokens(t_token **tokens)
 {
 	t_token *cur;
 	t_token *prev;
-    t_token *pair;
+	t_token *redir_list;
+	t_token *redir_tail;
 
-    cur = *tokens;
-    prev = NULL;
-	while (cur && cur->next)
+	cur = *tokens;
+	prev = NULL;
+	redir_list = NULL;
+	redir_tail = NULL;
+	while (cur)
 	{
-		if (cur->type == REDIR_IN || cur->type == REDIR_OUT
-			|| cur->type == APPEND || cur->type == HEREDOC)
+		if (is_pipe_or_logical(cur))
 		{
-			pair = cur->next;
-			if (prev)
-				prev->next = pair->next;
-			else
-				*tokens = pair->next;
-			cur->next = pair;
-			pair->next = NULL;
-			if (!*redir_start)
-				*redir_start = cur;
-			else
-				(*redir_end)->next = cur;
-			*redir_end = pair;
-            if (prev)
-                cur = prev->next;
-            else 
-			    cur = *tokens;
-			continue ;
+			if (redir_list)
+			{
+				if (prev)
+					prev->next = redir_list;
+				else
+					*tokens = redir_list;
+				
+				redir_tail->next = cur;
+				redir_list = NULL;
+				redir_tail = NULL;
+			}
+			prev = cur;
+			cur = cur->next;
 		}
-		prev = cur;
-		cur = cur->next;
+		else if (is_redirection(cur))
+		{
+			t_token *redir = cur;
+			t_token *file = cur->next;
+			if (prev)
+				prev->next = file->next;
+			else
+				*tokens = file->next;
+			cur = file->next;
+			redir->next = file;
+			file->next = NULL;
+			if (!redir_list)
+			{
+				redir_list = redir;
+				redir_tail = file;
+			}
+			else
+			{
+				redir_tail->next = redir;
+				redir_tail = file;
+			}
+		}
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
 	}
-}
-
-static void append_redirections_to_end(t_token **tokens, t_token *redir_start)
-{
-	t_token *tail;
-
-	if (!redir_start)
-		return ;
-	if (!*tokens)
+	if (redir_list)
 	{
-		*tokens = redir_start;
-		return ;
+		if (prev)
+			prev->next = redir_list;
+		else
+			*tokens = redir_list;
 	}
-	tail = *tokens;
-	while (tail->next)
-		tail = tail->next;
-	tail->next = redir_start;
-}
-
-void normalize_redirections(t_token **tokens)
-{
-	t_token *redir_start = NULL;
-	t_token *redir_end = NULL;
-
-    redir_start = NULL;
-    redir_end = NULL;
-	extract_redirection_pairs(tokens, &redir_start, &redir_end);
-	append_redirections_to_end(tokens, redir_start);
 }

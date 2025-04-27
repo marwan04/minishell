@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/27 15:51:53 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/27 18:55:10 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@ int	check_signal(t_minishell *data)
 {
 	if(g_sig_int)
 	{
-		// rl_on_new_line();
-		// rl_replace_line("", 0);
-		// rl_redisplay();
 		dup2(1, 0);
 		g_sig_int = 0;
 		data->last_exit_status = 130;
