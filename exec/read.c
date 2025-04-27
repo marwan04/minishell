@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/27 15:51:45 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/27 20:46:24 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_process_input(t_minishell *data, char *input)
 		{
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
-			// normalize_redirections(&data->tokens); 
+			normalize_tokens(&data->tokens); 
 			data->ast_root = parse_ast(&head);
 			// print_ast(data->ast_root, 0 ,0);
 			generate_ast_diagram(data->ast_root);
@@ -60,7 +60,6 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 	
-	dup2(1, 0);
 	input = readline("minishell> ");
 	if (!input && !g_sig_int)
 		ft_free(data, 1, "exit\n");
