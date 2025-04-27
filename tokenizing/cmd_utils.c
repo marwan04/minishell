@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/23 06:29:12 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:23:56 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,13 @@ t_ast	*handle_redirection(t_ast *cmd_node, t_token *token)
 	redir_node->args = NULL;
 	if (token->type == HEREDOC)
 	{
+		redir_node->heredoc_expand = 0;
 		redir_node->type = NODE_HEREDOC;
 		handle_heredoc_info(redir_node, raw);
 	}
 	else
 	{
-		redir_node->file = ft_strdup(raw);
+		redir_node->file = ft_strtrim(raw, " \t\n\v\f\r");
 		redir_node->heredoc_expand = 0;
 		if (token->type == REDIR_IN)
 			redir_node->type = NODE_REDIR_IN;

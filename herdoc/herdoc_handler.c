@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 06:31:34 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:27:54 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static int	process_heredoc(t_ast *node, t_minishell *data)
 			free(line);
 			break;
 		}
-		if (node->heredoc_expand)
+		printf("The herdoc expand var = %d\n", node->heredoc_expand);
+		if (node->heredoc_expand == 1)
 			line = expand_line(line, data);
 		write(node->heredoc_pipe[1], line, ft_strlen(line));
 		write(node->heredoc_pipe[1], "\n", 1);
