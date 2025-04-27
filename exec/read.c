@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/27 18:57:49 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/27 20:46:24 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 	
-	dup2(1, 0);
 	input = readline("minishell> ");
 	if (!input && !g_sig_int)
 		ft_free(data, 1, "exit\n");
