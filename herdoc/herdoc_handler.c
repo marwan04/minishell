@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 06:31:34 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/28 01:24:23 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,17 @@ static int	process_heredoc(t_ast *node, t_minishell *data)
 
 	if (pipe(node->heredoc_pipe) == -1)
 		return (heredoc_failed(node->heredoc_pipe));
+	g_sig_int = 0;
 	while ((line = readline("> ")))
 	{
+		if (g_sig_int)
+		{
+			free(line);
+			close(node->heredoc_pipe[0]);
+			close(node->heredoc_pipe[1]);
+			data->last_exit_status = 130;
+			return (HEREDOC_INTERRUPTED_SIG);
+		}
 		if (ft_strcmp(line, node->file) == 0)
 		{
 			free(line);
@@ -47,14 +56,14 @@ static int	process_heredoc(t_ast *node, t_minishell *data)
 	}
 	if (!line)
 	{
-        print_heredoc_eof_warning(node->file);
-		return (heredoc_failed(node->heredoc_pipe));
+		print_heredoc_eof_warning(node->file);
+		close(node->heredoc_pipe[1]);
+		return (HEREDOC_EOF);
 	}
 	close(node->heredoc_pipe[1]);
-	free(node->file);
-	node->file = NULL;
-	return (0);
+	return (HEREDOC_SUCCESS);
 }
+
 
 void	collect_heredocs(t_ast *node, t_minishell *data)
 {
@@ -64,10 +73,10 @@ void	collect_heredocs(t_ast *node, t_minishell *data)
 	collect_heredocs(node->right, data);
 	if (node->type == NODE_HEREDOC)
 	{
-		if (process_heredoc(node, data) != 0)
+		if (process_heredoc(node, data) != HEREDOC_SUCCESS)
 		{
 			data->last_exit_status = 130;
-			return ;
+			return;
 		}
 	}
 }

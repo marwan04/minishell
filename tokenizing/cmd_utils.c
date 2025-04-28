@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/23 06:29:12 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/27 23:31:24 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,14 @@ t_ast	*new_ast_cmd(void)
 // 	node->args = new_args;
 // }
 
-static void	handle_heredoc_info(t_ast *redir_node, char *raw)
+
+char *get_del(char *raw)
 {
 	if ((raw[0] == '\'' && raw[ft_strlen(raw) - 1] == '\'')
 		|| (raw[0] == '"' && raw[ft_strlen(raw) - 1] == '"'))
-	{
-		redir_node->heredoc_expand = 0;
-		redir_node->file = ft_substr(raw, 1, ft_strlen(raw) - 2);
-	}
+		return ft_substr(raw, 1, ft_strlen(raw) - 2);
 	else
-	{
-		redir_node->heredoc_expand = 1;
-		redir_node->file = ft_strdup(raw);
-	}
+		return ft_strdup(raw);
 }
 
 t_ast	*handle_redirection(t_ast *cmd_node, t_token *token)
@@ -102,22 +97,19 @@ t_ast	*handle_redirection(t_ast *cmd_node, t_token *token)
 	redir_node->left = cmd_node;
 	redir_node->right = NULL;
 	redir_node->args = NULL;
+	redir_node->heredoc_expand = 0;
+	redir_node->file = get_del(raw);
 	if (token->type == HEREDOC)
 	{
+		redir_node->heredoc_expand = !token->next->herdoc_quote;
 		redir_node->type = NODE_HEREDOC;
-		handle_heredoc_info(redir_node, raw);
 	}
-	else
-	{
-		redir_node->file = ft_strdup(raw);
-		redir_node->heredoc_expand = 0;
-		if (token->type == REDIR_IN)
-			redir_node->type = NODE_REDIR_IN;
-		else if (token->type == REDIR_OUT)
-			redir_node->type = NODE_REDIR_OUT;
-		else if (token->type == APPEND)
-			redir_node->type = NODE_APPEND;
-	}
+	else if (token->type == REDIR_IN)
+		redir_node->type = NODE_REDIR_IN;
+	else if (token->type == REDIR_OUT)
+		redir_node->type = NODE_REDIR_OUT;
+	else if (token->type == APPEND)
+		redir_node->type = NODE_APPEND;
 	return (redir_node);
 }
 

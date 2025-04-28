@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/23 06:14:31 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/27 23:25:07 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,30 @@ char	*remove_quotes(char *input)
 	return (cleaned);
 }
 
+void	check_del_flag(t_token *tokens)
+{
+	if ((tokens->value[0] == '\'' && tokens->value[ft_strlen(tokens->value) - 1] == '\'')
+		|| (tokens->value[0] == '"' && tokens->value[ft_strlen(tokens->value) - 1] == '"'))
+		tokens->herdoc_quote = 1;
+	else
+		tokens->herdoc_quote = 0;
+}
+
 void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
 	char	*expanded;
-	int		is_export;
 	char	*temp;
 
 	if (!tokens)
 		return ;
-	is_export = (tokens && ft_strcmp(tokens->value, "export") == 0);
 	while (tokens)
 	{
 		temp = expand_tilde(tokens->value);
 		expanded = expand_variables(temp, last_exit_status, env);
 		free(temp);
-		if (!is_export || tokens == tokens->next)
+		if (tokens->type == HEREDOC)
+			check_del_flag(tokens->next);
+		if (tokens == tokens->next)
 		{
 			temp = remove_quotes(expanded);
 			free(expanded);
