@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:32:35 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/27 19:10:46 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/28 17:58:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,79 @@ void	normalize_tokens(t_token **tokens)
 			prev->next = redir_list;
 		else
 			*tokens = redir_list;
+	}
+}
+
+static int	is_pipe_or_logical_or_paren(t_token *token)
+{
+	if (!token)
+		return (0);
+	return (token->type == PIPE || token->type == AND || token->type == OR
+		|| token->type == LPAREN || token->type == RPAREN);
+}
+
+void normalize_tokens_with_heredoc(t_token **tokens)
+{
+	t_token *cur = *tokens;
+	t_token *prev = NULL;
+	t_token *heredoc_list = NULL;
+	t_token *heredoc_tail = NULL;
+
+	while (cur)
+	{
+		if (is_pipe_or_logical_or_paren(cur))
+		{
+			if (heredoc_list)
+			{
+				if (prev)
+					prev->next = heredoc_list;
+				else
+					*tokens = heredoc_list;
+
+				heredoc_tail->next = cur;
+			}
+			heredoc_list = NULL;
+			heredoc_tail = NULL;
+			prev = cur;
+			cur = cur->next;
+		}
+		else if (cur->type == HEREDOC)
+		{
+			t_token *heredoc = cur;
+			t_token *limiter = cur->next;
+
+			if (prev)
+				prev->next = limiter->next;
+			else
+				*tokens = limiter->next;
+
+			cur = limiter->next;
+
+			heredoc->next = limiter;
+			limiter->next = NULL;
+
+			if (!heredoc_list)
+			{
+				heredoc_list = heredoc;
+				heredoc_tail = limiter;
+			}
+			else
+			{
+				heredoc_tail->next = heredoc;
+				heredoc_tail = limiter;
+			}
+		}
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
+	}
+	if (heredoc_list)
+	{
+		if (prev)
+			prev->next = heredoc_list;
+		else
+			*tokens = heredoc_list;
 	}
 }

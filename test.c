@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:48:42 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/20 09:35:36 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:11:59 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	print_ast_node_content(t_ast *node)
 		while (node->args[i])
 		{
 			printf("\"%s\" ", node->args[i]);
-			test_heredoc_node(node);
+			// test_heredoc_node(node);
 			i++;
 			
 		}
@@ -88,7 +88,7 @@ void	print_ast_node_content(t_ast *node)
 	else if (node->file)
 	{
 		printf(" file: \"%s\"", node->file);
-		test_heredoc_node(node);
+		// test_heredoc_node(node);
 	}
 	printf("\n");
 }
