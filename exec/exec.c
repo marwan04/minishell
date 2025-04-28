@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/27 16:30:08 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/28 22:20:18 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,13 @@ int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 {
 	pid_t	pid;
 	int		status;
-
-	if (is_builtin(node->args[0]))
+	int    in_pipe ;
+	
+	if (prev_fd != -1)
+		in_pipe = 1;
+	else 
+		in_pipe = 0;
+	if (is_builtin(node->args[0]) && !in_pipe)
 	{
 		execute_builtin_cmds(node, &data->last_exit_status, &data->env);
 		return (0);
@@ -51,13 +56,15 @@ int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-
 		if (prev_fd != -1)
 		{
 			dup2(prev_fd, STDIN_FILENO);
 			close(prev_fd);
 		}
-		ft_execute_command(node, data);
+		if (is_builtin(node->args[0]))
+			execute_builtin_cmds(node, &data->last_exit_status, &data->env);
+		else
+			ft_execute_command(node, data);
 		exit(data->last_exit_status);
 	}
 	else
@@ -70,6 +77,7 @@ int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 	}
 	return (data->last_exit_status);
 }
+
 
 static int	exec_and_or(t_ast *node, int prev_fd, t_minishell *data)
 {
