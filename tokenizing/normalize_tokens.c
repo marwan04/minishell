@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   normalize_tokens.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:32:35 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/28 14:33:15 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:58:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ void	normalize_tokens(t_token **tokens)
 	}
 }
 
-#include "minishell.h"
-
 static int	is_pipe_or_logical_or_paren(t_token *token)
 {
 	if (!token)
@@ -106,57 +104,51 @@ void normalize_tokens_with_heredoc(t_token **tokens)
 {
 	t_token *cur = *tokens;
 	t_token *prev = NULL;
-	t_token *redir_list = NULL;
-	t_token *redir_tail = NULL;
-	int has_heredoc = 0;
+	t_token *heredoc_list = NULL;
+	t_token *heredoc_tail = NULL;
 
 	while (cur)
 	{
 		if (is_pipe_or_logical_or_paren(cur))
 		{
-			// When reaching separator: attach collected redirs
-			if (has_heredoc && redir_list)
+			if (heredoc_list)
 			{
 				if (prev)
-					prev->next = redir_list;
+					prev->next = heredoc_list;
 				else
-					*tokens = redir_list;
-				redir_tail->next = cur;
+					*tokens = heredoc_list;
+
+				heredoc_tail->next = cur;
 			}
-			redir_list = NULL;
-			redir_tail = NULL;
-			has_heredoc = 0;
+			heredoc_list = NULL;
+			heredoc_tail = NULL;
 			prev = cur;
 			cur = cur->next;
 		}
-		else if (is_redirection(cur))
+		else if (cur->type == HEREDOC)
 		{
-			if (cur->type == HEREDOC)
-				has_heredoc = 1;
-
-			// Detach redirection + its target
-			t_token *redir = cur;
-			t_token *file = cur->next;
+			t_token *heredoc = cur;
+			t_token *limiter = cur->next;
 
 			if (prev)
-				prev->next = file->next;
+				prev->next = limiter->next;
 			else
-				*tokens = file->next;
+				*tokens = limiter->next;
 
-			cur = file->next;
+			cur = limiter->next;
 
-			redir->next = file;
-			file->next = NULL;
+			heredoc->next = limiter;
+			limiter->next = NULL;
 
-			if (!redir_list)
+			if (!heredoc_list)
 			{
-				redir_list = redir;
-				redir_tail = file;
+				heredoc_list = heredoc;
+				heredoc_tail = limiter;
 			}
 			else
 			{
-				redir_tail->next = redir;
-				redir_tail = file;
+				heredoc_tail->next = heredoc;
+				heredoc_tail = limiter;
 			}
 		}
 		else
@@ -165,11 +157,11 @@ void normalize_tokens_with_heredoc(t_token **tokens)
 			cur = cur->next;
 		}
 	}
-	if (has_heredoc && redir_list)
+	if (heredoc_list)
 	{
 		if (prev)
-			prev->next = redir_list;
+			prev->next = heredoc_list;
 		else
-			*tokens = redir_list;
+			*tokens = heredoc_list;
 	}
 }
