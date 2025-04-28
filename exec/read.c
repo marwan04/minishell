@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/28 11:53:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/28 16:49:15 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,17 @@ void	ft_process_input(t_minishell *data, char *input)
 		{
 			expand_tokens(head, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
-			normalize_tokens(&data->tokens); 
+			normalize_tokens(&data->tokens);
+			print_tokens(data->tokens);
+			printf("/n/n");
+			normalize_tokens_with_heredoc(&data->tokens);
+			print_tokens(data->tokens);
 			data->ast_root = parse_ast(&head);
 			// print_ast(data->ast_root, 0 ,0);
 			generate_ast_diagram(data->ast_root);
 			collect_heredocs(data->ast_root, data);
-			if (data->execution_aborted)
-				ft_free(data, data->last_exit_status, "");
+			// if (data->execution_aborted)
+			// 	ft_free(data, data->last_exit_status, "");
 		}
 	}
 }
@@ -69,7 +73,7 @@ void	ft_read(t_minishell *data)
 	if (!check_signal(data))
 	{
 		ft_process_input(data, input);
-		if (data->ast_root)
+		if (data->ast_root && !data->execution_aborted)
 		{
 			ft_handle_exit(data);
 			exec_ast(data->ast_root, -1, data);
@@ -77,3 +81,4 @@ void	ft_read(t_minishell *data)
 		free(input);
 	}
 }
+
