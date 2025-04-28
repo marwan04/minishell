@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/27 20:46:24 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:53:14 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	ft_process_input(t_minishell *data, char *input)
 			// print_ast(data->ast_root, 0 ,0);
 			generate_ast_diagram(data->ast_root);
 			collect_heredocs(data->ast_root, data);
+			if (data->execution_aborted)
+				ft_free(data, data->last_exit_status, "");
 		}
 	}
 }
@@ -60,6 +62,7 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 	
+	data->execution_aborted = 0;
 	input = readline("minishell> ");
 	if (!input && !g_sig_int)
 		ft_free(data, 1, "exit\n");

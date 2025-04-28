@@ -6,13 +6,12 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/28 00:42:36 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:46:34 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define HEREDOC_INTERRUPTED -1
 # define _GNU_SOURCE
 # include "libft/includes/libft.h"
 # include <signal.h>
@@ -106,6 +105,7 @@ typedef struct s_minishell
 	t_ast	*ast_root;
 	t_env	*env;
 	t_token	*tokens;
+	int		execution_aborted;
 }					t_minishell;
 
 //tokenizing/check.c
