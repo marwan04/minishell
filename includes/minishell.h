@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/28 14:33:36 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/29 10:47:55 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,7 +274,6 @@ void normalize_tokens(t_token **tokens);
 int is_redirection(t_token *token);
 int is_pipe_or_logical(t_token *token);
 void normalize_tokens_with_heredoc(t_token **tokens);
-
 void 				expand_wildcards(t_token *tokens);
 
 #endif
