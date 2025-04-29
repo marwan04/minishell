@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/27 23:25:07 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/29 07:48:48 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,9 @@ void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 		free(temp);
 		if (tokens->type == HEREDOC)
 			check_del_flag(tokens->next);
-		if (tokens == tokens->next)
-		{
-			temp = remove_quotes(expanded);
-			free(expanded);
-			expanded = temp;
-		}
+		temp = remove_quotes(expanded);
+		free(expanded);
+		expanded = temp;
 		if (expanded != tokens->value)
 		{
 			free(tokens->value);

@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:32:35 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/28 17:58:52 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:45:30 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	normalize_tokens(t_token **tokens)
 			prev = cur;
 			cur = cur->next;
 		}
-		else if (is_redirection(cur))
+		else if (is_redirection(cur) && cur->type != HEREDOC)
 		{
 			t_token *redir = cur;
 			t_token *file = cur->next;

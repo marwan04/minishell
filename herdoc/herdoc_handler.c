@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/28 11:46:52 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/29 12:17:09 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,30 +19,23 @@ static void	print_heredoc_eof_warning(char *delimiter)
 	write(2, "')\n", 3);
 }
 
-static int	heredoc_failed(int pipefd[2])
-{
-	close(pipefd[0]);
-	close(pipefd[1]);
-	return (HEREDOC_INTERRUPTED_SIG);
-}
+// static int	heredoc_failed(int pipefd[2])
+// {
+// 	close(pipefd[0]);
+// 	close(pipefd[1]);
+// 	return (HEREDOC_INTERRUPTED_SIG);
+// }
 
-static int	process_heredoc(t_ast *node, t_minishell *data)
+int process_heredoc(t_ast *node, t_minishell *data)
 {
-	char	*line;
+	char *line;
 
 	if (pipe(node->heredoc_pipe) == -1)
-		return (heredoc_failed(node->heredoc_pipe));
+		return HEREDOC_INTERRUPTED_SIG;
+
 	g_sig_int = 0;
 	while ((line = readline("> ")))
 	{
-		if (g_sig_int)
-		{
-			free(line);
-			close(node->heredoc_pipe[0]);
-			close(node->heredoc_pipe[1]);
-			data->last_exit_status = 130;
-			return (HEREDOC_INTERRUPTED_SIG);
-		}
 		if (ft_strcmp(line, node->file) == 0)
 		{
 			free(line);
@@ -54,34 +47,46 @@ static int	process_heredoc(t_ast *node, t_minishell *data)
 		write(node->heredoc_pipe[1], "\n", 1);
 		free(line);
 	}
+
+	// ❗ Null line = EOF or SIGINT
 	if (!line)
 	{
-		print_heredoc_eof_warning(node->file);
-		close(node->heredoc_pipe[1]);
-		return (HEREDOC_EOF);
+		if (g_sig_int)
+		{
+			// Ctrl+C behavior: abort heredoc completely
+			close(node->heredoc_pipe[0]);
+			close(node->heredoc_pipe[1]);
+			data->last_exit_status = 130;
+			return HEREDOC_INTERRUPTED_SIG;
+		}
+		else
+		{
+			// Ctrl+D behavior: show warning, continue execution
+			print_heredoc_eof_warning(node->file);
+			close(node->heredoc_pipe[1]);
+			return HEREDOC_EOF;
+		}
 	}
+
 	close(node->heredoc_pipe[1]);
-	return (HEREDOC_SUCCESS);
+	return HEREDOC_SUCCESS;
 }
 
 
 void collect_heredocs(t_ast *node, t_minishell *data)
 {
-	if (!node)
-		return;
+    if (!node)
+        return;
+    
+    collect_heredocs(node->left, data);
+    collect_heredocs(node->right, data);
 
-	collect_heredocs(node->left, data);
-	collect_heredocs(node->right, data);
-
-	if (node->type == NODE_HEREDOC)
-	{
-		int result = process_heredoc(node, data);
-
-		if (result == HEREDOC_INTERRUPTED_SIG)
-		{
-			data->last_exit_status = 130;
-			data->execution_aborted = 1;
-			return;
-		}
-	}
+    if (node->type == NODE_HEREDOC)
+    {
+        if (process_heredoc(node, data) == HEREDOC_INTERRUPTED_SIG)
+        {
+            data->execution_aborted = 1;
+            return;
+        }
+    }
 }
