@@ -6,48 +6,11 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 18:00:15 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 18:21:56 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:31:45 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// t_env	*copy_env(t_env *original)
-// {
-// 	t_env	*copy;
-// 	t_env	*tail;
-// 	t_env	*new_node;
-
-// 	copy = NULL;
-// 	tail = NULL;
-// 	while (original)
-// 	{
-// 		new_node = malloc(sizeof(t_env));
-// 		if (!new_node)
-// 		{
-// 			free_env(copy);
-// 			return (NULL);
-// 		}
-// 		new_node->key = ft_strdup(original->key);
-// 		if (original->value)
-// 			new_node->value = ft_strdup(original->value);
-// 		else
-// 			new_node->value = NULL;
-// 		new_node->next = NULL;
-// 		if (!copy)
-// 		{
-// 			copy = new_node;
-// 			tail = new_node;
-// 		}
-// 		else
-// 		{
-// 			tail->next = new_node;
-// 			tail = new_node;
-// 		}
-// 		original = original->next;
-// 	}
-// 	return (copy);
-// }
 
 void	is_larger(int *swapped, t_env **ptr)
 {
