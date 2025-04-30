@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 05:18:49 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:42:14 by alrfa3i          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int process_heredoc(t_ast *node, t_minishell *data)
 			return (HEREDOC_EOF);
 		}
 	}
-
+	close(node->heredoc_pipe[0]);
 	close(node->heredoc_pipe[1]);
 	return (HEREDOC_SUCCESS);
 }
