@@ -3,32 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirection.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:02:30 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 03:20:20 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 19:01:16 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-pid_t fork_and_exec_redir(t_ast *node, int fd, int prev_fd, t_minishell *data)
+pid_t	fork_and_exec_redir(t_ast *node, int fd, int prev_fd, t_minishell *data)
 {
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_DFL);
-        if (node->type == NODE_REDIR_IN)
-            dup2(fd, STDIN_FILENO);
-        else
-            dup2(fd, STDOUT_FILENO);
-        close(fd);
-        exec_ast(node->left, prev_fd, data);
-        ft_free(data, data->last_exit_status, "");
-        exit(data->last_exit_status);
-    }
-    return pid;
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		if (node->type == NODE_REDIR_IN)
+			dup2(fd, STDIN_FILENO);
+		else
+			dup2(fd, STDOUT_FILENO);
+		close(fd);
+		exec_ast(node->left, prev_fd, data);
+		ft_free(data, data->last_exit_status, "");
+		exit(data->last_exit_status);
+	}
+	return (pid);
 }
 
 int	open_redir_file(t_ast *node)

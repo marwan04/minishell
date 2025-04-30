@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/30 16:14:14 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/30 19:20:01 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
-EXEC		= exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c  exec/exec_herdoc.c
+EXEC		= exec/read_process.c exec/exec_cmd.c exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c  exec/exec_herdoc.c
 
 EXPANDER	= expander/expand_wildcard.c expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
 
