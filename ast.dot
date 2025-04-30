@@ -1,0 +1,7 @@
+digraph AST {
+"0x4b93c70" [label="|"];
+"0x4b93c70" -> "0x4b93a30" [label="L"];
+"0x4b93a30" [label="CMD: cd"];
+"0x4b93c70" -> "0x4b93b50" [label="R"];
+"0x4b93b50" [label="CMD: ls"];
+}

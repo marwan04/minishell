@@ -6,35 +6,36 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 00:29:25 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 06:18:03 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 03:20:46 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static pid_t	fork_and_exec_heredoc(t_ast *node,
-	int prev_fd, t_minishell *data)
+static pid_t fork_and_exec_heredoc(t_ast *node, int prev_fd, t_minishell *data)
 {
-	pid_t	pid;
-	t_ast	*cmd;
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+        if (prev_fd != -1)
+        {
+            dup2(prev_fd, STDOUT_FILENO);
+            close(prev_fd);
+        }
+        dup2(node->heredoc_pipe[0], STDIN_FILENO);
+        close(node->heredoc_pipe[0]);
 
-	pid = fork();
-	if (pid == 0)
-	{
-		if (prev_fd != -1)
-		{
-			dup2(prev_fd, STDOUT_FILENO);
-			close(prev_fd);
-		}
-		dup2(node->heredoc_pipe[0], STDIN_FILENO);
-		close(node->heredoc_pipe[0]);
-		cmd = node->left;
-		while (cmd && cmd->type == NODE_HEREDOC)
-			cmd = cmd->left;
-		exec_ast(cmd, -1, data);
-		ft_free(data, 1, "");
-	}
-	return (pid);
+        t_ast *cmd = node->left;
+        while (cmd && cmd->type == NODE_HEREDOC)
+            cmd = cmd->left;
+
+        exec_ast(cmd, -1, data);
+        ft_free(data, data->last_exit_status, "");
+        exit(data->last_exit_status);
+    }
+    return pid;
 }
 
 int	handle_heredoc_node(t_ast *node, int prev_fd, t_minishell *data)
