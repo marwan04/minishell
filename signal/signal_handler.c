@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/29 11:22:29 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:27:30 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	handle_sigint(int sig)
 
 int	check_signal(t_minishell *data)
 {
-	if(g_sig_int)
+	if (g_sig_int)
 	{
 		dup2(STDOUT_FILENO, STDIN_FILENO);
 		g_sig_int = 0;
@@ -33,15 +33,15 @@ int	check_signal(t_minishell *data)
 	return (0);
 }
 
-void 	init_signals(void)
+void	init_signals(void)
 {
-    struct sigaction sa;
+	struct sigaction	sa;
 
-    rl_catch_signals = 0;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags   = 0;
-    sa.sa_handler = handle_sigint;
-    sigaction(SIGINT, &sa, NULL);
-    sa.sa_handler = SIG_IGN;
-    sigaction(SIGQUIT, &sa, NULL);
+	rl_catch_signals = 0;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 }
