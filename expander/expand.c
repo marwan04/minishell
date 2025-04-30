@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 04:43:58 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 06:02:32 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,18 @@ char	*expand_tilde(char *token)
 char	*remove_quotes(char *input)
 {
 	char	*cleaned;
-	int		i;
+	int		i, j;
 	char	quote;
-	char	c[2];
 
-	cleaned = ft_strdup("");
+	if (!input)
+		return (NULL);
+
+	cleaned = malloc(ft_strlen(input) + 1); // worst-case: same length
+	if (!cleaned)
+		return (NULL);
+
 	i = 0;
+	j = 0;
 	quote = 0;
 	while (input[i])
 	{
@@ -49,15 +55,13 @@ char	*remove_quotes(char *input)
 		else if (input[i] == quote)
 			quote = 0;
 		else
-		{
-			c[0] = input[i];
-			c[1] = '\0';
-			cleaned = ft_strjoin_free(cleaned, c);
-		}
+			cleaned[j++] = input[i];
 		i++;
 	}
+	cleaned[j] = '\0';
 	return (cleaned);
 }
+
 
 void	check_del_flag(t_token *tokens)
 {
@@ -68,31 +72,54 @@ void	check_del_flag(t_token *tokens)
 		tokens->herdoc_quote = 0;
 }
 
-void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
+void expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
-	char	*expanded;
-	char	*temp;
+	char *tilde_expanded;
+	char *vars_expanded;
+	char *quoted_clean;
 
-	if (!tokens)
-		return ;
 	while (tokens)
 	{
-		temp = expand_tilde(tokens->value);
-		expanded = expand_variables(temp, last_exit_status, env);
-		free(temp);
+		if (!tokens->value)
+		{
+			tokens = tokens->next;
+			continue;
+		}
+
+		tilde_expanded = expand_tilde(tokens->value);  // malloc'd
+		if (!tilde_expanded)
+		{
+			tokens = tokens->next;
+			continue;
+		}
+
+		vars_expanded = expand_variables(tilde_expanded, last_exit_status, env);  // malloc'd
+		free(tilde_expanded);
+		if (!vars_expanded)
+		{
+			tokens = tokens->next;
+			continue;
+		}
+
+		quoted_clean = remove_quotes(vars_expanded);  // malloc'd
+		free(vars_expanded);
+
+		if (!quoted_clean)
+		{
+			tokens = tokens->next;
+			continue;
+		}
+
+		free(tokens->value);                  // ✅ Always free old value
+		tokens->value = quoted_clean;         // ✅ Replace with cleaned value
+
 		if (tokens->type == HEREDOC)
 			check_del_flag(tokens->next);
-		temp = remove_quotes(expanded);
-		free(expanded);
-		expanded = temp;
-		if (expanded != tokens->value)
-		{
-			free(tokens->value);
-			tokens->value = expanded;
-		}
+
 		tokens = tokens->next;
 	}
 }
+
 
 void expand_wildcards(t_token *tokens)
 {

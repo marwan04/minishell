@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 03:19:00 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 05:01:20 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ pid_t	pipe_and_fork(int pipefd[2], int prev_fd,
 	}
 	pid = fork();
 	if (pid == 0)
+	{
+		fprintf(stderr, "🧒 CHILD PID: %d executing...\n", getpid());
 		child_process_pipe(prev_fd, pipefd, node, data);
+	}
 	return (pid);
 }
 

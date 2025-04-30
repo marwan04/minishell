@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/29 12:17:09 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 05:18:49 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,21 @@ int process_heredoc(t_ast *node, t_minishell *data)
 			close(node->heredoc_pipe[0]);
 			close(node->heredoc_pipe[1]);
 			data->last_exit_status = 130;
-			return HEREDOC_INTERRUPTED_SIG;
+			return (HEREDOC_INTERRUPTED_SIG);
 		}
 		else
 		{
+			close(node->heredoc_pipe[0]);
+			close(node->heredoc_pipe[1]);
 			// Ctrl+D behavior: show warning, continue execution
 			print_heredoc_eof_warning(node->file);
 			close(node->heredoc_pipe[1]);
-			return HEREDOC_EOF;
+			return (HEREDOC_EOF);
 		}
 	}
 
 	close(node->heredoc_pipe[1]);
-	return HEREDOC_SUCCESS;
+	return (HEREDOC_SUCCESS);
 }
 
 

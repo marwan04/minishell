@@ -1,7 +1,17 @@
 digraph AST {
-"0x4b93c70" [label="|"];
-"0x4b93c70" -> "0x4b93a30" [label="L"];
-"0x4b93a30" [label="CMD: cd"];
-"0x4b93c70" -> "0x4b93b50" [label="R"];
-"0x4b93b50" [label="CMD: ls"];
+"0x4b91b60" [label="|"];
+"0x4b91b60" -> "0x4b91910" [label="L"];
+"0x4b91910" [label="|"];
+"0x4b91910" -> "0x4b916a0" [label="L"];
+"0x4b916a0" [label="|"];
+"0x4b916a0" -> "0x4b91460" [label="L"];
+"0x4b91460" [label="CMD: cat"];
+"0x4b916a0" -> "0x4b91580" [label="R"];
+"0x4b91580" [label="CMD: cat"];
+"0x4b91910" -> "0x4b91840" [label="R"];
+"0x4b91840" [label="REDIR: "];
+"0x4b91840" -> "0x4b91720" [label="L"];
+"0x4b91720" [label="CMD: cat"];
+"0x4b91b60" -> "0x4b91990" [label="R"];
+"0x4b91990" [label="CMD: cat -e"];
 }

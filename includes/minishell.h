@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/29 10:47:55 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 04:55:06 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ char				*expand_tilde(char *token);
 char				*remove_quotes(char *input);
 void				expand_tokens(t_token *tokens,
 						int last_exit_status, t_env *env);
+void 				ft_free_after_cmd(t_minishell *data);
 
 // expander/utils.c
 char				*ft_strjoin_free(char *s1, char *s2);
