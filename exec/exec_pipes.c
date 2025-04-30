@@ -3,32 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 08:05:54 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 05:01:20 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:15:18 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void child_process_pipe(int prev_fd, int pipefd[2], t_ast *node, t_minishell *data)
+void	child_process_pipe(int prev_fd,
+	int pipefd[2], t_ast *node, t_minishell *data)
 {
-    if (prev_fd != -1)
-    {
-        dup2(prev_fd, STDIN_FILENO);
-        close(prev_fd);
+	if (prev_fd != -1)
+	{
+		dup2(prev_fd, STDIN_FILENO);
+		close(prev_fd);
 	}
-    if (node->type == NODE_HEREDOC)
-    {
-        dup2(node->heredoc_pipe[0], STDIN_FILENO);
-        close(node->heredoc_pipe[0]);
-    }
-    dup2(pipefd[1], STDOUT_FILENO);
-    close(pipefd[0]);
-    close(pipefd[1]);
-    exec_ast(node->left, -1, data);
-    ft_free(data, 1, "");
+	if (node->type == NODE_HEREDOC)
+	{
+		dup2(node->heredoc_pipe[0], STDIN_FILENO);
+		close(node->heredoc_pipe[0]);
+	}
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	exec_ast(node->left, -1, data);
+	ft_free(data, 1, "");
 	exit(data->last_exit_status);
 }
 

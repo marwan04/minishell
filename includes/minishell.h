@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 16:19:48 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:12:19 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,18 +276,13 @@ int					has_empty_parentheses(char *input);
 int 				has_unmatched_parentheses(const char *input);
 int					has_invalid_operator_sequence(char *input);
 
-// // Testing
-void				print_ast(t_ast *node, int depth, int is_left);
-void				print_tokens(t_token *head);
-void				test_heredoc_node(t_ast *node);
-void 				generate_ast_diagram(t_ast *root);
-
 // normalize_tokens.c
 void normalize_tokens(t_token **tokens);
 int	is_pipe_or_logical_or_paren(t_token *token);
 int is_redirection(t_token *token);
 int is_pipe_or_logical(t_token *token);
 void normalize_tokens_with_heredoc(t_token **tokens);
+void	expand_one_token(t_token *tok, int last_exit_status, t_env *env);
 t_ast	*new_pipe_node(t_ast *left, t_ast *right);
 t_ast	*create_redir_node(t_ast *cmd_node, t_token *token);
 void 				expand_wildcards(t_token *tokens);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 03:24:47 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:24:52 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,23 @@ void	execute_builtin_cmds(t_ast *node, int *last_exit_status, t_env **env)
 		handle_unset(node->args, env);
 }
 
-int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
+int	handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 {
 	pid_t	pid;
 	int		status;
 	int		in_pipe;
 
-	if (!node || !node->args) // 💥 Prevent NULL dereference
+	if (!node || !node->args)
 	{
 		data->last_exit_status = 127;
-		return 127;
+		return (127);
 	}
-
 	in_pipe = (prev_fd != -1);
-
 	if (is_builtin(node->args[0]) && !in_pipe)
 	{
 		execute_builtin_cmds(node, &data->last_exit_status, &data->env);
-		return 0;
+		return (0);
 	}
-
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
@@ -80,7 +77,7 @@ int handle_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 		init_signals();
 		data->last_exit_status = WEXITSTATUS(status);
 	}
-	return data->last_exit_status;
+	return (data->last_exit_status);
 }
 
 static int	exec_and_or(t_ast *node, int prev_fd, t_minishell *data)

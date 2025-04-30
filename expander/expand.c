@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 15:42:48 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:11:41 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,39 +74,9 @@ void	check_del_flag(t_token *tokens)
 
 void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
-	char	*tilde_expanded;
-	char	*vars_expanded;
-	char	*quoted_clean;
-
 	while (tokens)
 	{
-		if (!tokens->value)
-		{
-			tokens = tokens->next;
-			continue ;
-		}
-		tilde_expanded = expand_tilde(tokens->value);
-		if (!tilde_expanded)
-		{
-			tokens = tokens->next;
-			continue ;
-		}
-		vars_expanded = expand_variables(tilde_expanded, last_exit_status, env);
-		free(tilde_expanded);
-		if (!vars_expanded)
-		{
-			tokens = tokens->next;
-			continue ;
-		}
-		quoted_clean = remove_quotes(vars_expanded);
-		free(vars_expanded);
-		if (!quoted_clean)
-		{
-			tokens = tokens->next;
-			continue ;
-		}
-		free(tokens->value);
-		tokens->value = quoted_clean;
+		expand_one_token(tokens, last_exit_status, env);
 		if (tokens->type == HEREDOC)
 			check_del_flag(tokens->next);
 		tokens = tokens->next;
