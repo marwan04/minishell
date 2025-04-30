@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 05:48:26 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:18:50 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void update_shlvl(t_env **env)
+void	update_shlvl(t_env **env)
 {
-	t_env *var;
-	int shlvl;
-	char *shlvl_str;
+	t_env	*var;
+	int		shlvl;
+	char	*shlvl_str;
 
 	var = *env;
 	while (var)
