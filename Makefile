@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/04/24 17:11:24 by malrifai         ###   ########.fr        #
+#    Updated: 2025/04/30 16:14:14 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ ARROW   	= ✔
 
 EXEC		= exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/error_utilites.c exec/exec_pipes.c  exec/exec_herdoc.c
 
-EXPANDER	= expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
+EXPANDER	= expander/expand_wildcard.c expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
 
 HERDOC		= herdoc/herdoc_handler.c
 
@@ -34,6 +34,9 @@ SIGNAL		= signal/signal_handler.c
 SYNTAX		= syntax/syntax_check.c syntax/syntax_utils.c
 
 TOKENIZING	= tokenizing/tokenizer.c \
+			  tokenizing/init_nodes.c \
+			  tokenizing/normalize_helpers.c \
+			  tokenizing/normalize_heredoc.c \
 			  tokenizing/check.c \
 			  tokenizing/tokenizer_utils.c \
 			  tokenizing/cmd_utils.c \
@@ -42,8 +45,6 @@ TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/normalize_tokens.c
 
 SRCS		= main.c \
-			  test.c \
-			  generate_ast_diagram.c \
 			  $(TOKENIZING) \
 			  $(EXPANDER) \
 			  $(SIGNAL) \

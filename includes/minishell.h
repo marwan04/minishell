@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 04:55:06 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:19:48 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,18 @@ typedef struct s_token
 	int				herdoc_quote;
 	t_token_type	type;
 }					t_token;
+
+typedef struct s_redir_state
+{
+	t_token	*list;
+	t_token	*tail;
+}	t_redir_state;
+
+typedef struct s_heredoc_state
+{
+	t_token	*list;
+	t_token	*tail;
+}	t_heredoc_state;
 
 typedef struct s_env
 {
@@ -272,9 +284,12 @@ void 				generate_ast_diagram(t_ast *root);
 
 // normalize_tokens.c
 void normalize_tokens(t_token **tokens);
+int	is_pipe_or_logical_or_paren(t_token *token);
 int is_redirection(t_token *token);
 int is_pipe_or_logical(t_token *token);
 void normalize_tokens_with_heredoc(t_token **tokens);
+t_ast	*new_pipe_node(t_ast *left, t_ast *right);
+t_ast	*create_redir_node(t_ast *cmd_node, t_token *token);
 void 				expand_wildcards(t_token *tokens);
 
 #endif
