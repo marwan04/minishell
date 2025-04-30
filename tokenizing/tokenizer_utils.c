@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 01:01:38 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 05:42:11 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:24:53 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,20 @@ t_token	*new_token(char *value, t_token_type type)
 	t_token	*token;
 
 	if (!value)
-		return (NULL); // Prevent undefined behavior from ft_strdup(NULL)
-
+		return (NULL);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-
 	token->value = ft_strdup(value);
 	if (!token->value)
 	{
 		free(token);
 		return (NULL);
 	}
-
 	token->type = type;
 	token->next = NULL;
 	return (token);
 }
-
 
 t_token	*last_token(t_token *token)
 {
@@ -49,25 +45,22 @@ void	add_token(t_token **head, char *value, t_token_type type)
 	t_token	*tmp;
 
 	if (!value)
-		return;
-
+		return ;
 	new = new_token(value, type);
 	if (!new)
 	{
-		// Optional: handle error (e.g. log, set error flag, etc.)
-		return;
+		return ;
 	}
 	if (!*head)
 	{
 		*head = new;
-		return;
+		return ;
 	}
 	tmp = *head;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
 }
-
 
 void	remove_last_token(t_token **head)
 {
@@ -97,15 +90,14 @@ void	remove_last_token(t_token **head)
 	}
 }
 
-void 	delete_next_token(t_token *prev_token)
+void	delete_next_token(t_token *prev_token)
 {
-    t_token *to_free;
+	t_token	*to_free;
 
-    if (!prev_token || !prev_token->next)
-        return;
-
-    to_free = prev_token->next;
-    prev_token->next = prev_token->next->next;
-    free(to_free->value);
-    free(to_free);
+	if (!prev_token || !prev_token->next)
+		return ;
+	to_free = prev_token->next;
+	prev_token->next = prev_token->next->next;
+	free(to_free->value);
+	free(to_free);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 04:51:08 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:25:34 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,45 +30,6 @@ void	free_tokens(t_minishell *data)
 	}
 	data->tokens = NULL;
 }
-
-// void	free_cmd(t_cmd *cmd)
-// {
-// 	int	i;
-
-// 	if (cmd->input)
-// 		free(cmd->input);
-// 	if (cmd->output)
-// 		free(cmd->output);
-// 	if (cmd->args)
-// 	{
-// 		i = 0;
-// 		while (cmd->args[i] != NULL)
-// 		{
-// 			if (cmd->args[i])
-// 				free(cmd->args[i]);
-// 			i++;
-// 		}
-// 		free(cmd->args);
-// 	}
-// 	free(cmd);
-// }
-
-// void	free_cmds(t_minishell *data)
-// {
-// 	t_cmd	*tmp;
-// 	t_cmd	*tmp2;
-
-// 	if (!data || !data->cmds)
-// 		return ;
-// 	tmp = data->cmds;
-// 	while (tmp != NULL)
-// 	{
-// 		tmp2 = tmp->next;
-// 		free_cmd(tmp);
-// 		tmp = tmp2;
-// 	}
-// 	data->cmds = NULL;
-// }
 
 void	free_ast(t_ast *node)
 {
@@ -105,7 +66,7 @@ void	ft_free(t_minishell *data, int flag, char *msg)
 	exit(flag);
 }
 
-void 	ft_free_after_cmd(t_minishell *data)
+void	ft_free_after_cmd(t_minishell *data)
 {
 	if (data->tokens)
 		free_tokens(data);
