@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 19:18:53 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/01 00:45:52 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,34 +35,36 @@ static int	handle_heredoc_end(t_ast *node, t_minishell *data, char *line)
 		print_heredoc_eof_warning(node->file);
 		return (HEREDOC_EOF);
 	}
-	close(node->heredoc_pipe[0]);
 	close(node->heredoc_pipe[1]);
 	return (HEREDOC_SUCCESS);
 }
 
-int	process_heredoc(t_ast *node, t_minishell *data)
+int process_heredoc(t_ast *node, t_minishell *data)
 {
-	char	*line;
+    char *line;
 
-	if (pipe(node->heredoc_pipe) == -1)
-		return (HEREDOC_INTERRUPTED_SIG);
-	g_sig_int = 0;
-	line = readline("> ");
-	while (line)
-	{
-		if (ft_strcmp(line, node->file) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (node->heredoc_expand)
-			line = expand_line(line, data);
-		write(node->heredoc_pipe[1], line, ft_strlen(line));
-		write(node->heredoc_pipe[1], "\n", 1);
-		free(line);
-		line = readline("> ");
-	}
-	return (handle_heredoc_end(node, data, line));
+    if (pipe(node->heredoc_pipe) == -1)
+        return (HEREDOC_INTERRUPTED_SIG);
+    g_sig_int = 0;
+    printf("herdoc del is : %s\n", node->file);
+    line = readline("> ");
+    while (line)
+    {
+        if (ft_strcmp(line, node->file) == 0)
+        {
+            free(line);
+            break ;
+        }
+        if (node->heredoc_expand)
+            line = expand_line(line, data);
+
+        write(node->heredoc_pipe[1], line, ft_strlen(line));
+        write(node->heredoc_pipe[1], "\n", 1);
+        free(line);
+        line = readline("> ");
+    }
+    close(node->heredoc_pipe[1]);
+    return (handle_heredoc_end(node, data, line));
 }
 
 void	collect_heredocs(t_ast *node, t_minishell *data)

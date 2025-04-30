@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 19:21:52 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/01 00:43:13 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,8 @@ int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
-
+// exec/check_access.c
+int					open_redir_file(t_ast *node);
 // exec/exec_herdoc.c
 int					handle_heredoc_node(t_ast *node,
 						int prev_fd, t_minishell *data);
