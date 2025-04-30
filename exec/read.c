@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 06:08:28 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:24:31 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void free_tokens_from_list(t_token *token)
 	}
 }
 
-
 void	ft_process_input(t_minishell *data, char *input)
 {
 	t_token *raw_tokens;
@@ -40,7 +39,6 @@ void	ft_process_input(t_minishell *data, char *input)
 	if (*input)
 	{
 		add_history(input);
-
 		if (syntax_error(input))
 		{
 			write(2, "minishell: syntax error\n", 25);
@@ -48,52 +46,43 @@ void	ft_process_input(t_minishell *data, char *input)
 			free(input);
 			free_tokens(data);
 			free_ast(data->ast_root);
-			return;
+			return ;
 		}
-
 		free_tokens(data);
 		free_ast(data->ast_root);
-
 		raw_tokens = tokenizer(input);
 		data->tokens = raw_tokens;
-
 		if (validate_token_sequence(data->tokens))
 		{
 			ft_putendl_fd("minishell: syntax error near unexpected token", 2);
 			data->last_exit_status = 2;
-			free_tokens_from_list(raw_tokens);  // ✅ important
+			free_tokens_from_list(raw_tokens);
 			free_ast(data->ast_root);
 			free(input);
 			data->tokens = NULL;
 			data->ast_root = NULL;
-			return;
+			return ;
 		}
-
 		if (data->tokens)
 		{
 			expand_tokens(data->tokens, data->last_exit_status, data->env);
 			expand_wildcards(data->tokens);
 			normalize_tokens(&data->tokens);
 			normalize_tokens_with_heredoc(&data->tokens);
-
 			data->ast_root = parse_ast(&data->tokens);
 			if (!data->ast_root)
 			{
-				free_tokens_from_list(raw_tokens);  // ✅ free original tokens
+				free_tokens_from_list(raw_tokens);
 				free(input);
 				data->tokens = NULL;
-				return;
+				return ;
 			}
-
-			generate_ast_diagram(data->ast_root);
 			collect_heredocs(data->ast_root, data);
 		}
-		free_tokens_from_list(raw_tokens);  // ✅ always free original token list
+		free_tokens_from_list(raw_tokens);
 	}
 	free(input);
 }
-
-
 
 void	ft_read(t_minishell *data)
 {

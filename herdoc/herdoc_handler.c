@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 06:38:24 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 11:42:14 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/30 16:35:15 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int process_heredoc(t_ast *node, t_minishell *data)
 
 	if (pipe(node->heredoc_pipe) == -1)
 		return HEREDOC_INTERRUPTED_SIG;
-
 	g_sig_int = 0;
 	while ((line = readline("> ")))
 	{
@@ -47,13 +46,10 @@ int process_heredoc(t_ast *node, t_minishell *data)
 		write(node->heredoc_pipe[1], "\n", 1);
 		free(line);
 	}
-
-	// ❗ Null line = EOF or SIGINT
 	if (!line)
 	{
 		if (g_sig_int)
 		{
-			// Ctrl+C behavior: abort heredoc completely
 			close(node->heredoc_pipe[0]);
 			close(node->heredoc_pipe[1]);
 			data->last_exit_status = 130;
@@ -63,7 +59,6 @@ int process_heredoc(t_ast *node, t_minishell *data)
 		{
 			close(node->heredoc_pipe[0]);
 			close(node->heredoc_pipe[1]);
-			// Ctrl+D behavior: show warning, continue execution
 			print_heredoc_eof_warning(node->file);
 			close(node->heredoc_pipe[1]);
 			return (HEREDOC_EOF);
@@ -78,17 +73,15 @@ int process_heredoc(t_ast *node, t_minishell *data)
 void collect_heredocs(t_ast *node, t_minishell *data)
 {
     if (!node)
-        return;
-    
+        return ;
     collect_heredocs(node->left, data);
     collect_heredocs(node->right, data);
-
     if (node->type == NODE_HEREDOC)
     {
         if (process_heredoc(node, data) == HEREDOC_INTERRUPTED_SIG)
         {
             data->execution_aborted = 1;
-            return;
+            return ;
         }
     }
 }

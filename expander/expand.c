@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:50:31 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 06:02:32 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:42:48 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,15 @@ char	*expand_tilde(char *token)
 char	*remove_quotes(char *input)
 {
 	char	*cleaned;
-	int		i, j;
+	int		i;
+	int		j;
 	char	quote;
 
 	if (!input)
 		return (NULL);
-
-	cleaned = malloc(ft_strlen(input) + 1); // worst-case: same length
+	cleaned = malloc(ft_strlen(input) + 1);
 	if (!cleaned)
 		return (NULL);
-
 	i = 0;
 	j = 0;
 	quote = 0;
@@ -62,116 +61,55 @@ char	*remove_quotes(char *input)
 	return (cleaned);
 }
 
-
 void	check_del_flag(t_token *tokens)
 {
-	if ((tokens->value[0] == '\'' && tokens->value[ft_strlen(tokens->value) - 1] == '\'')
-		|| (tokens->value[0] == '"' && tokens->value[ft_strlen(tokens->value) - 1] == '"'))
+	if ((tokens->value[0] == '\''
+			&& tokens->value[ft_strlen(tokens->value) - 1] == '\'')
+		|| (tokens->value[0] == '"'
+			&& tokens->value[ft_strlen(tokens->value) - 1] == '"'))
 		tokens->herdoc_quote = 1;
 	else
 		tokens->herdoc_quote = 0;
 }
 
-void expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
+void	expand_tokens(t_token *tokens, int last_exit_status, t_env *env)
 {
-	char *tilde_expanded;
-	char *vars_expanded;
-	char *quoted_clean;
+	char	*tilde_expanded;
+	char	*vars_expanded;
+	char	*quoted_clean;
 
 	while (tokens)
 	{
 		if (!tokens->value)
 		{
 			tokens = tokens->next;
-			continue;
+			continue ;
 		}
-
-		tilde_expanded = expand_tilde(tokens->value);  // malloc'd
+		tilde_expanded = expand_tilde(tokens->value);
 		if (!tilde_expanded)
 		{
 			tokens = tokens->next;
-			continue;
+			continue ;
 		}
-
-		vars_expanded = expand_variables(tilde_expanded, last_exit_status, env);  // malloc'd
+		vars_expanded = expand_variables(tilde_expanded, last_exit_status, env);
 		free(tilde_expanded);
 		if (!vars_expanded)
 		{
 			tokens = tokens->next;
-			continue;
+			continue ;
 		}
-
-		quoted_clean = remove_quotes(vars_expanded);  // malloc'd
+		quoted_clean = remove_quotes(vars_expanded);
 		free(vars_expanded);
-
 		if (!quoted_clean)
 		{
 			tokens = tokens->next;
-			continue;
+			continue ;
 		}
-
-		free(tokens->value);                  // ✅ Always free old value
-		tokens->value = quoted_clean;         // ✅ Replace with cleaned value
-
+		free(tokens->value);
+		tokens->value = quoted_clean;
 		if (tokens->type == HEREDOC)
 			check_del_flag(tokens->next);
-
 		tokens = tokens->next;
-	}
-}
-
-
-void expand_wildcards(t_token *tokens)
-{
-	DIR *dir;
-	struct dirent *entry;
-	t_token *cur = tokens;
-	t_token *matches_head;
-	t_token *matches_tail;
-	t_token *new_tok;
-	t_token *tmp;
-	
-	while (cur)
-	{
-		if (cur->type == WORD && ft_strchr(cur->value, '*'))
-		{
-			dir = opendir(".");
-			if (!dir)
-				return;
-			matches_head = NULL;
-			matches_tail = NULL;
-			while ((entry = readdir(dir)))
-			{
-				if (entry->d_name[0] == '.')
-					continue;
-				if (fnmatch(cur->value, entry->d_name, 0) == 0)
-				{
-					new_tok = new_token(entry->d_name, WORD);
-					if (!matches_head)
-					{
-						matches_head = new_tok;
-						matches_tail = new_tok;
-					}
-					else
-					{
-						matches_tail->next = new_tok;
-						matches_tail = new_tok;
-					}
-				}
-			}
-			closedir(dir);
-			if (matches_head)
-			{
-				free(cur->value);
-				cur->value = ft_strdup(matches_head->value);
-				tmp = matches_head->next;
-				matches_tail->next = cur->next;
-				cur->next = tmp;
-				free(matches_head->value);
-				free(matches_head);
-			}
-		}
-		cur = cur->next;
 	}
 }
 
