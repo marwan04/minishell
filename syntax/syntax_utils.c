@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:32:11 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/22 15:54:33 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:13:51 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ int	has_invalid_operator_sequence(char *input)
 	return (0);
 }
 
-int has_unmatched_parentheses(const char *input)
+int	has_unmatched_parentheses(const char *input)
 {
-	int depth = 0;
-	int i = 0;
+	int	depth;
+	int	i;
 
+	depth = 0;
+	i = 0;
 	while (input[i])
 	{
 		if (input[i] == '(')
@@ -113,5 +115,3 @@ int	starts_with_pipe_or_logical(char *input)
 		return (1);
 	return (0);
 }
-
-
