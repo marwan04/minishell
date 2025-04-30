@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 01:01:38 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/20 09:16:37 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/04/30 05:42:11 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,25 @@ t_token	*new_token(char *value, t_token_type type)
 {
 	t_token	*token;
 
+	if (!value)
+		return (NULL); // Prevent undefined behavior from ft_strdup(NULL)
+
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
+
 	token->value = ft_strdup(value);
 	if (!token->value)
 	{
 		free(token);
 		return (NULL);
 	}
+
 	token->type = type;
 	token->next = NULL;
 	return (token);
 }
+
 
 t_token	*last_token(t_token *token)
 {
@@ -42,19 +48,26 @@ void	add_token(t_token **head, char *value, t_token_type type)
 	t_token	*new;
 	t_token	*tmp;
 
+	if (!value)
+		return;
+
 	new = new_token(value, type);
 	if (!new)
-		return ;
+	{
+		// Optional: handle error (e.g. log, set error flag, etc.)
+		return;
+	}
 	if (!*head)
 	{
 		*head = new;
-		return ;
+		return;
 	}
 	tmp = *head;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
 }
+
 
 void	remove_last_token(t_token **head)
 {

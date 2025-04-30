@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/16 14:27:15 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 04:51:08 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,31 +105,10 @@ void	ft_free(t_minishell *data, int flag, char *msg)
 	exit(flag);
 }
 
-// void	free_cmds_list(t_cmd *head)
-// {
-// 	t_cmd	*current;
-// 	t_cmd	*next;
-// 	int		i;
-
-// 	current = head;
-// 	while (current)
-// 	{
-// 		next = current->next;
-// 		if (current->input)
-// 			free(current->input);
-// 		if (current->output)
-// 			free(current->output);
-// 		if (current->args)
-// 		{
-// 			i = 0;
-// 			while (current->args[i])
-// 			{
-// 				free(current->args[i]);
-// 				i++;
-// 			}
-// 			free(current->args);
-// 		}
-// 		free(current);
-// 		current = next;
-// 	}
-// }
+void 	ft_free_after_cmd(t_minishell *data)
+{
+	if (data->tokens)
+		free_tokens(data);
+	if (data->ast_root)
+		free_ast(data->ast_root);
+}

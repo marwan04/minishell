@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alrfa3i <alrfa3i@student.42.fr>            +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:24:10 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/28 13:42:35 by alrfa3i          ###   ########.fr       */
+/*   Updated: 2025/04/30 04:33:43 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,42 @@ t_ast *parse_pipeline(t_token **tokens)
 	t_ast *left;
 	t_ast *right;
 	t_ast *pipe_node;
-	
+
 	left = parse_command(tokens);
+	if (!left)
+		return (NULL);
+
 	while (*tokens && (*tokens)->type == PIPE)
 	{
 		*tokens = (*tokens)->next;
 		right = parse_command(tokens);
+		if (!right)
+		{
+			free_ast(left);  // ✅ prevent leak
+			return (NULL);
+		}
+
 		pipe_node = malloc(sizeof(t_ast));
 		if (!pipe_node)
+		{
+			free_ast(left);   // ✅ free existing subtree
+			free_ast(right);
 			return (NULL);
+		}
+
 		pipe_node->type = NODE_PIPE;
 		pipe_node->left = left;
 		pipe_node->right = right;
 		pipe_node->args = NULL;
 		pipe_node->file = NULL;
+
 		left = pipe_node;
 	}
 	return (left);
 }
+
+
+
 
 t_ast *parse_and(t_token **tokens)
 {

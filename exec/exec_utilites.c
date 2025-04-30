@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utilites.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:07:13 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/23 18:33:42 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/04/30 03:21:11 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,32 @@
 
 int ft_execute_command(t_ast *node, t_minishell *data)
 {
-	char *full_path;
-	char **envp;
+    char *full_path = NULL;
+    char **envp = NULL;
 
-	if (initialize_execution_params(&full_path, &envp, node->args, &data->env) == -1)
-	{
-		data->last_exit_status = 127;
-		return (-1);
-	}
-	if (!full_path)
-	{
-		ft_free_double_list(envp);
-		ft_putstr_fd(node->args[0], 2);
-		ft_putendl_fd(": command not found", 2);
-		ft_free(data, 127, "");
-	}
-	execve(full_path, node->args, envp);
-	free(full_path);
-	ft_free_double_list(envp);
-	ft_putstr_fd(node->args[0], 2);
-	ft_putendl_fd(": command not found", 2);
-	ft_free(data, 127, "");
-	return (1);
+    if (initialize_execution_params(&full_path, &envp, node->args, &data->env) == -1)
+    {
+        data->last_exit_status = 127;
+        return -1;
+    }
+    if (!full_path)
+    {
+        ft_free_double_list(envp);
+        ft_putstr_fd(node->args[0], 2);
+        ft_putendl_fd(": command not found", 2);
+        ft_free(data, 127, "");
+        exit(127);
+    }
+    execve(full_path, node->args, envp);
+
+    // Only if execve fails
+    free(full_path);
+    ft_free_double_list(envp);
+    ft_putstr_fd(node->args[0], 2);
+    ft_putendl_fd(": command not found", 2);
+    ft_free(data, 127, "");
+    exit(127);
+    return 1;
 }
 
 int		is_builtin(char *cmd)
