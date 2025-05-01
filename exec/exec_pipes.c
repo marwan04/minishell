@@ -42,34 +42,61 @@ void close_all_heredoc_fds(t_ast *node)
 // Fixed function for child process pipe handling
 void child_process_pipe(int prev_fd, int pipefd[2], t_ast *node, t_minishell *data)
 {
+    int stdin_fd = -1;
+    int stdout_fd = -1;
+
     // Redirect input from previous command in the pipeline (if exists)
     if (prev_fd != -1)
     {
-        dup2(prev_fd, STDIN_FILENO);
-        close(prev_fd); // Close the previous pipe after it's used
+        stdin_fd = dup(prev_fd);
+        if (stdin_fd == -1)
+        {
+            perror("dup");
+            exit(1);
+        }
+        dup2(stdin_fd, STDIN_FILENO);
+        close(prev_fd);
     }
 
     // If this is a heredoc node, redirect input from the heredoc pipe
     if (node->type == NODE_HEREDOC && node->heredoc_pipe[0] >= 0)
     {
-        dup2(node->heredoc_pipe[0], STDIN_FILENO);
-        close(node->heredoc_pipe[0]); // Close the heredoc pipe after using it
-        node->heredoc_pipe[0] = -1;   // Mark as closed
+        stdin_fd = dup(node->heredoc_pipe[0]);
+        if (stdin_fd == -1)
+        {
+            perror("dup");
+            exit(1);
+        }
+        dup2(stdin_fd, STDIN_FILENO);
+        close(node->heredoc_pipe[0]);
+        node->heredoc_pipe[0] = -1;
     }
 
     // Redirect output to the current pipe's write end
-    dup2(pipefd[1], STDOUT_FILENO);
+    stdout_fd = dup(pipefd[1]);
+    if (stdout_fd == -1)
+    {
+        perror("dup");
+        exit(1);
+    }
+    dup2(stdout_fd, STDOUT_FILENO);
     
-    // Close pipe file descriptors after they've been duplicated
-    close(pipefd[0]); 
+    // Close all pipe file descriptors
+    if (prev_fd != -1)
+        close(prev_fd);
+    if (stdin_fd != -1)
+        close(stdin_fd);
+    if (stdout_fd != -1)
+        close(stdout_fd);
+    close(pipefd[0]);
     close(pipefd[1]);
 
     // Execute the current command in the pipeline
-    exec_ast(node->left, -1, data);
-    
-    // Properly clean up before exit
-    ft_free(data, 1, "");
-    exit(data->last_exit_status);
+    if (exec_ast(node->left, -1, data) == -1)
+    {
+        perror("exec");
+        exit(1);
+    }
 }
 
 // Fixed function for pipe and fork
@@ -81,6 +108,7 @@ pid_t pipe_and_fork(int pipefd[2], int prev_fd, t_ast *node, t_minishell *data)
     if (pipe(pipefd) == -1)
     {
         perror("pipe");
+        close_all_heredoc_fds(node);
         return (-1);
     }
 
@@ -88,7 +116,10 @@ pid_t pipe_and_fork(int pipefd[2], int prev_fd, t_ast *node, t_minishell *data)
     pid = fork();
     if (pid == 0)
     {
-        child_process_pipe(prev_fd, pipefd, node, data); // Child process handles the pipe
+        // Child process
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+        child_process_pipe(prev_fd, pipefd, node, data);
         // The child process will not return from child_process_pipe
     }
     else if (pid < 0)
@@ -96,8 +127,12 @@ pid_t pipe_and_fork(int pipefd[2], int prev_fd, t_ast *node, t_minishell *data)
         perror("fork");
         close(pipefd[0]);
         close(pipefd[1]);
+        close_all_heredoc_fds(node);
+        return (-1);
     }
 
+    // Parent process
+    close(pipefd[1]); // Close write end of pipe in parent
     return pid;
 }
 

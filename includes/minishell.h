@@ -64,6 +64,7 @@ typedef struct s_ast
 	t_node_type		type;
 	char			**args;
 	char			*file;
+	char			*heredoc_delim;
 	int				heredoc_pipe[2];
 	int				heredoc_expand;
 	struct s_ast	*left;
@@ -242,6 +243,9 @@ int					open_redir_file(t_ast *node);
 // exec/exec_herdoc.c
 int					handle_heredoc_node(t_ast *node,
 						int prev_fd, t_minishell *data);
+
+// exec/write_heredoc.c
+void				write_heredoc(char *delimiter, int pipe_fd);
 
 // exec/read.c
 void				ft_read(t_minishell *data);

@@ -13,7 +13,7 @@
 NAME    	= minishell
 CC      	= cc
 incDir 		= includes
-CFLAGS  	= -Wall -Wextra -Werror -I$(incDir)
+CFLAGS  	= -Wall -Wextra -Werror -I$(incDir) -g
 libftDir 	= $(incDir)/libft
 objDir 		= obj
 GREEN   	= \033[0;32m
