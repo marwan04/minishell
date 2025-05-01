@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 19:06:00 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/01 19:06:00 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/01 19:12:37 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void write_heredoc(char *delimiter, int pipe_fd)
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
-    char *input = NULL;
-    size_t input_len = 0;
 
     while (1)
     {
