@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/04 02:22:40 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 02:35:25 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,22 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// Function signatures
+void perror_and_exit(const char *message);
+static void flatten_pipeline(t_ast *pipe_node, t_ast **stages, int n_stages);
+static int exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data);
+static void process_heredoc_node(t_ast *node, t_minishell *data);
+static void collect_heredocs(t_ast *node, t_minishell *data);
+static void apply_redirections(t_ast *node);
+char **envp_to_array(t_env *env);
+int is_builtin(const char *cmd);
+void execute_builtin_cmds(t_ast *node, int *last_exit, t_env **env);
+static void read_heredoc(const char *delim, int write_fd, int expand, t_minishell *data);
+int exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data);
+int exec_and_or(t_ast *node, int prev_fd, t_minishell *data);
+int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data);
+int exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // Static function declarations
 static void flatten_pipeline(t_ast *pipe_node, t_ast **stages, int n_stages);
@@ -60,35 +76,26 @@ flatten_pipeline(t_ast *pipe_node, t_ast **stages, int n_stages)
 static int
 exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
 {
-    int   (*pipes)[2] = NULL;
-    pid_t *pids        = NULL;
-    int    status = 0;
+    int   (*pipes)[2];
+    pid_t *pids;
+    int    status, last_status = 0;
 
-    if (n_stages <= 0)
-        return 0;
-    
-    if (n_stages == 1) {
-        // Special case: single command, no pipes needed
-        int result = exec_ast(stages[0], prev_fd, data);
-        if (prev_fd  > STDIN_FILENO)
-            close(prev_fd);
-        return result;
-    }
+    /* 1) Single-stage shortcut */
+    if (n_stages == 1)
+        return exec_cmd_node(stages[0], prev_fd, data);
 
-    pipes = malloc(sizeof(int[2]) * (n_stages - 1));
-    pids = malloc(sizeof(pid_t) * n_stages);
-
+    /* 2) Allocate pipes & pid array */
+    pipes = malloc(sizeof *pipes * (n_stages - 1));
+    pids  = malloc(sizeof *pids  *  n_stages);
     if (!pipes || !pids)
     {
         perror("malloc");
-        if (pipes) free(pipes);
-        if (pids) free(pids);
-        if (prev_fd  > STDIN_FILENO)
-            close(prev_fd);
+        free(pipes);
+        free(pids);
         return 1;
     }
 
-    // 1) create all the pipes
+    /* 3) Create all the pipes */
     for (int i = 0; i < n_stages - 1; i++)
     {
         if (pipe(pipes[i]) < 0)
@@ -99,91 +106,126 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
                 close(pipes[j][0]);
                 close(pipes[j][1]);
             }
-            if (prev_fd  > STDIN_FILENO)
-                close(prev_fd);
             free(pipes);
             free(pids);
             return 1;
         }
     }
 
-    // 2) fork each stage
+    /* 4) Fork each stage */
     for (int i = 0; i < n_stages; i++)
     {
         pid_t pid = fork();
         if (pid < 0)
         {
             perror("fork");
+            /* cleanup leftover pipes */
             for (int j = 0; j < n_stages - 1; j++)
-            {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-            }
-            if (prev_fd  > STDIN_FILENO)
-                close(prev_fd);
+                close(pipes[j][0]), close(pipes[j][1]);
             free(pipes);
             free(pids);
             return 1;
         }
+
         if (pid == 0)
         {
-            // stdin
+            /* Child: restore default signals so Ctrl-C works */
+            signal(SIGINT,  SIG_DFL);
+            signal(SIGQUIT, SIG_DFL);
+
+            /* Setup stdin */
             if (i == 0)
             {
-                if (prev_fd  > STDIN_FILENO) {
-                    if (dup2(prev_fd, STDIN_FILENO) < 0)
-                        perror_and_exit("dup2");
-                    close(prev_fd);
+                if (prev_fd > STDERR_FILENO)
+                    dup2(prev_fd, STDIN_FILENO);
+            }
+            else
+            {
+                dup2(pipes[i - 1][0], STDIN_FILENO);
+            }
+
+            /* Setup stdout */
+            if (i < n_stages - 1)
+                dup2(pipes[i][1], STDOUT_FILENO);
+
+            /* Close all pipe fds in the child */
+            for (int j = 0; j < n_stages - 1; j++)
+                close(pipes[j][0]), close(pipes[j][1]);
+
+            /* Close prev_fd if it was our input pipe */
+            if (prev_fd > STDERR_FILENO)
+                close(prev_fd);
+
+            /* Apply `<`, `>`, and heredoc redirections on this stage */
+            apply_redirections(stages[i]);
+
+            /* Find the real command under any redir nodes */
+            t_ast *cmd = stages[i];
+            while (cmd && (cmd->type == NODE_HEREDOC
+                         || cmd->type == NODE_REDIR_IN
+                         || cmd->type == NODE_REDIR_OUT
+                         || cmd->type == NODE_APPEND))
+            {
+                cmd = cmd->left;
+            }
+
+            if (cmd && cmd->args && cmd->args[0])
+            {
+                if (is_builtin(cmd->args[0]))
+                {
+                    int ret = 0;
+                    execute_builtin_cmds(cmd, &ret, &data->env);
+                    exit(ret);
+                }
+                else
+                {
+                    char *path = ft_get_path(cmd->args[0], &data->env);
+                    if (!path)
+                    {
+                        fprintf(stderr, "%s: command not found\n",
+                                cmd->args[0]);
+                        exit(127);
+                    }
+                    execve(path, cmd->args, envp_to_array(data->env));
+                    perror("execve");
+                    exit(126);
                 }
             }
-            else {
-                if (dup2(pipes[i-1][0], STDIN_FILENO) < 0)
-                    perror_and_exit("dup2");
-            }
 
-            // stdout
-            if (i < n_stages - 1) {
-                if (dup2(pipes[i][1], STDOUT_FILENO) < 0)
-                    perror_and_exit("dup2");
-            }
-
-            // close all pipe fds
-            for (int j = 0; j < n_stages - 1; j++)
-            {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-            }
-
-            // run the command/subtree
-            exit(exec_ast(stages[i], STDIN_FILENO, data));
+            /* If nothing to run (just redirections), exit cleanly */
+            exit(0);
         }
+
+        /* Parent stores child PID */
         pids[i] = pid;
     }
 
-    // 3) parent cleanup + wait
-    if (prev_fd  > STDIN_FILENO)
+    /* 5) Parent: close unused fds */
+    if (prev_fd > STDERR_FILENO)
         close(prev_fd);
     for (int i = 0; i < n_stages - 1; i++)
-    {
-        close(pipes[i][0]);
-        close(pipes[i][1]);
-    }
+        close(pipes[i][0]), close(pipes[i][1]);
 
+    /* 6) Wait for all children, return last exit status */
     for (int i = 0; i < n_stages; i++)
     {
         if (waitpid(pids[i], &status, 0) < 0)
         {
             perror("waitpid");
-            free(pipes);
-            free(pids);
-            return 1;
+            last_status = 1;
+        }
+        else
+        {
+            last_status = WEXITSTATUS(status);
         }
     }
 
     free(pipes);
     free(pids);
-    return WEXITSTATUS(status);
+    return last_status;
 }
+
+
 
 char **envp_to_array(t_env *env)
 {
@@ -526,7 +568,7 @@ int exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
     pid = fork();
     if (pid < 0) {
         perror("fork");
-        if (prev_fd  > STDIN_FILENO)
+        if (prev_fd > STDERR_FILENO)
             close(prev_fd);
         return (data->last_exit_status = 1);
     }
@@ -578,7 +620,7 @@ int exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
     }
     
     // Parent process
-    if (prev_fd  > STDIN_FILENO)
+    if (prev_fd > STDERR_FILENO)
         close(prev_fd);
     
     waitpid(pid, &status, 0);
@@ -664,7 +706,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
     // Check if heredoc collection was interrupted
     if (data->last_exit_status == 130) {
         data->pipes_count = 0;
-        if (prev_fd  > STDIN_FILENO || prev_fd != -1)
+        if (prev_fd > STDERR_FILENO || prev_fd != -1)
             close(prev_fd);
         return 130;
     }
@@ -684,13 +726,13 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                 pid_t pid = fork();
                 if (pid < 0) {
                     perror("fork");
-                    if (prev_fd  > STDIN_FILENO)
+                    if (prev_fd > STDERR_FILENO)
                         close(prev_fd);
                     return (data->last_exit_status = 1);
                 }
                 
                 if (pid == 0) {
-                    if (prev_fd  > STDIN_FILENO && prev_fd != -1) {
+                    if (prev_fd > STDERR_FILENO && prev_fd != -1) {
                         if (dup2(prev_fd, STDIN_FILENO) < 0)
                             perror_and_exit("dup2");
                         close(prev_fd);
@@ -698,7 +740,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                     exit(exec_ast(node->left, STDIN_FILENO, data));
                 }
                 
-                if (prev_fd  > STDIN_FILENO)
+                if (prev_fd > STDERR_FILENO)
                     close(prev_fd);
                     
                 waitpid(pid, &status, 0);
@@ -722,13 +764,13 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                 pid_t pid = fork();
                 if (pid < 0) {
                     perror("fork");
-                    if (prev_fd  > STDIN_FILENO)
+                    if (prev_fd > STDERR_FILENO)
                         close(prev_fd);
                     return (data->last_exit_status = 1);
                 }
                 
                 if (pid == 0) {
-                    if (prev_fd  > STDIN_FILENO) {
+                    if (prev_fd > STDERR_FILENO) {
                         if (dup2(prev_fd, STDIN_FILENO) < 0)
                             perror_and_exit("dup2");
                         close(prev_fd);
@@ -743,7 +785,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                         exit(0);
                 }
                 
-                if (prev_fd  > STDIN_FILENO)
+                if (prev_fd > STDERR_FILENO)
                     close(prev_fd);
                     
                 waitpid(pid, &status, 0);
@@ -759,7 +801,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
         default:
             // Unknown node type
             fprintf(stderr, "minishell: Unknown AST node type: %d\n", node->type);
-            if (prev_fd  > STDIN_FILENO)
+            if (prev_fd > STDERR_FILENO)
                 close(prev_fd);
             return (data->last_exit_status = 1);
     }
