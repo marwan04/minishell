@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/04 02:35:25 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 02:54:36 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 
 // Function signatures
 void perror_and_exit(const char *message);
-static void flatten_pipeline(t_ast *pipe_node, t_ast **stages, int n_stages);
 static int exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data);
 static void process_heredoc_node(t_ast *node, t_minishell *data);
 static void collect_heredocs(t_ast *node, t_minishell *data);
@@ -41,7 +40,6 @@ int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data);
 int exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // Static function declarations
-static void flatten_pipeline(t_ast *pipe_node, t_ast **stages, int n_stages);
 static int exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data);
 static void process_heredoc_node(t_ast *node, t_minishell *data);
 static void collect_heredocs(t_ast *node, t_minishell *data);
@@ -56,35 +54,75 @@ void perror_and_exit(const char *message) {
  * Fill an array of length (data->pipes_count + 1) with the
  * individual stage sub-ASTs from a left/right PIPE tree.
  */
-static void
-flatten_pipeline(t_ast *pipe_node, t_ast **stages, int n_stages)
+// helper: recursively walk a PIPE tree and collect non-PIPE leaves
+static int
+count_pipe_leaves(t_ast *node)
 {
-    int   idx  = 0;
-    t_ast *cur = pipe_node;
-
-    // For each '|', pull off the left child
-    while (cur && cur->type == NODE_PIPE && idx < n_stages-1)
-    {
-        stages[idx++] = cur->left;
-        cur = cur->right;
-    }
-    // Last stage is whatever remains
-    if (idx < n_stages)
-        stages[idx] = cur;
+    if (!node)
+        return 0;
+    if (node->type == NODE_PIPE)
+        return count_pipe_leaves(node->left)
+             + count_pipe_leaves(node->right);
+    // anything that isn’t a PIPE is one “stage”
+    return 1;
 }
+
+// -----------------------------------------------------------------------------
+// 2) Helper to walk the tree and collect each non-PIPE leaf into stages[].
+// -----------------------------------------------------------------------------
+static void
+flatten_pipeline_helper(t_ast *node, t_ast **stages, int *idx)
+{
+    if (!node)
+        return;
+    if (node->type == NODE_PIPE)
+    {
+        flatten_pipeline_helper(node->left,  stages, idx);
+        flatten_pipeline_helper(node->right, stages, idx);
+    }
+    else
+    {
+        stages[(*idx)++] = node;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// 3) Public flatten function: caller just needs an AST root and gets back
+//    an array of exactly count_pipe_leaves(root) t_ast*’s.
+// -----------------------------------------------------------------------------
+static t_ast **
+collect_pipeline_stages(t_ast *pipe_root, int *out_n)
+{
+    int n = count_pipe_leaves(pipe_root);
+    t_ast **stages = malloc(sizeof *stages * n);
+    if (!stages)
+    {
+        perror("malloc");
+        *out_n = 0;
+        return NULL;
+    }
+    int idx = 0;
+    flatten_pipeline_helper(pipe_root, stages, &idx);
+    // idx should equal n
+    *out_n = n;
+    return stages;
+}
+
+
 
 static int
 exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
 {
-    int   (*pipes)[2];
-    pid_t *pids;
+    int   (*pipes)[2] = NULL;
+    pid_t *pids        = NULL;
     int    status, last_status = 0;
 
-    /* 1) Single-stage shortcut */
+    
+    /* 1) Single‐stage shortcut */
     if (n_stages == 1)
         return exec_cmd_node(stages[0], prev_fd, data);
 
-    /* 2) Allocate pipes & pid array */
+    /* 2) Allocate N−1 pipes and N pids */
     pipes = malloc(sizeof *pipes * (n_stages - 1));
     pids  = malloc(sizeof *pids  *  n_stages);
     if (!pipes || !pids)
@@ -96,7 +134,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
     }
 
     /* 3) Create all the pipes */
-    for (int i = 0; i < n_stages - 1; i++)
+    for (int i = 0; i < n_stages; i++)
     {
         if (pipe(pipes[i]) < 0)
         {
@@ -119,9 +157,11 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
         if (pid < 0)
         {
             perror("fork");
-            /* cleanup leftover pipes */
             for (int j = 0; j < n_stages - 1; j++)
-                close(pipes[j][0]), close(pipes[j][1]);
+            {
+                close(pipes[j][0]);
+                close(pipes[j][1]);
+            }
             free(pipes);
             free(pids);
             return 1;
@@ -129,45 +169,70 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
 
         if (pid == 0)
         {
+            int used_in  = 0, used_out = 0;
+            t_ast *r;
+
             /* Child: restore default signals so Ctrl-C works */
             signal(SIGINT,  SIG_DFL);
             signal(SIGQUIT, SIG_DFL);
 
-            /* Setup stdin */
-            if (i == 0)
+            /* 4a) Apply any <, <<, >, >> on this stage first */
+            apply_redirections(stages[i]);
+
+            /* 4b) Detect whether this stage used its pipe-in or pipe-out */
+            r = stages[i];
+            while (r && (r->type == NODE_HEREDOC
+                       || r->type == NODE_REDIR_IN
+                       || r->type == NODE_REDIR_OUT
+                       || r->type == NODE_APPEND))
             {
-                if (prev_fd > STDERR_FILENO)
-                    dup2(prev_fd, STDIN_FILENO);
-            }
-            else
-            {
-                dup2(pipes[i - 1][0], STDIN_FILENO);
+                if (r->type == NODE_HEREDOC || r->type == NODE_REDIR_IN)
+                    used_in = 1;
+                if (r->type == NODE_REDIR_OUT || r->type == NODE_APPEND)
+                    used_out = 1;
+                r = r->right;
             }
 
-            /* Setup stdout */
-            if (i < n_stages - 1)
-                dup2(pipes[i][1], STDOUT_FILENO);
-
-            /* Close all pipe fds in the child */
+            /* 4c) Wire up the pipes */
             for (int j = 0; j < n_stages - 1; j++)
-                close(pipes[j][0]), close(pipes[j][1]);
+            {
+                int rd = pipes[j][0], wr = pipes[j][1];
 
-            /* Close prev_fd if it was our input pipe */
+                if (j == i - 1)
+                {
+                    /* incoming pipe */
+                    if (!used_in)
+                        dup2(rd, STDIN_FILENO);
+                    close(rd);
+                    close(wr);
+                }
+                else if (j == i)
+                {
+                    /* outgoing pipe */
+                    close(rd);
+                    if (!used_out)
+                        dup2(wr, STDOUT_FILENO);
+                    close(wr);
+                }
+                else
+                {
+                    /* unrelated pipe */
+                    close(rd);
+                    close(wr);
+                }
+            }
+
+            /* 4d) Close prev_fd if it was a real pipe */
             if (prev_fd > STDERR_FILENO)
                 close(prev_fd);
 
-            /* Apply `<`, `>`, and heredoc redirections on this stage */
-            apply_redirections(stages[i]);
-
-            /* Find the real command under any redir nodes */
+            /* 4e) Find and execute the real command under any redirs */
             t_ast *cmd = stages[i];
             while (cmd && (cmd->type == NODE_HEREDOC
-                         || cmd->type == NODE_REDIR_IN
-                         || cmd->type == NODE_REDIR_OUT
-                         || cmd->type == NODE_APPEND))
-            {
+                        || cmd->type == NODE_REDIR_IN
+                        || cmd->type == NODE_REDIR_OUT
+                        || cmd->type == NODE_APPEND))
                 cmd = cmd->left;
-            }
 
             if (cmd && cmd->args && cmd->args[0])
             {
@@ -192,21 +257,24 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
                 }
             }
 
-            /* If nothing to run (just redirections), exit cleanly */
+            /* Only redirections? Exit successfully */
             exit(0);
         }
 
-        /* Parent stores child PID */
+        /* Parent records PID */
         pids[i] = pid;
     }
 
-    /* 5) Parent: close unused fds */
+    /* 5) Parent closes its copies of all pipe fds */
     if (prev_fd > STDERR_FILENO)
         close(prev_fd);
-    for (int i = 0; i < n_stages - 1; i++)
-        close(pipes[i][0]), close(pipes[i][1]);
+    for (int j = 0; j < n_stages - 1; j++)
+    {
+        close(pipes[j][0]);
+        close(pipes[j][1]);
+    }
 
-    /* 6) Wait for all children, return last exit status */
+    /* 6) Wait for all children and return the last exit status */
     for (int i = 0; i < n_stages; i++)
     {
         if (waitpid(pids[i], &status, 0) < 0)
@@ -224,6 +292,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
     free(pids);
     return last_status;
 }
+
 
 
 
@@ -683,7 +752,8 @@ handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
     }
     
     // Fill stages array
-    flatten_pipeline(node, stages, pipe_count + 1);
+    int     r = pipe_count + 1;
+    flatten_pipeline_helper(node, stages, &r);
     
     // Execute pipeline
     int result = exec_pipeline(stages, pipe_count + 1, prev_fd, data);
@@ -694,15 +764,11 @@ handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
 
 int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 {
-    int status = 0;
-
     if (!node)
         return 0;
-
-    // First, collect all heredocs
-    if (data->last_exit_status != 130) // Skip if we already had a SIGINT
-        collect_heredocs(node, data);
-        
+    
+    int status = 0;
+    collect_heredocs(node, data);
     // Check if heredoc collection was interrupted
     if (data->last_exit_status == 130) {
         data->pipes_count = 0;
@@ -711,11 +777,21 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
         return 130;
     }
 
+    if (node->type == NODE_PIPE)
+    {
+        int n_stages;
+        t_ast **stages = collect_pipeline_stages(node, &n_stages);
+        if (!stages)
+            return 1;  // malloc failure
+
+        int status = exec_pipeline(stages, n_stages, prev_fd, data);
+        free(stages);
+        return status;
+    }
+
     // Handle different node types
     switch (node->type)
     {
-        case NODE_PIPE:
-            return handle_pipe_node(node, prev_fd, data);
             
         case NODE_AND:
         case NODE_OR:
