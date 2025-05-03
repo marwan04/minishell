@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/04 02:15:54 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 02:22:40 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
     if (n_stages == 1) {
         // Special case: single command, no pipes needed
         int result = exec_ast(stages[0], prev_fd, data);
-        if (prev_fd != STDIN_FILENO)
+        if (prev_fd  > STDIN_FILENO)
             close(prev_fd);
         return result;
     }
@@ -83,7 +83,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
         perror("malloc");
         if (pipes) free(pipes);
         if (pids) free(pids);
-        if (prev_fd != STDIN_FILENO)
+        if (prev_fd  > STDIN_FILENO)
             close(prev_fd);
         return 1;
     }
@@ -99,7 +99,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
                 close(pipes[j][0]);
                 close(pipes[j][1]);
             }
-            if (prev_fd != STDIN_FILENO)
+            if (prev_fd  > STDIN_FILENO)
                 close(prev_fd);
             free(pipes);
             free(pids);
@@ -119,7 +119,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
                 close(pipes[j][0]);
                 close(pipes[j][1]);
             }
-            if (prev_fd != STDIN_FILENO)
+            if (prev_fd  > STDIN_FILENO)
                 close(prev_fd);
             free(pipes);
             free(pids);
@@ -130,7 +130,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
             // stdin
             if (i == 0)
             {
-                if (prev_fd != STDIN_FILENO) {
+                if (prev_fd  > STDIN_FILENO) {
                     if (dup2(prev_fd, STDIN_FILENO) < 0)
                         perror_and_exit("dup2");
                     close(prev_fd);
@@ -161,7 +161,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
     }
 
     // 3) parent cleanup + wait
-    if (prev_fd != STDIN_FILENO)
+    if (prev_fd  > STDIN_FILENO)
         close(prev_fd);
     for (int i = 0; i < n_stages - 1; i++)
     {
@@ -526,7 +526,7 @@ int exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
     pid = fork();
     if (pid < 0) {
         perror("fork");
-        if (prev_fd != STDIN_FILENO)
+        if (prev_fd  > STDIN_FILENO)
             close(prev_fd);
         return (data->last_exit_status = 1);
     }
@@ -578,7 +578,7 @@ int exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
     }
     
     // Parent process
-    if (prev_fd != STDIN_FILENO)
+    if (prev_fd  > STDIN_FILENO)
         close(prev_fd);
     
     waitpid(pid, &status, 0);
@@ -664,7 +664,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
     // Check if heredoc collection was interrupted
     if (data->last_exit_status == 130) {
         data->pipes_count = 0;
-        if (prev_fd != STDIN_FILENO || prev_fd != -1)
+        if (prev_fd  > STDIN_FILENO || prev_fd != -1)
             close(prev_fd);
         return 130;
     }
@@ -684,13 +684,13 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                 pid_t pid = fork();
                 if (pid < 0) {
                     perror("fork");
-                    if (prev_fd != STDIN_FILENO)
+                    if (prev_fd  > STDIN_FILENO)
                         close(prev_fd);
                     return (data->last_exit_status = 1);
                 }
                 
                 if (pid == 0) {
-                    if (prev_fd != STDIN_FILENO && prev_fd != -1) {
+                    if (prev_fd  > STDIN_FILENO && prev_fd != -1) {
                         if (dup2(prev_fd, STDIN_FILENO) < 0)
                             perror_and_exit("dup2");
                         close(prev_fd);
@@ -698,7 +698,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                     exit(exec_ast(node->left, STDIN_FILENO, data));
                 }
                 
-                if (prev_fd != STDIN_FILENO)
+                if (prev_fd  > STDIN_FILENO)
                     close(prev_fd);
                     
                 waitpid(pid, &status, 0);
@@ -722,13 +722,13 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                 pid_t pid = fork();
                 if (pid < 0) {
                     perror("fork");
-                    if (prev_fd != STDIN_FILENO)
+                    if (prev_fd  > STDIN_FILENO)
                         close(prev_fd);
                     return (data->last_exit_status = 1);
                 }
                 
                 if (pid == 0) {
-                    if (prev_fd != STDIN_FILENO) {
+                    if (prev_fd  > STDIN_FILENO) {
                         if (dup2(prev_fd, STDIN_FILENO) < 0)
                             perror_and_exit("dup2");
                         close(prev_fd);
@@ -743,7 +743,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
                         exit(0);
                 }
                 
-                if (prev_fd != STDIN_FILENO)
+                if (prev_fd  > STDIN_FILENO)
                     close(prev_fd);
                     
                 waitpid(pid, &status, 0);
@@ -759,7 +759,7 @@ int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
         default:
             // Unknown node type
             fprintf(stderr, "minishell: Unknown AST node type: %d\n", node->type);
-            if (prev_fd != STDIN_FILENO)
+            if (prev_fd  > STDIN_FILENO)
                 close(prev_fd);
             return (data->last_exit_status = 1);
     }
