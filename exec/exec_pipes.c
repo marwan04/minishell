@@ -42,56 +42,39 @@ void close_all_heredoc_fds(t_ast *node)
 // Fixed function for child process pipe handling
 void child_process_pipe(int prev_fd, int pipefd[2], t_ast *node, t_minishell *data)
 {
-    int stdin_fd = -1;
-    int stdout_fd = -1;
+    // Close unused pipe ends in child
+    close(pipefd[0]);
 
-    // Redirect input from previous command in the pipeline (if exists)
+    // Handle input redirection
     if (prev_fd != -1)
     {
-        stdin_fd = dup(prev_fd);
-        if (stdin_fd == -1)
+        if (dup2(prev_fd, STDIN_FILENO) == -1)
         {
-            perror("dup");
+            perror("dup2");
             exit(1);
         }
-        dup2(stdin_fd, STDIN_FILENO);
         close(prev_fd);
     }
-
-    // If this is a heredoc node, redirect input from the heredoc pipe
-    if (node->type == NODE_HEREDOC && node->heredoc_pipe[0] >= 0)
+    else if (node->type == NODE_HEREDOC && node->heredoc_pipe[0] >= 0)
     {
-        stdin_fd = dup(node->heredoc_pipe[0]);
-        if (stdin_fd == -1)
+        if (dup2(node->heredoc_pipe[0], STDIN_FILENO) == -1)
         {
-            perror("dup");
+            perror("dup2");
             exit(1);
         }
-        dup2(stdin_fd, STDIN_FILENO);
         close(node->heredoc_pipe[0]);
         node->heredoc_pipe[0] = -1;
     }
 
-    // Redirect output to the current pipe's write end
-    stdout_fd = dup(pipefd[1]);
-    if (stdout_fd == -1)
+    // Handle output redirection
+    if (dup2(pipefd[1], STDOUT_FILENO) == -1)
     {
-        perror("dup");
+        perror("dup2");
         exit(1);
     }
-    dup2(stdout_fd, STDOUT_FILENO);
-    
-    // Close all pipe file descriptors
-    if (prev_fd != -1)
-        close(prev_fd);
-    if (stdin_fd != -1)
-        close(stdin_fd);
-    if (stdout_fd != -1)
-        close(stdout_fd);
-    close(pipefd[0]);
     close(pipefd[1]);
 
-    // Execute the current command in the pipeline
+    // Execute the command
     if (exec_ast(node->left, -1, data) == -1)
     {
         perror("exec");
@@ -140,47 +123,79 @@ pid_t pipe_and_fork(int pipefd[2], int prev_fd, t_ast *node, t_minishell *data)
 int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
 {
     int pipefd[2];
-    int status;
     pid_t pid;
+    int status;
 
-    pid = pipe_and_fork(pipefd, prev_fd, node, data);
+    // Create pipe
+    if (pipe(pipefd) == -1)
+    {
+        perror("pipe");
+        return (-1);
+    }
+
+    // Fork child process
+    pid = fork();
     if (pid == -1)
-        return (1); // Handle error
-
-    // Parent closes the write end of the pipe
-    close(pipefd[1]);
-
-    // Close the previous file descriptor if it exists
-    if (prev_fd > -1)
     {
-        close(prev_fd);
-    }
-
-    // If this is a heredoc node, close its FDs in the parent
-    if (node->type == NODE_HEREDOC)
-    {
-        // Close only if the fd is valid (not already closed)
-        if (node->heredoc_pipe[0] >= 0)
-        {
-            close(node->heredoc_pipe[0]);
-            node->heredoc_pipe[0] = -1; // Mark as closed
-        }
-        
-        if (node->heredoc_pipe[1] >= 0)
-        {
-            close(node->heredoc_pipe[1]);
-            node->heredoc_pipe[1] = -1; // Mark as closed
-        }
-    }
-    exec_ast(node->right, pipefd[0], data);
-    if (pipefd[0] >= 0)
+        perror("fork");
         close(pipefd[0]);
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status))
-        data->last_exit_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-        data->last_exit_status = 128 + WTERMSIG(status);
+        close(pipefd[1]);
+        return (-1);
+    }
+    else if (pid == 0)
+    {
+        // Child process
+        close(pipefd[0]);  // Close read end in child
+        
+        // Execute left command and free its AST
+        t_ast *left = node->left;
+        node->left = NULL;
+        child_process_pipe(prev_fd, pipefd, left, data);
+        free_ast(left);
+        
+        // Free this node before exiting
+        free_ast(node);
+        exit(1);
+    }
     else
-        data->last_exit_status = 1;
-    return data->last_exit_status;
+    {
+        // Parent process
+        close(pipefd[1]);  // Close write end in parent
+        if (prev_fd != -1)
+            close(prev_fd);
+
+        // Wait for the child process
+        if (waitpid(pid, &status, 0) == -1)
+        {
+            perror("waitpid");
+            close(pipefd[0]);
+            return (-1);
+        }
+
+        // Update last exit status
+        if (WIFEXITED(status))
+            data->last_exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            data->last_exit_status = 128 + WTERMSIG(status);
+
+        // Handle next command in pipeline
+        if (node->right)
+        {
+            // Execute right command and free its AST
+            t_ast *right = node->right;
+            node->right = NULL;
+            int next_status = handle_pipe_node(right, pipefd[0], data);
+            close(pipefd[0]);
+            free_ast(right);
+            return next_status;
+        }
+
+        // Last command in pipeline
+        close(pipefd[0]);
+        
+        // Free this node
+        free_ast(node);
+        return 0;
+    }
+    return 0;
 }

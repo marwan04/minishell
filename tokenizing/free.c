@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 14:25:34 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/02 06:20:01 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,43 @@ void	free_tokens(t_minishell *data)
 
 void	free_ast(t_ast *node)
 {
-	int	i;
-
 	if (!node)
-		return ;
-	free_ast(node->left);
-	free_ast(node->right);
+		return;
+
+	// First free children
+	if (node->left)
+	{
+		free_ast(node->left);
+		node->left = NULL;
+	}
+	if (node->right)
+	{
+		free_ast(node->right);
+		node->right = NULL;
+	}
+
+	// Then free arguments if it's a command node
 	if (node->type == NODE_CMD && node->args)
 	{
-		i = 0;
+		int i = 0;
 		while (node->args[i])
 		{
 			free(node->args[i]);
+			node->args[i] = NULL;
 			i++;
 		}
 		free(node->args);
+		node->args = NULL;
 	}
+
+	// Finally free file if it exists
 	if (node->file)
+	{
 		free(node->file);
+		node->file = NULL;
+	}
+
+	// Free the node itself
 	free(node);
 }
 

@@ -3,42 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:10:15 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 16:18:50 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/02 06:18:29 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void	update_shlvl(t_env **env)
+void update_shlvl(t_env **env)
 {
-	t_env	*var;
-	int		shlvl;
-	char	*shlvl_str;
+    t_env *var = *env;
 
-	var = *env;
-	while (var)
-	{
-		if (ft_strcmp(var->key, "SHLVL") == 0)
-		{
-			shlvl = ft_atoi(var->value);
-			if (shlvl < 0)
-				shlvl = 0;
-			else if (shlvl >= 999)
-				shlvl = 1;
-			else
-				shlvl += 1;
-			free(var->value);
-			shlvl_str = ft_itoa(shlvl);
-			var->value = shlvl_str;
-			return ;
-		}
-		var = var->next;
-	}
-	add_or_update_env(env, "SHLVL", "1");
+    while (var)
+    {
+        if (ft_strcmp(var->key, "SHLVL") == 0)
+        {
+            int   shlvl    = ft_atoi(var->value) + 1;
+            char *new_val = ft_itoa(shlvl);
+            free(var->value);
+            var->value = new_val;
+            return;
+        }
+        var = var->next;
+    }
+
+    // if SHLVL not found, add it at 1
+    add_or_update_env(env, "SHLVL", "1");
 }
+
 
 int	main(int ac, char **av, char **envp)
 {

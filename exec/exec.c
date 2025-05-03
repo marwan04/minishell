@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 17:53:48 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/02 06:00:04 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,92 @@ static int	exec_leaf(t_ast *node, int prev_fd, t_minishell *data)
 		return (handle_heredoc_node(node, prev_fd, data));
 	return (0);
 }
-
-int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
+int exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 {
-	if (!node)
-		return (1);
-	if (node->type == NODE_AND || node->type == NODE_OR)
-		return (exec_and_or(node, prev_fd, data));
-	else if (node->type == NODE_GROUP)
-		return (exec_ast(node->left, prev_fd, data));
-	return (exec_leaf(node, prev_fd, data));
+    if (!node)
+        return (1);
+
+    // ─── Pipeline ──────────────────────────────────────────────────────────
+    if (node->type == NODE_PIPE)
+    {
+        int pipefd[2];
+        if (pipe(pipefd) == -1)
+        {
+            perror("pipe");
+            return (-1);
+        }
+
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+            perror("fork");
+            close(pipefd[0]);
+            close(pipefd[1]);
+            return (-1);
+        }
+        else if (pid == 0)
+        {
+            // Child: read from prev_fd, write to pipefd[1]
+            close(pipefd[0]);
+            if (prev_fd != -1)
+            {
+                dup2(prev_fd, STDIN_FILENO);
+                close(prev_fd);
+            }
+            dup2(pipefd[1], STDOUT_FILENO);
+            close(pipefd[1]);
+        
+            // Execute left command and free its AST
+            t_ast *left = node->left;
+            node->left = NULL;
+            exec_ast(left, -1, data);
+            free_ast(left);
+            
+            // Free this node before exiting
+            free_ast(node);
+            exit(1);
+        }
+        // Parent: close write end, optionally close prev_fd
+        close(pipefd[1]);
+        if (prev_fd != -1)
+            close(prev_fd);
+
+        int status;
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status))
+            data->last_exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            data->last_exit_status = 128 + WTERMSIG(status);
+
+        // Recurse into the right side of the pipeline
+        if (node->right)
+        {
+            int next_status = exec_ast(node->right, pipefd[0], data);
+            close(pipefd[0]);
+            
+            // Free the right node after execution
+            t_ast *right = node->right;
+            node->right = NULL;
+            free_ast(right);
+            
+            return next_status;
+        }
+
+        close(pipefd[0]);
+        
+        // Free this node
+        free_ast(node);
+        return (data->last_exit_status);
+    }
+
+    // ─── && / || ────────────────────────────────────────────────────────────
+    if (node->type == NODE_AND || node->type == NODE_OR)
+        return exec_and_or(node, prev_fd, data);
+
+    // ─── Grouping ───────────────────────────────────────────────────────────
+    if (node->type == NODE_GROUP)
+        return exec_ast(node->left, prev_fd, data);
+
+    // ─── Leaf (simple command) ─────────────────────────────────────────────
+    return exec_leaf(node, prev_fd, data);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/30 19:21:09 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/02 06:21:05 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,39 @@ void	ft_handle_exit(t_minishell *data)
 		ft_exit(data);
 }
 
-void	ft_read(t_minishell *data)
-{
-	char	*input;
 
-	check_signal(data);
-	data->execution_aborted = 0;
-	input = readline("minishell> ");
-	if (!input && !g_sig_int)
-		ft_free(data, 1, "exit\n");
-	if (!g_sig_int)
-	{
-		ft_process_input(data, input);
-		if (data->ast_root && !data->execution_aborted)
-		{
-			ft_handle_exit(data);
-			exec_ast(data->ast_root, -1, data);
-		}
-		free_tokens(data);
-		free_ast(data->ast_root);
-		data->ast_root = NULL;
-		data->tokens = NULL;
-	}
+void ft_read(t_minishell *data)
+{
+    char *input;
+
+    check_signal(data);
+    data->execution_aborted = 0;
+    input = readline("minishell> ");
+    if (!input && !g_sig_int)
+        ft_free(data, 1, "exit\n");
+
+    if (!g_sig_int)
+    {
+        ft_process_input(data, input);
+        if (data->ast_root && !data->execution_aborted)
+        {
+            ft_handle_exit(data);
+            exec_ast(data->ast_root, -1, data);
+        }
+
+        if (data->ast_root)
+        {
+            free_ast(data->ast_root);
+            data->ast_root = NULL;
+        }
+        if (data->tokens)
+        {
+            free_tokens(data);
+            data->tokens = NULL;
+        }
+    }
+    else
+    {
+        free(input);  // if you got a SIGINT, still free
+    }
 }
