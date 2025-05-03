@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/01 00:43:13 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 01:28:38 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_minishell
 	t_ast	*ast_root;
 	t_env	*env;
 	t_token	*tokens;
+	int		pipes_count;
 	int		execution_aborted;
 }					t_minishell;
 
@@ -127,11 +128,11 @@ int					check_redirections(int *i, char *input, t_token **head,
 						char symbol[2]);
 int					handle_words(int *i, char *input, t_token **head);
 void				check_separator(int *i, char *input);
-
+void	add_token(t_token **head, char *value, t_token_type type);
 //tokenizing/cmd_utils.c
 t_ast				*new_ast_cmd(void);
 void				add_argument(t_ast *node, char *arg);
-t_ast				*handle_redirection(t_ast *cmd_node, t_token *token);
+t_ast			*handle_redirection(t_ast *node, t_token *token);
 t_ast				*parse_ast(t_token **tokens);
 
 //tokenizing/free.c
@@ -149,10 +150,8 @@ t_ast				*parse_expression(t_token **tokens);
 
 //tokenizing/tokenizer_utils.c
 t_token				*last_token(t_token *token);
-t_token				*new_token(char *value, t_token_type type);
-void				add_token(t_token **head, char *value, t_token_type type);
 void				remove_last_token(t_token **head);
-void				delete_next_token(t_token *prev_token);
+t_token				*new_token(char *value, t_token_type type);
 
 //tokenizing/tokenizer.c
 t_token				*tokenizer(char *input);
@@ -177,6 +176,7 @@ char				*expand_variables(char *token,
 						int last_exit_status, t_env *env);
 void				expand_append_char(t_expand *expand, char c);
 void				expand_track_quotes(t_expand *expand, char c);
+char				*expand_vars(char *line, t_env *env);
 
 // signal/signal_handler.c
 void				handle_sigint(int sig);
@@ -210,7 +210,8 @@ void				handle_cd(char **args, t_env **env);
 void				handle_pwd(void);
 
 // builtins/exit.c
-void				ft_exit(t_minishell *data);
+void			ft_exit(t_minishell *data);
+int                     handle_exit(char **args, int *last_exit);
 
 // builtins/env.c
 void				handle_env(t_env *env);
@@ -231,18 +232,20 @@ void				handle_export(char **args, t_env **env);
 int					update_pwd_env(t_env **env);
 
 // exec/exec.c
-int					ft_execute_command(t_ast *node, t_minishell *data);
-void				execute_builtin_cmds(t_ast *node,
-						int *last_exit_status, t_env **env);
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
 // exec/check_access.c
 int					open_redir_file(t_ast *node);
+// exec/exec_redirection.c
+int		handle_redirection_node(t_ast *node, int prev_fd, t_minishell *data);
+
+// exec/exec_pipes.c
+void		close_all_heredoc_fds(t_ast *node);
+
 // exec/exec_herdoc.c
-int					handle_heredoc_node(t_ast *node,
-						int prev_fd, t_minishell *data);
+int		handle_heredoc_node(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/write_heredoc.c
 void				write_heredoc(char *delimiter, int pipe_fd);
@@ -254,23 +257,6 @@ void				ft_read(t_minishell *data);
 void				close_on_exit(int *fds, int fd_count);
 void				ft_perror(char *msg, int errno);
 void				ft_set_exit_status(int *ptr, int status);
-
-// exec/exec_utilites.c
-int					initialize_execution_params(char **full_path,
-						char ***envp, char **args, t_env **env);
-int					is_builtin(char *cmd);
-
-// exec/exec_pipes.c
-int					handle_pipe_node(t_ast *node,
-						int prev_fd, t_minishell *data);
-int					handle_redirection_node(t_ast *node,
-						int prev_fd, t_minishell *data);
-int					handle_cmd_node(t_ast *node,
-						int prev_fd, t_minishell *data);
-
-// herdoc/herdoc_handler.c
-
-void				collect_heredocs(t_ast *node, t_minishell *data);
 
 // syntax/syntax_check.c
 int					validate_token_sequence(t_token *tokens);
@@ -294,6 +280,6 @@ void				expand_one_token(t_token *tok,
 t_ast				*new_pipe_node(t_ast *left, t_ast *right);
 t_ast				*create_redir_node(t_ast *cmd_node, t_token *token);
 void				expand_wildcards(t_token *tokens);
-void				ft_process_input(t_minishell *data, char *input);
+void    			ft_process_input(t_minishell *data, char *input);
 
 #endif

@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void	ft_perror(char *msg, int errno)
+void	ft_error(char *msg, int errnum)
 {
-	if (errno == 4242)
+	if (errnum == 4242)
 	{
 		ft_putstr_fd(msg, 2);
 		exit(1);
@@ -22,7 +22,7 @@ void	ft_perror(char *msg, int errno)
 	else
 	{
 		perror(msg);
-		exit(errno);
+		exit(errnum);
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/30 19:06:16 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 19:21:17 by malrifai         ###   ########.fr       */
+/*   Created: 2025/05/04 00:17:16 by eaqrabaw          #+#    #+#             */
+/*   Updated: 2025/05/04 02:03:46 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	handle_token_sequence(t_minishell *data,
 static int	handle_parsing(t_minishell *data,
 	t_token *raw_tokens, char *input)
 {
-	data->ast_root = parse_ast(&data->tokens);
+	data->ast_root = parse_ast(&raw_tokens);
 	if (!data->ast_root)
 	{
 		free_tokens_from_list(raw_tokens);
@@ -68,8 +68,23 @@ static int	handle_parsing(t_minishell *data,
 		data->tokens = NULL;
 		return (1);
 	}
-	collect_heredocs(data->ast_root, data);
+	//collect_heredocs(data->ast_root, data);
 	return (0);
+}
+int     ft_pipes_count(t_token *tokens)
+{
+    t_token *token;
+    int     count;
+
+    count = 0;
+    token = tokens;
+    while (token)
+    {
+        if (token->type == PIPE)
+            count++;
+        token = token->next;
+    }
+    return (count);
 }
 
 void	ft_process_input(t_minishell *data, char *input)
@@ -85,6 +100,7 @@ void	ft_process_input(t_minishell *data, char *input)
 	free_ast(data->ast_root);
 	raw_tokens = tokenizer(input);
 	data->tokens = raw_tokens;
+    data->pipes_count = ft_pipes_count(raw_tokens);
 	if (handle_token_sequence(data, raw_tokens, input))
 		return ;
 	if (data->tokens)
@@ -92,10 +108,8 @@ void	ft_process_input(t_minishell *data, char *input)
 		expand_tokens(data->tokens, data->last_exit_status, data->env);
 		expand_wildcards(data->tokens);
 		normalize_tokens(&data->tokens);
-		normalize_tokens_with_heredoc(&data->tokens);
 		if (handle_parsing(data, raw_tokens, input))
 			return ;
 	}
-	free_tokens_from_list(raw_tokens);
 	free(input);
 }

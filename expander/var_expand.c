@@ -138,45 +138,42 @@ void	expand_append_char(t_expand *expand, char c)
 	expand->expanded = ft_strjoin_free(expand->expanded, expand->c);
 }
 
-/* This function for the following
-1- Loops through token character by character.
-2- Tracks quotes (' ") and applies variable expansion accordingly.
-3- Calls helper functions for:
- - Handling quotes (expand_track_quotes())
- - Extracting variables (expand_extract_var())
- - Replacing variables (expand_replace_var())
- - Appending normal characters (expand_append_char())
-*/
-// char	*expand_variables(char *token, int last_exit_status, t_env *env)
-// {
-// 	t_expand	exp;
+char	*expand_vars(char *line, t_env *env)
+{
+	char	*expanded;
+	t_expand	exp;
 
-// 	if (!token || !ft_strchr(token, '$'))
-// 		return (ft_strdup(token));
-// 	ft_bzero(&exp, sizeof(t_expand));
-// 	exp.expanded = ft_strdup("");
-// 	while (token[exp.i])
-// 	{
-// 		expand_track_quotes(&exp, token[exp.i]);
-// 		if (token[exp.i] == '$' && exp.quote != '\'')
-// 		{
-// 			exp.var_name = expand_extract_var(&exp, token, last_exit_status);
-// 			if (exp.skip_env_lookup)
-// 				exp.expanded = ft_strdup(exp.var_name);
-// 			else
-// 			{
-// 				exp.var_value = expand_replace_var(exp.var_name,
-// 						exp.preserve_spaces, env);
-// 				exp.expanded = ft_strjoin_free(exp.expanded, exp.var_value);
-// 				free(exp.var_value);
-// 			}
-// 			free(exp.var_name);
-// 		}
-// 		else
-// 			expand_append_char(&exp, token[exp.i++]);
-// 	}
-// 	return (exp.expanded);
-// }
+	if (!line)
+		return (NULL);
+	ft_bzero(&exp, sizeof(t_expand));
+	exp.expanded = ft_strdup("");
+	while (line[exp.i])
+	{
+		expand_track_quotes(&exp, line[exp.i]);
+		if (line[exp.i] == '$' && exp.quote != '\'' && line[exp.i + 1])
+		{
+			exp.var_name = expand_extract_var(&exp, line, 0);
+			if (exp.skip_env_lookup)
+			{
+				free(exp.expanded);
+				exp.expanded = ft_strdup(exp.var_name);
+			}
+			else
+			{
+				exp.var_value = expand_replace_var(exp.var_name,
+						exp.preserve_spaces, env);
+				exp.expanded = ft_strjoin_free(exp.expanded, exp.var_value);
+				free(exp.var_value);
+			}
+			free(exp.var_name);
+		}
+		else
+			expand_append_char(&exp, line[exp.i++]);
+	}
+	expanded = exp.expanded;
+	return (expanded);
+}
+
 void	append_char_if_not_dollar(t_expand *exp, char c)
 {
 	expand_append_char(exp, c);

@@ -21,11 +21,9 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
-EXEC		= exec/read_process.c exec/write_heredoc.c exec/exec_cmd.c exec/read.c exec/exec_redirection.c exec/exec.c exec/path.c exec/exec_utilites.c exec/check_access.c exec/error_utilites.c exec/exec_pipes.c  exec/exec_herdoc.c
+EXEC		= exec/read_process.c exec/read.c exec/exec.c exec/path.c exec/check_access.c exec/error_utilites.c
 
 EXPANDER	= expander/expand_wildcard.c expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
-
-HERDOC		= herdoc/herdoc_handler.c
 
 BUILTINS	= builtins/exit.c builtins/update_env_cd.c builtins/update_env.c builtins/echo.c builtins/unset.c builtins/export/export.c builtins/export/copy_env.c builtins/export/print_env.c builtins/pwd.c builtins/env.c builtins/env_utils.c builtins/cd.c
 
@@ -50,7 +48,6 @@ SRCS		= main.c \
 			  $(SIGNAL) \
 			  $(BUILTINS) \
 			  $(EXEC) \
-			  $(HERDOC) \
 			  $(SYNTAX)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)

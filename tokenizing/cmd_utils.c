@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 14:07:09 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/30 16:24:06 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/04 01:20:32 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ t_ast	*handle_redirection(t_ast *cmd_node, t_token *token)
 		return (NULL);
 	if (token->type == HEREDOC)
 	{
+		redir_node->heredoc_delim = redir_node->file;
 		redir_node->heredoc_expand = !token->next->herdoc_quote;
 		redir_node->type = NODE_HEREDOC;
 	}
