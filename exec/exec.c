@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/04 02:54:36 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 03:03:30 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,18 +113,19 @@ collect_pipeline_stages(t_ast *pipe_root, int *out_n)
 static int
 exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
 {
-    int   (*pipes)[2] = NULL;
+    size_t pipe_count;
+    int    (*pipes)[2] = NULL;
     pid_t *pids        = NULL;
-    int    status, last_status = 0;
+    int     status, last_status = 0;
 
-    
-    /* 1) Single‐stage shortcut */
-    if (n_stages == 1)
+    /* 1) If there's only one stage, fall back to the normal cmd path */
+    if (n_stages <= 1)
         return exec_cmd_node(stages[0], prev_fd, data);
 
-    /* 2) Allocate N−1 pipes and N pids */
-    pipes = malloc(sizeof *pipes * (n_stages - 1));
-    pids  = malloc(sizeof *pids  *  n_stages);
+    /* 2) Allocate exactly (n_stages - 1) pipes and n_stages PIDs */
+    pipe_count = (size_t)(n_stages - 1);
+    pipes      = malloc(pipe_count * sizeof *pipes);
+    pids       = malloc((size_t)n_stages * sizeof *pids);
     if (!pipes || !pids)
     {
         perror("malloc");
@@ -133,13 +134,14 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
         return 1;
     }
 
-    /* 3) Create all the pipes */
-    for (int i = 0; i < n_stages; i++)
+    /* 3) Create the pipes */
+    for (size_t i = 0; i < pipe_count; i++)
     {
         if (pipe(pipes[i]) < 0)
         {
             perror("pipe");
-            for (int j = 0; j < i; j++)
+            /* close any we opened */
+            for (size_t j = 0; j < i; j++)
             {
                 close(pipes[j][0]);
                 close(pipes[j][1]);
@@ -150,14 +152,15 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
         }
     }
 
-    /* 4) Fork each stage */
+    /* 4) Fork off each stage */
     for (int i = 0; i < n_stages; i++)
     {
         pid_t pid = fork();
         if (pid < 0)
         {
             perror("fork");
-            for (int j = 0; j < n_stages - 1; j++)
+            /* cleanup pipes */
+            for (size_t j = 0; j < pipe_count; j++)
             {
                 close(pipes[j][0]);
                 close(pipes[j][1]);
@@ -172,43 +175,43 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
             int used_in  = 0, used_out = 0;
             t_ast *r;
 
-            /* Child: restore default signals so Ctrl-C works */
+            /* Child: restore default SIGINT/SIGQUIT */
             signal(SIGINT,  SIG_DFL);
             signal(SIGQUIT, SIG_DFL);
 
-            /* 4a) Apply any <, <<, >, >> on this stage first */
+            /* 4a) First apply any <, <<, >, >> on this stage */
             apply_redirections(stages[i]);
 
-            /* 4b) Detect whether this stage used its pipe-in or pipe-out */
+            /* 4b) Detect if input or output was redirected */
             r = stages[i];
-            while (r && (r->type == NODE_HEREDOC
-                       || r->type == NODE_REDIR_IN
-                       || r->type == NODE_REDIR_OUT
-                       || r->type == NODE_APPEND))
+            while (r && (r->type == NODE_HEREDOC ||
+                         r->type == NODE_REDIR_IN ||
+                         r->type == NODE_REDIR_OUT ||
+                         r->type == NODE_APPEND))
             {
                 if (r->type == NODE_HEREDOC || r->type == NODE_REDIR_IN)
                     used_in = 1;
-                if (r->type == NODE_REDIR_OUT || r->type == NODE_APPEND)
+                if (r->type == NODE_REDIR_OUT  || r->type == NODE_APPEND)
                     used_out = 1;
                 r = r->right;
             }
 
-            /* 4c) Wire up the pipes */
-            for (int j = 0; j < n_stages - 1; j++)
+            /* 4c) Wire up each pipe end exactly once */
+            for (size_t j = 0; j < pipe_count; j++)
             {
                 int rd = pipes[j][0], wr = pipes[j][1];
 
-                if (j == i - 1)
+                if ((int)j == i - 1)
                 {
-                    /* incoming pipe */
+                    /* this pipe feeds us */
                     if (!used_in)
                         dup2(rd, STDIN_FILENO);
                     close(rd);
                     close(wr);
                 }
-                else if (j == i)
+                else if ((int)j == i)
                 {
-                    /* outgoing pipe */
+                    /* this pipe carries our output */
                     close(rd);
                     if (!used_out)
                         dup2(wr, STDOUT_FILENO);
@@ -216,24 +219,27 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
                 }
                 else
                 {
-                    /* unrelated pipe */
+                    /* unrelated pipe ends */
                     close(rd);
                     close(wr);
                 }
             }
 
-            /* 4d) Close prev_fd if it was a real pipe */
+            /* 4d) Close the prev_fd if it was a real FD > 2 */
             if (prev_fd > STDERR_FILENO)
                 close(prev_fd);
 
-            /* 4e) Find and execute the real command under any redirs */
+            /* 4e) Peel off any redir nodes to get to the real command */
             t_ast *cmd = stages[i];
-            while (cmd && (cmd->type == NODE_HEREDOC
-                        || cmd->type == NODE_REDIR_IN
-                        || cmd->type == NODE_REDIR_OUT
-                        || cmd->type == NODE_APPEND))
+            while (cmd && (cmd->type == NODE_HEREDOC ||
+                           cmd->type == NODE_REDIR_IN ||
+                           cmd->type == NODE_REDIR_OUT ||
+                           cmd->type == NODE_APPEND))
+            {
                 cmd = cmd->left;
+            }
 
+            /* 4f) Execute builtin or external */
             if (cmd && cmd->args && cmd->args[0])
             {
                 if (is_builtin(cmd->args[0]))
@@ -257,24 +263,24 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
                 }
             }
 
-            /* Only redirections? Exit successfully */
+            /* Only redirections? exit success */
             exit(0);
         }
 
-        /* Parent records PID */
+        /* Parent: remember this child’s PID */
         pids[i] = pid;
     }
 
-    /* 5) Parent closes its copies of all pipe fds */
+    /* 5) Parent closes its copies of all pipe FDs */
     if (prev_fd > STDERR_FILENO)
         close(prev_fd);
-    for (int j = 0; j < n_stages - 1; j++)
+    for (size_t j = 0; j < pipe_count; j++)
     {
         close(pipes[j][0]);
         close(pipes[j][1]);
     }
 
-    /* 6) Wait for all children and return the last exit status */
+    /* 6) Parent waits for every child, returns the last exit code */
     for (int i = 0; i < n_stages; i++)
     {
         if (waitpid(pids[i], &status, 0) < 0)
@@ -292,6 +298,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
     free(pids);
     return last_status;
 }
+
 
 
 
