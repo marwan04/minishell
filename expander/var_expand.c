@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:51:48 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 17:37:42 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/04 21:08:04 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,7 @@ void	handle_dollar_expansion(t_expand *exp,
 {
 	exp->var_name = expand_extract_var(exp, token, last_exit_status);
 	if (exp->skip_env_lookup)
-	{
-		free(exp->expanded);
-		exp->expanded = ft_strdup(exp->var_name);
-	}
+		exp->expanded = ft_strjoin_free(exp->expanded, exp->var_name);
 	else
 	{
 		exp->var_value = expand_replace_var(exp->var_name,
