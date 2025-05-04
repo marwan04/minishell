@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   copy_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:21:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/04/12 18:22:00 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:48:53 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	append_env_node(t_env **head, t_env **tail, t_env *new_node)
 {
