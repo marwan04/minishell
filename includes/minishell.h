@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 10:36:16 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 10:46:15 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,12 @@ typedef struct s_minishell
 	int		execution_aborted;
 }					t_minishell;
 
+typedef struct s_pipe_data
+{
+	int			prev_fd;
+	int			(*pipes)[2];
+	t_minishell	*data;
+}	t_pipe_data;
 
 //herdoc/herdoc_utils.c
 void    			close_heredoc_in_node(t_ast *node);

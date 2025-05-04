@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:16:09 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 07:18:33 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 10:56:28 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,17 @@
 static int
 count_pipe_leaves(t_ast *node)
 {
+    int result;
+    
     if (!node)
-        return 0;
+        return (0);
     if (node->type == NODE_PIPE)
-        return count_pipe_leaves(node->left)
-             + count_pipe_leaves(node->right);
-    // anything that isn’t a PIPE is one “stage”
-    return 1;
+    {
+        result = count_pipe_leaves(node->left);
+        result += count_pipe_leaves(node->right);
+        return (result);
+    }
+    return (1);
 }
 
 static void
@@ -41,38 +45,48 @@ flatten_pipeline_helper(t_ast *node, t_ast **stages, int *idx)
 }
 t_ast ** collect_pipeline_stages(t_ast *pipe_root, int *out_n)
 {
-    int n = count_pipe_leaves(pipe_root);
-    t_ast **stages = malloc(sizeof *stages * n);
+    int n;
+    t_ast **stages;
+    int idx;
+
+    n = count_pipe_leaves(pipe_root);
+    stages =  malloc(sizeof *stages * n);
+    idx = 0;
     if (!stages)
     {
         perror("malloc");
         *out_n = 0;
-        return NULL;
+        return (NULL);
     }
-    int idx = 0;
     flatten_pipeline_helper(pipe_root, stages, &idx);
     *out_n = n;
-    return stages;
+    return (stages);
 }
 
 int handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
 {
+    t_ast *cur;
+    int pipe_count;
+    t_ast **stages;
+    int r;
+    int result;
+    
     if (!node || !node->left || !node->right)
-        return 1;
-    int pipe_count = 1;
-    t_ast *cur = node->right;
+        return (1);
+    pipe_count = 1;
+    cur = node->right;
     while (cur && cur->type == NODE_PIPE) {
         pipe_count++;
         cur = cur->right;
     }
-    t_ast **stages = malloc(sizeof(t_ast*) * (pipe_count + 1));
+    stages = malloc(sizeof(t_ast*) * (pipe_count + 1));
     if (!stages) {
         perror("malloc");
-        return 1;
+        return (1);
     }
-    int     r = pipe_count + 1;
+    r = pipe_count + 1;
     flatten_pipeline_helper(node, stages, &r);
-    int result = exec_pipeline(stages, pipe_count + 1, prev_fd, data);
+    result = exec_pipeline(stages, pipe_count + 1, prev_fd, data);
     free(stages);
-    return result;
+    return (result);
 }
