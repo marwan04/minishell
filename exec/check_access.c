@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 00:39:28 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/01 00:48:21 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:40:10 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int open_redir_in_file(t_ast *node)
         perror(node->file);
         return (-1);
     }
-    return fd;
+    return (fd);
 }
 
 int open_redir_out_file(t_ast *node)
@@ -53,7 +53,7 @@ int open_redir_out_file(t_ast *node)
         perror(node->file);
         return (-1);
     }
-    return fd;
+    return (fd);
 }
 
 int open_redir_append_file(t_ast *node)
@@ -74,7 +74,7 @@ int open_redir_append_file(t_ast *node)
         perror(node->file);
         return (-1);
     }
-    return fd;
+    return (fd);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 08:18:26 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 09:19:34 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:58:06 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,6 @@ char	**envp_to_array(t_env *env)
 		env = env->next;
 	}
 	arr[idx] = NULL;
+	free_env(env);
 	return (arr);
 }

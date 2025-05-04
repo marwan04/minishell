@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:26:17 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 09:23:25 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:50:35 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,16 @@ static int exec_cmd_execve(t_ast *node, t_minishell *data)
     {
         ft_putstr_fd(node->args[0], 2);
         ft_putstr_fd(": command not found\n", 2);
-        return (127);
+        ft_free(data, 127, "");
     }
     envp = envp_to_array(data->env);
     if (!envp) 
-    {
-        perror("malloc");
-        return (126);
-    }
+        ft_free(data, 126, "malloc");
     execve(path, node->args, envp);
     perror("execve");
     free(path);
     ft_free_double_list(envp);
+    ft_free(data, 126, "");
     return (126);
 }
 
@@ -65,9 +63,17 @@ void	exec_cmd_child(t_ast *node, int prev_fd, t_minishell *data)
 		handle_prev_fd(prev_fd);
 	apply_redirections(node);
 	if (!node->args || !node->args[0])
-		exit(0);
+	{
+        close(node->heredoc_pipe[0]);
+        close(node->heredoc_pipe[1]);
+        ft_free(data, 127, "");
+    }
 	if (is_builtin(node->args[0]))
-		exit(exec_builtin(node, data, &data->last_exit_status));
+    {
+        data->last_exit_status = 0;
+        exec_builtin(node, data, &data->last_exit_status);
+        ft_free(data, data->last_exit_status, "");
+    }
 	exit(exec_cmd_execve(node, data));
 }
 
