@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/04 02:06:24 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:18:03 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,33 @@ void	free_tokens(t_minishell *data)
 	data->tokens = NULL;
 }
 
+static void	free_ast_content(t_ast *node)
+{
+	int	i;
+
+	if (node->type == NODE_CMD && node->args)
+	{
+		i = 0;
+		while (node->args[i])
+		{
+			free(node->args[i]);
+			node->args[i] = NULL;
+			i++;
+		}
+		free(node->args);
+		node->args = NULL;
+	}
+	if (node->file)
+	{
+		free(node->file);
+		node->file = NULL;
+	}
+}
+
 void	free_ast(t_ast *node)
 {
 	if (!node)
-		return;
-
-	// First free children
+		return ;
 	if (node->left)
 	{
 		free_ast(node->left);
@@ -47,29 +68,7 @@ void	free_ast(t_ast *node)
 		free_ast(node->right);
 		node->right = NULL;
 	}
-
-	// Then free arguments if it's a command node
-	if (node->type == NODE_CMD && node->args)
-	{
-		int i = 0;
-		while (node->args[i])
-		{
-			free(node->args[i]);
-			node->args[i] = NULL;
-			i++;
-		}
-		free(node->args);
-		node->args = NULL;
-	}
-
-	// Finally free file if it exists
-	if (node->file)
-	{
-		free(node->file);
-		node->file = NULL;
-	}
-
-	// Free the node itself
+	free_ast_content(node);
 	free(node);
 }
 

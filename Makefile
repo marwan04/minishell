@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
+#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/04 08:22:42 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/05/04 22:19:04 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,6 @@ SYNTAX		= syntax/syntax_check.c \
 TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/init_nodes.c \
 			  tokenizing/normalize_helpers.c \
-			  tokenizing/normalize_heredoc.c \
 			  tokenizing/check.c \
 			  tokenizing/tokenizer_utils.c \
 			  tokenizing/cmd_utils.c \
