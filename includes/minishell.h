@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 09:21:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 10:36:16 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ void				handle_export(char **args, t_env **env);
 int					update_pwd_env(t_env **env);
 
 //exec/exec_redirection.c 
-void 				apply_redirections(t_ast *node);
+int 				apply_redirections(t_ast *node);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
