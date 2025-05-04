@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:03:21 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 07:48:00 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:30:45 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void read_heredoc(const char *delim, int write_fd, int expand, t_minishel
             if (!line) 
 				continue;
         }
-        write(write_fd, line, strlen(line));
+        write(write_fd, line, ft_strlen(line));
         write(write_fd, "\n", 1);
         free(line);
     }
@@ -96,13 +96,10 @@ void collect_heredocs(t_ast *node, t_minishell *data)
 {
     if (!node)
         return;
-        
     if (node->type == NODE_HEREDOC)
-        process_heredoc_node(node, data);
-        
+        process_heredoc_node(node, data);   
     if (node->left)
-        collect_heredocs(node->left, data);
-        
+        collect_heredocs(node->left, data);   
     if (node->right)
         collect_heredocs(node->right, data);
 }

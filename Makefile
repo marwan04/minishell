@@ -6,7 +6,7 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/04 07:59:05 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/05/04 08:22:42 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ EXEC		= exec/exec_and_or.c \
 			  exec/pipe_utils.c \
 			  exec/exec.c \
 			  exec/exec_cmd.c \
-			  exec/exec_pipe.c
+			  exec/exec_pipe.c \
+			  exec/exec_utils.c
 			  
 EXPANDER	= expander/expand_wildcard.c \
 			  expander/replace_var.c \
