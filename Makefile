@@ -6,7 +6,7 @@
 #    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/01 19:08:39 by eaqrabaw         ###   ########.fr        #
+#    Updated: 2025/05/04 07:59:05 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,15 +21,47 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
-EXEC		= exec/read_process.c exec/read.c exec/exec.c exec/path.c exec/check_access.c exec/error_utilites.c
+EXEC		= exec/exec_and_or.c \
+			  exec/exec_builtins.c \
+			  exec/path.c \
+			  exec/check_access.c \
+			  exec/error_utilites.c \
+			  exec/exec_redirection.c \
+			  exec/pipe_utils.c \
+			  exec/exec.c \
+			  exec/exec_cmd.c \
+			  exec/exec_pipe.c
+			  
+EXPANDER	= expander/expand_wildcard.c \
+			  expander/replace_var.c \
+			  expander/expand_special.c \
+			  expander/expand.c \
+			  expander/utils.c \
+			  expander/var_expand.c
 
-EXPANDER	= expander/expand_wildcard.c expander/replace_var.c expander/expand_special.c expander/expand.c expander/utils.c expander/var_expand.c
-
-BUILTINS	= builtins/exit.c builtins/update_env_cd.c builtins/update_env.c builtins/echo.c builtins/unset.c builtins/export/export.c builtins/export/copy_env.c builtins/export/print_env.c builtins/pwd.c builtins/env.c builtins/env_utils.c builtins/cd.c
+BUILTINS	= builtins/exit.c \
+			  builtins/update_env_cd.c \
+			  builtins/update_env.c \
+			  builtins/echo.c \
+			  builtins/unset.c \
+			  builtins/export/export.c \
+			  builtins/export/copy_env.c \
+			  builtins/export/print_env.c \
+			  builtins/pwd.c \
+			  builtins/env.c \
+			  builtins/env_utils.c \
+			  builtins/cd.c
 
 SIGNAL		= signal/signal_handler.c
 
-SYNTAX		= syntax/syntax_check.c syntax/syntax_utils.c
+READ 		= read/read.c \
+			  read/read_process.c
+
+HERDOC 		= herdoc/herdoc_handler.c \
+			  herdoc/herdoc_utils.c
+
+SYNTAX		= syntax/syntax_check.c \
+			  syntax/syntax_utils.c
 
 TOKENIZING	= tokenizing/tokenizer.c \
 			  tokenizing/init_nodes.c \
@@ -47,7 +79,9 @@ SRCS		= main.c \
 			  $(EXPANDER) \
 			  $(SIGNAL) \
 			  $(BUILTINS) \
+			  $(HERDOC) \
 			  $(EXEC) \
+			  $(READ) \
 			  $(SYNTAX)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)

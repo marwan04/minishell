@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 01:28:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:58:40 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,17 +122,36 @@ typedef struct s_minishell
 	int		execution_aborted;
 }					t_minishell;
 
+
+//herdoc/herdoc_utils.c
+void    			close_heredoc_in_node(t_ast *node);
+void 				close_heredoc_pipes_in_stages(t_ast **stages, int n_stages);
+
+//exec/exec_cmd.c
+int 				exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data);
+
+//exec/pipe_utils.c
+t_ast 				**collect_pipeline_stages(t_ast *pipe_root, int *out_n);
+//exec/exec_builtins.c
+void 				execute_builtin_cmds(t_ast *node, int *last_exit, t_env **env);
+int 				is_builtin(char *cmd);
+
+// exec/exec.c
+int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
+char				**envp_to_array(t_env *env);
+
 //tokenizing/check.c
 int					check_quote(int *i, char *input, t_token **head);
 int					check_redirections(int *i, char *input, t_token **head,
 						char symbol[2]);
 int					handle_words(int *i, char *input, t_token **head);
 void				check_separator(int *i, char *input);
-void	add_token(t_token **head, char *value, t_token_type type);
+void				add_token(t_token **head, char *value, t_token_type type);
+
 //tokenizing/cmd_utils.c
 t_ast				*new_ast_cmd(void);
 void				add_argument(t_ast *node, char *arg);
-t_ast			*handle_redirection(t_ast *node, t_token *token);
+t_ast				*handle_redirection(t_ast *node, t_token *token);
 t_ast				*parse_ast(t_token **tokens);
 
 //tokenizing/free.c
@@ -210,8 +229,8 @@ void				handle_cd(char **args, t_env **env);
 void				handle_pwd(void);
 
 // builtins/exit.c
-void			ft_exit(t_minishell *data);
-int                     handle_exit(char **args, int *last_exit);
+void				ft_exit(t_minishell *data);
+int					handle_exit(char **args, int *last_exit);
 
 // builtins/env.c
 void				handle_env(t_env *env);
@@ -231,32 +250,29 @@ void				handle_export(char **args, t_env **env);
 // builtins/update_env_cd.c
 int					update_pwd_env(t_env **env);
 
-// exec/exec.c
-int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
+//exec/exec_redirection.c 
+void 				apply_redirections(t_ast *node);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
+
 // exec/check_access.c
 int					open_redir_file(t_ast *node);
-// exec/exec_redirection.c
-int		handle_redirection_node(t_ast *node, int prev_fd, t_minishell *data);
-
-// exec/exec_pipes.c
-void		close_all_heredoc_fds(t_ast *node);
-
-// exec/exec_herdoc.c
-int		handle_heredoc_node(t_ast *node, int prev_fd, t_minishell *data);
-
-// exec/write_heredoc.c
-void				write_heredoc(char *delimiter, int pipe_fd);
 
 // exec/read.c
 void				ft_read(t_minishell *data);
 
+//exec/exec_and_or.c
+int					exec_and_or(t_ast *node, int prev_fd, t_minishell *data);
+
 // exec/error_utilites.c
-void				close_on_exit(int *fds, int fd_count);
-void				ft_perror(char *msg, int errno);
-void				ft_set_exit_status(int *ptr, int status);
+void 				perror_and_exit(const char *message);
+
+//herdoc/herdoc_handler.c
+void 				collect_heredocs(t_ast *node, t_minishell *data);
+
+//exec/exec_pipes.c
+int 				exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data);
 
 // syntax/syntax_check.c
 int					validate_token_sequence(t_token *tokens);
