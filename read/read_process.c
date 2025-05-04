@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 00:17:16 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 00:16:11 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 01:51:12 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ void	ft_process_input(t_minishell *data, char *input)
 		if (handle_parsing(data, raw_tokens, input))
 			return ;
 	}
+	g_sig_int = 0;
 	free(input);
 }

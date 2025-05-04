@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 00:16:30 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 01:38:58 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,13 @@ typedef struct s_minishell
 	int		execution_aborted;
 }					t_minishell;
 
-typedef struct s_pipe_data
+typedef struct s_pipeline
 {
-	int			prev_fd;
-	int			(*pipes)[2];
-	t_minishell	*data;
-}	t_pipe_data;
+	int		(*pipes)[2];
+	pid_t	*pids;
+	int		n_stages;
+	int		prev_fd;
+}	t_pipeline;
 
 //herdoc/herdoc_utils.c
 void				close_heredoc_in_node(t_ast *node);
@@ -203,7 +204,7 @@ char				*expand_vars(char *line, t_env *env);
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void				init_signals(void);
-int					check_signal(t_minishell *data);
+int					check_signal(void);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);
