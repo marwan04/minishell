@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 07:58:40 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:41:57 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,6 +267,8 @@ int					exec_and_or(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/error_utilites.c
 void 				perror_and_exit(const char *message);
+int					handle_fork_error(int prev_fd, t_minishell *data);
+void				handle_prev_fd(int prev_fd);
 
 //herdoc/herdoc_handler.c
 void 				collect_heredocs(t_ast *node, t_minishell *data);
