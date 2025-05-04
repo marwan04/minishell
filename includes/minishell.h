@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 10:46:15 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:36:25 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,6 @@ typedef struct s_redir_state
 	t_token	*list;
 	t_token	*tail;
 }	t_redir_state;
-
-typedef struct s_heredoc_state
-{
-	t_token	*list;
-	t_token	*tail;
-}	t_heredoc_state;
 
 typedef struct s_env
 {
@@ -297,10 +291,8 @@ int					has_invalid_operator_sequence(char *input);
 
 // normalize_tokens.c
 void				normalize_tokens(t_token **tokens);
-int					is_pipe_or_logical_or_paren(t_token *token);
 int					is_redirection(t_token *token);
 int					is_pipe_or_logical(t_token *token);
-void				normalize_tokens_with_heredoc(t_token **tokens);
 void				expand_one_token(t_token *tok,
 						int last_exit_status, t_env *env);
 t_ast				*new_pipe_node(t_ast *left, t_ast *right);
