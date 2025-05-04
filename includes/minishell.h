@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 08:41:57 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 09:21:38 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ t_ast 				**collect_pipeline_stages(t_ast *pipe_root, int *out_n);
 //exec/exec_builtins.c
 void 				execute_builtin_cmds(t_ast *node, int *last_exit, t_env **env);
 int 				is_builtin(char *cmd);
+int 				exec_builtin(t_ast *node, t_minishell *data, int *status);
 
 // exec/exec.c
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
@@ -243,6 +244,7 @@ char				**ft_free_env_array(char **env_array, int last);
 t_env				*init_env_list(char **envp);
 void				free_env(t_env *env);
 void				free_env_node(t_env *node);
+void				set_exit_status_from_wait(int status, t_minishell *data);
 
 // builtins/export/export.c
 void				handle_export(char **args, t_env **env);

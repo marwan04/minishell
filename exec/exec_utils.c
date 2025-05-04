@@ -6,11 +6,27 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 08:18:26 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 08:28:30 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 09:19:34 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"  
+
+void	set_exit_status_from_wait(int status, t_minishell *data)
+{
+	if (WIFSIGNALED(status))
+	{
+		int	sig = WTERMSIG(status);
+		if (sig == SIGINT)
+			data->last_exit_status = 130;
+		else if (sig == SIGQUIT)
+			data->last_exit_status = 131;
+		else
+			data->last_exit_status = 128 + sig;
+	}
+	else
+		data->last_exit_status = WEXITSTATUS(status);
+}
 
 static size_t	count_env(t_env *env)
 {

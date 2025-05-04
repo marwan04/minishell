@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 06:57:14 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 07:56:55 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/04 09:21:06 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,10 @@ void execute_builtin_cmds(t_ast *node, int *last_exit, t_env **env)
         handle_cd(node->args, env);
     else if (strcmp(node->args[0], "exit") == 0)
         *last_exit = handle_exit(node->args, last_exit);
+}
+
+int exec_builtin(t_ast *node, t_minishell *data, int *status)
+{
+    execute_builtin_cmds(node, status, &data->env);
+    return (*status);
 }
