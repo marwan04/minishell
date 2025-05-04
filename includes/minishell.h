@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 22:36:25 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:16:30 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,18 +124,20 @@ typedef struct s_pipe_data
 }	t_pipe_data;
 
 //herdoc/herdoc_utils.c
-void    			close_heredoc_in_node(t_ast *node);
-void 				close_heredoc_pipes_in_stages(t_ast **stages, int n_stages);
+void				close_heredoc_in_node(t_ast *node);
+void				close_heredoc_pipes_in_stages(t_ast **stages, int n_stages);
 
 //exec/exec_cmd.c
-int 				exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data);
+int					exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data);
 
 //exec/pipe_utils.c
-t_ast 				**collect_pipeline_stages(t_ast *pipe_root, int *out_n);
+t_ast				**collect_pipeline_stages(t_ast *pipe_root, int *out_n);
+
 //exec/exec_builtins.c
-void 				execute_builtin_cmds(t_ast *node, int *last_exit, t_env **env);
-int 				is_builtin(char *cmd);
-int 				exec_builtin(t_ast *node, t_minishell *data, int *status);
+void				execute_builtin_cmds(t_ast *node,
+						int *last_exit, t_env **env);
+int					is_builtin(char *cmd);
+int					exec_builtin(t_ast *node, t_minishell *data, int *status);
 
 // exec/exec.c
 int					exec_ast(t_ast *node, int prev_fd, t_minishell *data);
@@ -253,7 +255,7 @@ void				handle_export(char **args, t_env **env);
 int					update_pwd_env(t_env **env);
 
 //exec/exec_redirection.c 
-int 				apply_redirections(t_ast *node);
+int					apply_redirections(t_ast *node);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);
@@ -268,15 +270,16 @@ void				ft_read(t_minishell *data);
 int					exec_and_or(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/error_utilites.c
-void 				perror_and_exit(const char *message);
+void				perror_and_exit(const char *message);
 int					handle_fork_error(int prev_fd, t_minishell *data);
 void				handle_prev_fd(int prev_fd);
 
 //herdoc/herdoc_handler.c
-void 				collect_heredocs(t_ast *node, t_minishell *data);
+void				collect_heredocs(t_ast *node, t_minishell *data);
 
 //exec/exec_pipes.c
-int 				exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data);
+int					exec_pipeline(t_ast **stages,
+						int n_stages, int prev_fd, t_minishell *data);
 
 // syntax/syntax_check.c
 int					validate_token_sequence(t_token *tokens);
@@ -298,6 +301,6 @@ void				expand_one_token(t_token *tok,
 t_ast				*new_pipe_node(t_ast *left, t_ast *right);
 t_ast				*create_redir_node(t_ast *cmd_node, t_token *token);
 void				expand_wildcards(t_token *tokens);
-void    			ft_process_input(t_minishell *data, char *input);
-
+void				ft_process_input(t_minishell *data, char *input);
+void				free_tokens_from_list(t_token *token);
 #endif

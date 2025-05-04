@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 01:26:09 by alrfa3i           #+#    #+#             */
-/*   Updated: 2025/04/30 16:32:35 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:30:42 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,21 @@ void	ft_exit(t_minishell *data)
 int	handle_exit(char **args, int *last_exit)
 {
 	if (!args[1])
-		return *last_exit;
+		return (*last_exit);
 	if (!is_valid_exit_arg(args[1]))
 	{
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		return 2;
+		return (2);
 	}
 	if (args[2])
 	{
 		write(1, "exit\n", 5);
 		ft_putendl_fd("bash: exit: too many arguments\n", 2);
 		*last_exit = 1;
-		return 1;
+		return (1);
 	}
 	*last_exit = (unsigned char)ft_atoi(args[1]);
-	return *last_exit;
+	return (*last_exit);
 }

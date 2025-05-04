@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/04 22:19:04 by malrifai         ###   ########.fr        #
+#    Updated: 2025/05/04 23:25:30 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ EXPANDER	= expander/expand_wildcard.c \
 			  expander/expand_special.c \
 			  expander/expand.c \
 			  expander/utils.c \
-			  expander/var_expand.c
+			  expander/var_expand.c \
+			  expander/var_expand_utils.c
 
 BUILTINS	= builtins/exit.c \
 			  builtins/update_env_cd.c \

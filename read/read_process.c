@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 00:17:16 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 02:03:46 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:16:11 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_tokens_from_list(t_token *token)
-{
-	t_token	*next;
-
-	while (token)
-	{
-		next = token->next;
-		if (token->value)
-			free(token->value);
-		free(token);
-		token = next;
-	}
-}
 
 static int	handle_raw_syntax(t_minishell *data, char *input)
 {
@@ -68,23 +54,23 @@ static int	handle_parsing(t_minishell *data,
 		data->tokens = NULL;
 		return (1);
 	}
-	//collect_heredocs(data->ast_root, data);
 	return (0);
 }
-int     ft_pipes_count(t_token *tokens)
-{
-    t_token *token;
-    int     count;
 
-    count = 0;
-    token = tokens;
-    while (token)
-    {
-        if (token->type == PIPE)
-            count++;
-        token = token->next;
-    }
-    return (count);
+int	ft_pipes_count(t_token *tokens)
+{
+	t_token	*token;
+	int		count;
+
+	count = 0;
+	token = tokens;
+	while (token)
+	{
+		if (token->type == PIPE)
+			count++;
+		token = token->next;
+	}
+	return (count);
 }
 
 void	ft_process_input(t_minishell *data, char *input)
@@ -100,7 +86,7 @@ void	ft_process_input(t_minishell *data, char *input)
 	free_ast(data->ast_root);
 	raw_tokens = tokenizer(input);
 	data->tokens = raw_tokens;
-    data->pipes_count = ft_pipes_count(raw_tokens);
+	data->pipes_count = ft_pipes_count(raw_tokens);
 	if (handle_token_sequence(data, raw_tokens, input))
 		return ;
 	if (data->tokens)

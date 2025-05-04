@@ -1,39 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   herdoc_utils.c                                     :+:      :+:    :+:   */
+/*   var_expand_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/04 07:25:07 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 23:40:08 by malrifai         ###   ########.fr       */
+/*   Created: 2025/02/15 18:51:48 by malrifai          #+#    #+#             */
+/*   Updated: 2025/05/04 23:27:46 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	close_heredoc_in_node(t_ast *node)
+void	expand_track_quotes(t_expand *expand, char c)
 {
-	if (!node)
-		return ;
-	if (node->type == NODE_HEREDOC
-		&& node->heredoc_pipe[0] > STDERR_FILENO)
+	if ((c == '"' || c == '\'') && expand->quote == 0)
 	{
-		close(node->heredoc_pipe[0]);
-		node->heredoc_pipe[0] = -1;
+		expand->quote = c;
+		if (expand->quote == '"')
+			expand->preserve_spaces = 1;
 	}
-	close_heredoc_in_node(node->left);
-	close_heredoc_in_node(node->right);
+	else if (c == expand->quote)
+	{
+		expand->quote = 0;
+		expand->preserve_spaces = 0;
+	}
 }
 
-void	close_heredoc_pipes_in_stages(t_ast **stages, int n_stages)
+void	expand_append_char(t_expand *expand, char c)
 {
-	int	i;
-
-	i = 0;
-	while (i < n_stages)
-	{
-		close_heredoc_in_node(stages[i]);
-		i++;
-	}
+	expand->c[0] = c;
+	expand->c[1] = '\0';
+	expand->expanded = ft_strjoin_free(expand->expanded, expand->c);
 }
