@@ -6,13 +6,12 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 12:00:00 by student           #+#    #+#             */
-/*   Updated: 2025/05/04 23:01:54 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 01:21:05 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
-
 int
 exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
 {
@@ -47,6 +46,8 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
     }
     for (int i = 0; i < n_stages; ++i)
     {
+        signal(SIGINT,  SIG_IGN);
+        signal(SIGQUIT, SIG_IGN);
         pid_t pid = fork();
         if (pid < 0)
         {
@@ -149,6 +150,7 @@ exec_pipeline(t_ast **stages, int n_stages, int prev_fd, t_minishell *data)
         else
             last_status = WEXITSTATUS(status);
     }
+    init_signals();
     free(pipes);
     free(pids);
     return last_status;

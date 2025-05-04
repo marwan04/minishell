@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 00:16:14 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 01:39:50 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_read(t_minishell *data)
 {
 	char	*input;
 
-	check_signal(data);
+	check_signal();
 	data->execution_aborted = 0;
 	input = readline("minishell> ");
 	if (!input && !g_sig_int)
