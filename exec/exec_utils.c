@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 08:18:26 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 22:58:06 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 01:11:42 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	set_exit_status_from_wait(int status, t_minishell *data)
 {
+	int	sig;
+
 	if (WIFSIGNALED(status))
 	{
-		int	sig = WTERMSIG(status);
+		sig = WTERMSIG(status);
 		if (sig == SIGINT)
 			data->last_exit_status = 130;
 		else if (sig == SIGQUIT)
@@ -50,16 +52,16 @@ static char	*make_entry(t_env *env)
 	char	*entry;
 
 	klen = ft_strlen(env->key);
-    vlen = 0;
-    if (env->value)
+	vlen = 0;
+	if (env->value)
 		vlen = ft_strlen(env->value);
 	entry = malloc(klen + 1 + vlen + 1);
 	if (!entry)
 		return (NULL);
-    ft_strlcpy(entry, env->key, klen + 1);
+	ft_strlcpy(entry, env->key, klen + 1);
 	entry[klen] = '=';
 	if (env->value)
-        ft_strlcpy(entry + klen + 1, env->value, vlen + 1);
+		ft_strlcpy(entry + klen + 1, env->value, vlen + 1);
 	else
 		entry[klen + 1] = '\0';
 	return (entry);
