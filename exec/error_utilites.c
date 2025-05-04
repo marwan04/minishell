@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   error_utilites.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:22:11 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 08:41:38 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:31:09 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void 	perror_and_exit(const char *message) 
+void	perror_and_exit(const char *message)
 {
-    perror(message);
-    exit(EXIT_FAILURE);
+	perror(message);
+	exit(EXIT_FAILURE);
 }
 
 void	handle_prev_fd(int prev_fd)

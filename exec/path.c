@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 08:39:20 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/04/22 00:51:53 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:34:11 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,13 @@ char	*ft_get_path(char *cmd, t_env **envp)
 
 	if (!cmd)
 		return (NULL);
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		else
+			return (NULL);
+	}
 	paths = ft_split_path(envp);
 	if (!paths)
 		return (NULL);
