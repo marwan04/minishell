@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:29:42 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/04 22:18:03 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:05:35 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static void	free_ast_content(t_ast *node)
 		free(node->file);
 		node->file = NULL;
 	}
+	if (node->type == NODE_HEREDOC)
+		close_heredocs(node);
 }
 
 void	free_ast(t_ast *node)
@@ -80,7 +82,8 @@ void	ft_free(t_minishell *data, int flag, char *msg)
 		free_ast(data->ast_root);
 	if (data->env)
 		free_env(data->env);
-	printf("%s", msg);
+	if (msg)
+		printf("%s", msg);
 	exit(flag);
 }
 

@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:26:17 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 10:54:05 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:09:15 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,13 @@ static int	exec_cmd_execve(t_ast *node, t_minishell *data)
 
 int	is_parent_builtin(t_ast *node, int prev_fd)
 {
-	return (node->args[0] && is_builtin(node->args[0])
+	if (node->args[0] && is_builtin(node->args[0])
 		&& prev_fd == STDIN_FILENO && node->type == NODE_CMD
-		&& !node->right);
+		&& !node->right)
+		return (1);
+	else if (is_builtin(node->args[0]) && !node->right)
+		return (1);
+	return (0);
 }
 
 void	exec_cmd_child(t_ast *node, int prev_fd, t_minishell *data)

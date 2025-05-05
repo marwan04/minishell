@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/05 10:57:01 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:43:48 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ void	handle_sigint(int signo)
 	close(STDIN_FILENO);
 }
 
-int	check_signal(void)
+int	check_signal(t_minishell *data)
 {
 	if (g_sig_int)
 	{
 		dup2(STDOUT_FILENO, STDIN_FILENO);
 		g_sig_int = 0;
+		data->last_exit_status = 130;
 		return (1);
 	}
 	return (0);

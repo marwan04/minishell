@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 14:37:50 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:44:08 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,16 @@ typedef struct s_pipeline
 	int		prev_fd;
 }	t_pipeline;
 
-typedef struct s_redirect_args {
+typedef struct s_redirect_args
+{
 	t_ast	*stage;
 	int		pipe_count;
 	int		index;
 	int		(*pipes)[2];
 }	t_redirect_args;
 
-typedef struct s_child_args {
+typedef struct s_child_args
+{
 	t_ast			**stages;
 	int				i;
 	int				pipe_count;
@@ -140,7 +142,8 @@ typedef struct s_child_args {
 	t_minishell		*data;
 }	t_child_args;
 
-typedef struct s_fork_args {
+typedef struct s_fork_args
+{
 	t_ast			**stages;
 	int				n_stages;
 	int				pipe_count;
@@ -150,13 +153,13 @@ typedef struct s_fork_args {
 	t_minishell		*data;
 }	t_fork_args;
 
-typedef struct s_exec_pipeline_args {
+typedef struct s_exec_pipeline_args
+{
 	t_ast			**stages;
 	int				n_stages;
 	int				prev_fd;
 	t_minishell		*data;
 }	t_exec_pipeline_args;
-
 
 //herdoc/herdoc_utils.c
 void				close_heredoc_in_node(t_ast *node);
@@ -210,6 +213,7 @@ t_ast				*parse_ast(t_token **tokens);
 void				free_tokens(t_minishell *data);
 void				ft_free(t_minishell *data, int flag, char *msg);
 void				free_ast(t_ast *node);
+void				close_heredocs(t_ast *node);
 
 //tokenizing/parsing_utils.c
 t_ast				*parse_command(t_token **tokens);
@@ -252,7 +256,7 @@ char				*expand_vars(char *line, t_env *env);
 // signal/signal_handler.c
 void				handle_sigint(int sig);
 void				init_signals(void);
-int					check_signal(void);
+int					check_signal(t_minishell *data);
 void				def_sig(void);
 void				ign_sig(void);
 
@@ -307,7 +311,8 @@ int					update_pwd_env(t_env **env);
 
 //exec/exec_redirection.c 
 int					apply_redirections(t_ast *node);
-void				handle_redir_child(t_ast *node, int prev_fd, t_minishell *data);
+void				handle_redir_child(t_ast *node,
+						int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);

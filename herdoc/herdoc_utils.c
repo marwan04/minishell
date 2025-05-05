@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:25:07 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 14:37:24 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:45:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,18 @@ void	heredoc_child(t_ast *node, t_minishell *data)
 		node->heredoc_expand,
 		data);
 	exit(EXIT_SUCCESS);
+}
+
+void	close_heredocs(t_ast *node)
+{
+	if (node->heredoc_pipe[0] > STDERR_FILENO)
+	{
+		close(node->heredoc_pipe[0]);
+		node->heredoc_pipe[0] = -1;
+	}
+	if (node->heredoc_pipe[1] > STDERR_FILENO)
+	{
+		close(node->heredoc_pipe[1]);
+		node->heredoc_pipe[1] = -1;
+	}
 }
