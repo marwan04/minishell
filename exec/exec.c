@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/05 03:52:27 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 06:30:19 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	exec_group_node(t_ast *node, int prev_fd, t_minishell *data)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		if (prev_fd > STDERR_FILENO && prev_fd != -1)
+		if (prev_fd > STDERR_FILENO)
             handle_prev_fd(prev_fd);
 		exit(exec_ast(node->left, STDIN_FILENO, data));
 	}
@@ -63,6 +63,8 @@ static int	exec_redir_node(t_ast *node, int prev_fd, t_minishell *data)
 		apply_redirections(node);
 		if (node->left)
 			exit(exec_ast(node->left, STDIN_FILENO, data));
+		if (data)
+			ft_free(data, data->last_exit_status, "");
 		exit(0);
 	}
 	if (prev_fd > STDERR_FILENO)
@@ -120,7 +122,7 @@ int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 	if (data->last_exit_status == 130)
 	{
 		data->pipes_count = 0;
-		if (prev_fd > STDERR_FILENO || prev_fd != -1)
+		if (prev_fd > STDERR_FILENO)
 			close(prev_fd);
 	}
 	data->last_exit_status = exec_ast_helper(node, prev_fd, data);
