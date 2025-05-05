@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 01:38:58 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:57:26 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,8 @@ char				*expand_vars(char *line, t_env *env);
 void				handle_sigint(int sig);
 void				init_signals(void);
 int					check_signal(void);
+void				def_sig(void);
+void				ign_sig(void);
 
 // builtins/echo.c
 int					is_n_flag(char *arg);

@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:26:17 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 10:42:29 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:54:05 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,7 @@ int	is_parent_builtin(t_ast *node, int prev_fd)
 
 void	exec_cmd_child(t_ast *node, int prev_fd, t_minishell *data)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	def_sig();
 	if (prev_fd > STDIN_FILENO)
 		handle_prev_fd(prev_fd);
 	apply_redirections(node);
@@ -91,8 +90,7 @@ int	exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data)
 	pid = exec_fork(prev_fd);
 	if (pid < 0)
 		return (data->last_exit_status = 1);
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	ign_sig();
 	if (pid == 0)
 		exec_cmd_child(node, prev_fd, data);
 	if (prev_fd > STDERR_FILENO)

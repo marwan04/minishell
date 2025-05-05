@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:03:21 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 10:31:32 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:52:01 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,7 @@ static void	process_heredoc_node(t_ast *node, t_minishell *data)
 		data->last_exit_status = 1;
 		return ;
 	}
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	ign_sig();
 	if (pid == 0)
 	{
 		sigaction(SIGINT, NULL, &old_int);
