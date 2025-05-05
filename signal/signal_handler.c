@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:08:28 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/05 02:10:44 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 03:48:11 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void init_signals(void)
 
     sa.sa_handler = handle_sigint;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;        // *no* SA_RESTART, so readline gets EINTR
+    sa.sa_flags = SA_RESTART;
 
     if (sigaction(SIGINT, &sa, NULL) < 0)
         perror("sigaction(SIGINT)");
