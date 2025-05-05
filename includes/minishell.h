@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 13:17:27 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:23:00 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,20 @@ typedef struct s_exec_pipeline_args {
 void				close_heredoc_in_node(t_ast *node);
 void				close_heredoc_pipes_in_stages(t_ast **stages, int n_stages);
 
+//exec/pipeline_utils
+void				close_all_pipes(int pipe_count, int (*pipes)[2]);
+int					create_pipes(int pipe_count, int (*pipes)[2]);
+int					count_pipes(t_ast *node);
+
+//exec/pipeline_command.c
+void				exec_handle_command(t_ast *cmd, t_minishell *data);
+
+//exec/pipeline_redirect.c
+void				exec_setup_redirects(t_redirect_args *a);
+
+//exec/pipeline_fork.c
+int					fork_and_exec(t_fork_args *f);
+
 //exec/exec_cmd.c
 int					exec_cmd_node(t_ast *node, int prev_fd, t_minishell *data);
 
@@ -293,6 +307,7 @@ int					update_pwd_env(t_env **env);
 
 //exec/exec_redirection.c 
 int					apply_redirections(t_ast *node);
+void				handle_redir_child(t_ast *node, int prev_fd, t_minishell *data);
 
 // exec/path.c
 char				*ft_get_path(char *s, t_env **envp);

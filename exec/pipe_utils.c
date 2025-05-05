@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:16:09 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 01:31:10 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:25:02 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static void	flatten_pipeline_helper(t_ast *node, t_ast **stages, int *idx)
 		stages[(*idx)++] = node;
 	}
 }
+
 t_ast	**collect_pipeline_stages(t_ast *pipe_root, int *out_n)
 {
 	int		n;
@@ -48,7 +49,7 @@ t_ast	**collect_pipeline_stages(t_ast *pipe_root, int *out_n)
 	int		idx;
 
 	n = count_pipe_leaves(pipe_root);
-	stages =  malloc(sizeof *stages * n);
+	stages = malloc(sizeof * stages * n);
 	idx = 0;
 	if (!stages)
 	{
@@ -61,32 +62,32 @@ t_ast	**collect_pipeline_stages(t_ast *pipe_root, int *out_n)
 	return (stages);
 }
 
-int	handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
+static int	exec_pipeline_with_all(t_ast *node,
+	int count, int prev_fd, t_minishell *data)
 {
-	t_ast	*cur;
-	int		pipe_count;
 	t_ast	**stages;
-	int		r;
 	int		result;
+	int		r;
 
-	if (!node || !node->left || !node->right)
-		return (1);
-	pipe_count = 1;
-	cur = node->right;
-	while (cur && cur->type == NODE_PIPE)
-	{
-		pipe_count++;
-		cur = cur->right;
-	}
-	stages = malloc(sizeof(t_ast*) * (pipe_count + 1));
+	stages = malloc(sizeof(t_ast *) * (count + 1));
 	if (!stages)
 	{
 		perror("malloc");
 		return (1);
 	}
-	r = pipe_count + 1;
+	r = count + 1;
 	flatten_pipeline_helper(node, stages, &r);
-	result = exec_pipeline(stages, pipe_count + 1, prev_fd, data);
+	result = exec_pipeline(stages, count + 1, prev_fd, data);
 	free(stages);
 	return (result);
+}
+
+int	handle_pipe_node(t_ast *node, int prev_fd, t_minishell *data)
+{
+	int	pipe_count;
+
+	if (!node || !node->left || !node->right)
+		return (1);
+	pipe_count = count_pipes(node);
+	return (exec_pipeline_with_all(node, pipe_count, prev_fd, data));
 }

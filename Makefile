@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/04 23:25:30 by malrifai         ###   ########.fr        #
+#    Updated: 2025/05/05 14:17:21 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,10 @@ RESET   	= \033[0m
 ARROW   	= ✔
 
 EXEC		= exec/exec_and_or.c \
+			  exec/pipeline_command.c \
+			  exec/pipeline_fork.c \
+			  exec/pipeline_redirect.c \
+			  exec/pipeline_utils.c \
 			  exec/exec_builtins.c \
 			  exec/path.c \
 			  exec/check_access.c \
