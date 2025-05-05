@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirection.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:26:41 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 01:08:31 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 06:32:57 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static int	handle_heredoc(t_ast *node)
 int	apply_redirections(t_ast *node)
 {
 	t_ast	*cur;
+	int fd;
 
 	cur = node;
 	while (cur)
@@ -66,7 +67,11 @@ int	apply_redirections(t_ast *node)
 		else if (cur->type == NODE_REDIR_IN
 			|| cur->type == NODE_REDIR_OUT || cur->type == NODE_APPEND)
 		{
-			if (handle_redir(cur, cur->type == NODE_REDIR_IN ? STDIN_FILENO : STDOUT_FILENO) < 0)
+			if (cur->type == NODE_REDIR_IN)
+				fd = STDIN_FILENO;
+			else
+				fd = STDOUT_FILENO;
+			if (handle_redir(cur, fd) < 0)
 				return (-1);
 		}
 		cur = cur->right;
