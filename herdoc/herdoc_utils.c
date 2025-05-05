@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:25:07 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 23:40:08 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:37:24 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,28 @@ void	close_heredoc_pipes_in_stages(t_ast **stages, int n_stages)
 		close_heredoc_in_node(stages[i]);
 		i++;
 	}
+}
+
+static void	setup_sigint_default(struct sigaction *old_int)
+{
+	struct sigaction	new_int;
+
+	sigaction(SIGINT, NULL, old_int);
+	new_int.sa_handler = SIG_DFL;
+	sigemptyset(&new_int.sa_mask);
+	new_int.sa_flags = 0;
+	sigaction(SIGINT, &new_int, NULL);
+}
+
+void	heredoc_child(t_ast *node, t_minishell *data)
+{
+	struct sigaction	old_int;
+
+	setup_sigint_default(&old_int);
+	close(node->heredoc_pipe[0]);
+	read_heredoc(node->heredoc_delim,
+		node->heredoc_pipe[1],
+		node->heredoc_expand,
+		data);
+	exit(EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 14:23:00 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:37:50 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,6 +328,9 @@ void				handle_prev_fd(int prev_fd);
 
 //herdoc/herdoc_handler.c
 void				collect_heredocs(t_ast *node, t_minishell *data);
+void				read_heredoc(char *delim, int write_fd,
+						int expand, t_minishell *data);
+void				heredoc_child(t_ast *node, t_minishell *data);
 
 //exec/exec_pipes.c
 int					exec_pipeline(t_ast **stages,

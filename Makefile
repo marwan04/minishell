@@ -6,7 +6,7 @@
 #    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/05 14:17:21 by malrifai         ###   ########.fr        #
+#    Updated: 2025/05/05 14:38:05 by malrifai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,8 @@ READ 		= read/read.c \
 			  read/read_process.c
 
 HERDOC 		= herdoc/herdoc_handler.c \
-			  herdoc/herdoc_utils.c
+			  herdoc/herdoc_utils.c \
+			  herdoc/read_heredoc.c
 
 SYNTAX		= syntax/syntax_check.c \
 			  syntax/syntax_utils.c
