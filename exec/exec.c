@@ -6,7 +6,7 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/05 02:12:47 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 03:52:27 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 		data->pipes_count = 0;
 		if (prev_fd > STDERR_FILENO || prev_fd != -1)
 			close(prev_fd);
-		return (131);
 	}
 	data->last_exit_status = exec_ast_helper(node, prev_fd, data);
 	if (prev_fd > STDERR_FILENO)
