@@ -6,7 +6,7 @@
 /*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:13:43 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 10:57:26 by malrifai         ###   ########.fr       */
+/*   Updated: 2025/05/05 13:17:27 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,40 @@ typedef struct s_pipeline
 	int		n_stages;
 	int		prev_fd;
 }	t_pipeline;
+
+typedef struct s_redirect_args {
+	t_ast	*stage;
+	int		pipe_count;
+	int		index;
+	int		(*pipes)[2];
+}	t_redirect_args;
+
+typedef struct s_child_args {
+	t_ast			**stages;
+	int				i;
+	int				pipe_count;
+	int				prev_fd;
+	int				(*pipes)[2];
+	t_minishell		*data;
+}	t_child_args;
+
+typedef struct s_fork_args {
+	t_ast			**stages;
+	int				n_stages;
+	int				pipe_count;
+	int				prev_fd;
+	int				(*pipes)[2];
+	pid_t			*pids;
+	t_minishell		*data;
+}	t_fork_args;
+
+typedef struct s_exec_pipeline_args {
+	t_ast			**stages;
+	int				n_stages;
+	int				prev_fd;
+	t_minishell		*data;
+}	t_exec_pipeline_args;
+
 
 //herdoc/herdoc_utils.c
 void				close_heredoc_in_node(t_ast *node);

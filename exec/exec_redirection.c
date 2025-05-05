@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirection.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:26:41 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 06:32:57 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:58:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	handle_heredoc(t_ast *node)
 int	apply_redirections(t_ast *node)
 {
 	t_ast	*cur;
-	int fd;
+	int		fd;
 
 	cur = node;
 	while (cur)
