@@ -37,9 +37,8 @@ int check_signal()
 
 void init_signals(void)
 {
-    struct sigaction sa = {0};
+    struct sigaction sa;
 
-    rl_catch_signals = 0;   // we’ll handle SIGINT ourselves
     g_sig_int = 0;
 
     sa.sa_handler = handle_sigint;
