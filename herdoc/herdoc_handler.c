@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 07:03:21 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 06:26:25 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:31:32 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	read_heredoc(const char *delim, int write_fd, int expand, t_minishell *data)
+static void	read_heredoc(char *delim, int write_fd, int expand, t_minishell *data)
 {
 	char	*line;
 	char	*expanded;
@@ -22,11 +22,8 @@ static void	read_heredoc(const char *delim, int write_fd, int expand, t_minishel
 	{
 		line = readline("> ");
 		if (!line)
-		{
-			write(STDOUT_FILENO, "\n", 1);
 			break ;
-		}
-		if (strcmp(line, delim) == 0)
+		if (ft_strcmp(line, delim) == 0)
 		{
 			free(line);
 			break ;
@@ -70,6 +67,8 @@ static void	process_heredoc_node(t_ast *node, t_minishell *data)
 		data->last_exit_status = 1;
 		return ;
 	}
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	if (pid == 0)
 	{
 		sigaction(SIGINT, NULL, &old_int);
@@ -92,9 +91,11 @@ static void	process_heredoc_node(t_ast *node, t_minishell *data)
 		data->last_exit_status = 1;
 		return ;
 	}
+	init_signals();
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		data->last_exit_status = 130;
+		data->execution_aborted = 1;
 	}
 }
 

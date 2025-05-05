@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:58:37 by malrifai          #+#    #+#             */
-/*   Updated: 2025/05/05 06:30:19 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:29:40 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ int	exec_ast(t_ast *node, int prev_fd, t_minishell *data)
 		if (prev_fd > STDERR_FILENO)
 			close(prev_fd);
 	}
+	if (data->execution_aborted)
+		return (data->last_exit_status);
 	data->last_exit_status = exec_ast_helper(node, prev_fd, data);
 	if (prev_fd > STDERR_FILENO)
 		close(prev_fd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 06:46:53 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/05 06:28:52 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:27:30 by malrifai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_read(t_minishell *data)
 	if (!g_sig_int)
 	{
 		ft_process_input(data, input);
-		if (data->ast_root && !data->execution_aborted)
+		if (data->ast_root)
 		{
 			if (data->ast_root->type == NODE_CMD
 				&& data->ast_root->args
