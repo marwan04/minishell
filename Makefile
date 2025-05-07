@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: malrifai <malrifai@student.42.fr>          +#+  +:+       +#+         #
+#    By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/03 10:28:41 by eaqrabaw          #+#    #+#              #
-#    Updated: 2025/05/05 14:38:05 by malrifai         ###   ########.fr        #
+#    Updated: 2025/05/07 10:46:34 by eaqrabaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,11 @@ RED    		= \033[0;31m
 RESET   	= \033[0m
 ARROW   	= ✔
 
+PARSING		= parsing/cmd_utils.c \
+			  parsing/init_nodes.c \
+			  parsing/parsing_cmd.c \
+			  parsing/parsing_utils.c
+			  
 EXEC		= exec/exec_and_or.c \
 			  exec/pipeline_command.c \
 			  exec/pipeline_fork.c \
@@ -71,13 +76,10 @@ SYNTAX		= syntax/syntax_check.c \
 			  syntax/syntax_utils.c
 
 TOKENIZING	= tokenizing/tokenizer.c \
-			  tokenizing/init_nodes.c \
 			  tokenizing/normalize_helpers.c \
 			  tokenizing/check.c \
 			  tokenizing/tokenizer_utils.c \
-			  tokenizing/cmd_utils.c \
 			  tokenizing/free.c\
-			  tokenizing/parsing_utils.c \
 			  tokenizing/normalize_tokens.c
 
 SRCS		= main.c \
@@ -88,6 +90,7 @@ SRCS		= main.c \
 			  $(HERDOC) \
 			  $(EXEC) \
 			  $(READ) \
+			  $(PARSING) \
 			  $(SYNTAX)
 
 OBJS		= $(SRCS:%.c=$(objDir)/%.o)

@@ -6,40 +6,11 @@
 /*   By: eaqrabaw <eaqrabaw@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:24:10 by eaqrabaw          #+#    #+#             */
-/*   Updated: 2025/05/04 01:21:32 by eaqrabaw         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:47:33 by eaqrabaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_ast	*parse_command(t_token **tokens)
-{
-	t_ast	*cmd;
-
-	if (*tokens && (*tokens)->type == LPAREN)
-		return (parse_group(tokens));
-	cmd = new_ast_cmd();
-	while (*tokens && ((*tokens)->type == REDIR_IN
-			|| (*tokens)->type == REDIR_OUT || (*tokens)->type == APPEND
-			|| (*tokens)->type == HEREDOC))
-	{
-		cmd = handle_redirection(cmd, *tokens);
-		*tokens = (*tokens)->next->next;
-	}
-	while (*tokens && (*tokens)->type == WORD)
-	{
-		add_argument(cmd, (*tokens)->value);
-		*tokens = (*tokens)->next;
-	}
-	while (*tokens && ((*tokens)->type == REDIR_IN
-			|| (*tokens)->type == REDIR_OUT || (*tokens)->type == APPEND
-			|| (*tokens)->type == HEREDOC))
-	{
-		cmd = handle_redirection(cmd, *tokens);
-		*tokens = (*tokens)->next->next;
-	}
-	return (cmd);
-}
 
 t_ast	*parse_pipeline(t_token **tokens)
 {
