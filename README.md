@@ -216,8 +216,8 @@ echo '$USER' "$USER" $USER
 
 ## 👥 Authors
 
-**Saleh** – AST, syntax handling, signals, pipeline management  
-**Partner** – Expander, tokenizer, redirection & wildcard support
+**Eyad** – AST, syntax handling, signals, pipeline management  
+**Marwan** – Expander, tokenizer, redirection & wildcard support
 
 Together, we tackled every corner case and built a fully functional shell that respects all 42 subject constraints and mimics the Bash behavior under the hood.
 
